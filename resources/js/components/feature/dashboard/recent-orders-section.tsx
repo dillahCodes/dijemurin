@@ -6,7 +6,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { RecentOrdersTable } from './recent-orders-table';
-import type { Order } from '@/types/features/order';
+import type { Order } from '@/types/feature/order';
 
 const RECENT_ORDERS: Order[] = [
     {

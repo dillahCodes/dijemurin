@@ -8,7 +8,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import type { Order } from '@/types/features/order';
+import type { Order } from '@/types/feature/order';
 
 /**
  * 1. Local Types

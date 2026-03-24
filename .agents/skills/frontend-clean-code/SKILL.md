@@ -30,12 +30,12 @@ Setiap modul besar harus memiliki folder sendiri di bawah kategori `features`.
 src/
 ├── pages/
 │   └── dashboard.tsx               <-- Entry point (Clean)
-├── components/features/order/
+├── components/feature/order/
 │   ├── order-table.tsx             <-- UI Components
 │   └── order-filters.tsx
-├── hooks/features/order/
+├── hooks/feature/order/
 │   └── use-order-filters.ts        <-- Business Logic
-└── types/features/order/
+└── types/feature/order/
     └── index.ts                    <-- Feature Types
 ```
 
@@ -45,12 +45,12 @@ src/
 
 ### Rule 3: Logic Extraction to Feature Hooks
 
-Dilarang keras menulis `useMemo`, `useCallback`, atau `useState` yang berhubungan dengan data fitur langsung di dalam komponen UI jika logikanya lebih dari 3 baris. Ekstrak ke `hooks/features/<feature-name>/`.
+Dilarang keras menulis `useMemo`, `useCallback`, atau `useState` yang berhubungan dengan data fitur langsung di dalam komponen UI jika logikanya lebih dari 3 baris. Ekstrak ke `hooks/feature/<feature-name>/`.
 
 #### ❌ Bad: Logika bercampur di UI
 
 ```tsx
-// src/components/features/order/order-list.tsx
+// src/components/feature/order/order-list.tsx
 export function OrderList() {
     const [search, setSearch] = useState(''); // Logic dalam UI
     const filtered = orders.filter(...);      // Logic dalam UI
@@ -61,8 +61,8 @@ export function OrderList() {
 #### ✅ Good: Logika di-import dari Feature Hook
 
 ```tsx
-// src/components/features/order/order-list.tsx
-import { useOrderFilters } from '@/hooks/features/order/use-order-filters';
+// src/components/feature/order/order-list.tsx
+import { useOrderFilters } from '@/hooks/feature/order/use-order-filters';
 
 export function OrderList() {
     const { search, setSearch, filteredOrders } = useOrderFilters();

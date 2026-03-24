@@ -24,8 +24,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { useOrderFilters } from '@/hooks/features/order/use-order-filters';
-import type { Order } from '@/types/features/order';
+import { useOrderFilters } from '@/hooks/feature/order/use-order-filters';
+import type { Order } from '@/types/feature/order';
 
 /**
  * 1. Local Types

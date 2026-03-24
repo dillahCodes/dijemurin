@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Order } from '@/types/features/order';
+import type { Order } from '@/types/feature/order';
 
 export function useOrderFilters(orders: Order[]) {
     const [search, setSearch] = useState('');
