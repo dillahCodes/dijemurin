@@ -12,7 +12,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, laporan, order } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -23,12 +23,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Order',
-        href: dashboard(),
+        href: order(),
         icon: ShoppingBag,
     },
     {
         title: 'Laporan',
-        href: dashboard(),
+        href: laporan(),
         icon: FileText,
     },
 ];

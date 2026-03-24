@@ -1,5 +1,3 @@
-import type { OrderStatusDataPoint } from '@/components/ui/order-status-pie-chart';
-import type { RevenueDataPoint } from '@/components/ui/revenue-bar-chart';
 import {
     Card,
     CardContent,
@@ -7,7 +5,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import type { OrderStatusDataPoint } from '@/components/ui/order-status-pie-chart';
 import { OrderStatusPieChart } from '@/components/ui/order-status-pie-chart';
+import type { RevenueDataPoint } from '@/components/ui/revenue-bar-chart';
 import { RevenueBarChart } from '@/components/ui/revenue-bar-chart';
 
 const REVENUE_DATA: RevenueDataPoint[] = [

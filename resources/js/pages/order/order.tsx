@@ -1,11 +1,12 @@
-import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import { OrderDataSection } from '@/components/features/order/order-data-section';
 import AppLayout from '@/layouts/app-layout';
-import { OrderDataSection } from '@/components/pages/order/order-data-section';
+import type { BreadcrumbItem } from '@/types';
+import { dashboard, order } from '@/routes';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Order', href: '/order' },
+    { title: 'Dashboard', href: dashboard() },
+    { title: 'Order', href: order() },
 ];
 
 export default function OrderIndex() {

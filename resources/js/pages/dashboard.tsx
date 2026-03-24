@@ -1,10 +1,10 @@
-import { ChartsGrid } from '@/components/pages/dashboard/charts-grid';
-import { RecentOrdersSection } from '@/components/pages/dashboard/recent-orders-section';
-import { SummaryCardGrid } from '@/components/pages/dashboard/summary-card-grid';
+import { Head } from '@inertiajs/react';
+import { ChartsGrid } from '@/components/features/dashboard/charts-grid';
+import { RecentOrdersSection } from '@/components/features/dashboard/recent-orders-section';
+import { SummaryCardGrid } from '@/components/features/dashboard/summary-card-grid';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
 
 const BREADCRUMBS: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
 

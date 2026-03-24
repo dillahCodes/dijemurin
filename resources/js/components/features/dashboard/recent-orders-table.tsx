@@ -1,26 +1,35 @@
+import { Badge } from '@/components/ui/badge';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import type { Order } from '@/types/features/order';
+
 /**
- * types
+ * 1. Local Types
  */
-
-export interface Order {
-    id: string;
-    customer: string;
-    service: string;
-    status: 'Selesai' | 'Diproses' | 'Pending' | 'Batal';
-    date: string;
-    amount: number;
-}
-
 type BadgeVariant = 'default' | 'destructive' | 'secondary' | 'outline';
 
 interface RecentOrdersTableProps {
     orders: Order[];
 }
 
-/**
- * utils
- */
+interface OrderStatusBadgeProps {
+    status: Order['status'];
+}
 
+interface OrderTableRowProps {
+    order: Order;
+}
+
+/**
+ * Utils
+ */
 function formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -36,6 +45,7 @@ function getStatusBadgeVariant(status: Order['status']): BadgeVariant {
         Pending: 'secondary',
         Diproses: 'outline',
     };
+
     return variantMap[status];
 }
 
@@ -43,31 +53,17 @@ function getStatusBadgeClass(status: Order['status']): string {
     if (status === 'Selesai') {
         return 'border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-600';
     }
+
     if (status === 'Diproses') {
         return 'border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400';
     }
+
     return '';
 }
 
 /**
- * sub components
+ * 2. Sub-components
  */
-
-import { Badge } from '@/components/ui/badge';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { cn } from '@/lib/utils';
-
-interface OrderStatusBadgeProps {
-    status: Order['status'];
-}
-
 function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
     return (
         <Badge
@@ -77,10 +73,6 @@ function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
             {status}
         </Badge>
     );
-}
-
-interface OrderTableRowProps {
-    order: Order;
 }
 
 function OrderTableRow({ order }: OrderTableRowProps) {
@@ -107,9 +99,8 @@ function OrderTableRow({ order }: OrderTableRowProps) {
 }
 
 /**
- * main component
+ * 3. Main Component
  */
-
 export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
     return (
         <Table>
