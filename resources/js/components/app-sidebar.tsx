@@ -1,5 +1,3 @@
-import { Link } from '@inertiajs/react';
-import { FileText, LayoutGrid, Package, ShoppingBag } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +12,8 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, laporan, order } from '@/routes';
 import type { NavItem } from '@/types';
+import { Link } from '@inertiajs/react';
+import { FileText, LayoutGrid, ShoppingBag } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {

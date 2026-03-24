@@ -11,8 +11,10 @@ export function useOrderFilters(orders: Order[]) {
             const matchSearch =
                 order.customer.toLowerCase().includes(search.toLowerCase()) ||
                 order.id.toLowerCase().includes(search.toLowerCase());
-            const matchStatus = status === 'Semua Status' || order.status === status;
-            const matchService = service === 'Semua Layanan' || order.service === service;
+            const matchStatus =
+                status === 'Semua Status' || order.status === status;
+            const matchService =
+                service === 'Semua Layanan' || order.service === service;
 
             return matchSearch && matchStatus && matchService;
         });

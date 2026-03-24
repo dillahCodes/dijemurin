@@ -1,7 +1,3 @@
-import { Transition } from '@headlessui/react';
-import { Form, Head } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
-import { useRef, useState } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
@@ -12,8 +8,9 @@ import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/security';
 import type { BreadcrumbItem } from '@/types';
-
-// Props removed
+import { Transition } from '@headlessui/react';
+import { Form, Head } from '@inertiajs/react';
+import { useRef } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -142,8 +139,6 @@ export default function Security() {
                         )}
                     </Form>
                 </div>
-
-
             </SettingsLayout>
         </AppLayout>
     );

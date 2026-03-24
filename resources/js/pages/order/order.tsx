@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
-import { OrderDataSection } from '@/components/features/order/order-data-section';
 import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
 import { dashboard, order } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
+import { OrderDataSection } from '@/components/features/order/order-data-section';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },

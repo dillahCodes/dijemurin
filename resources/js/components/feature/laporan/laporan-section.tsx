@@ -1,15 +1,14 @@
+import { DownloadIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
-    CardHeader,
-    CardTitle,
     CardDescription,
     CardFooter,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DownloadIcon } from 'lucide-react';
-import { Fragment } from 'react/jsx-runtime';
 
 // 1. Local Types
 interface LaporanCardProps {
@@ -68,7 +67,10 @@ function LaporanCard({ title, description, onDownload }: LaporanCardProps) {
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button onClick={onDownload} className="w-full gap-2 sm:w-auto">
+                <Button
+                    onClick={onDownload}
+                    className="curpo w-full cursor-pointer gap-2 sm:w-auto"
+                >
                     <DownloadIcon className="h-4 w-4" />
                     Download
                 </Button>
