@@ -4,7 +4,7 @@ import {
     LoaderCircle,
     ShoppingBag,
 } from 'lucide-react';
-import SummaryCard from '@/components/features/dashboard/summary-card';
+import SummaryCard from '@/components/feature/dashboard/summary-card';
 
 const CARD_DATA = [
     {

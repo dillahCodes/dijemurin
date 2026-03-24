@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
-import { LaporanSection } from '@/components/features/laporan/laporan-section';
+import { LaporanSection } from '@/components/feature/laporan/laporan-section';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
