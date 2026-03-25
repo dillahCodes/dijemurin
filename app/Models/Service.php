@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,5 +26,17 @@ class Service extends Model
     public function items(): HasMany
     {
         return $this->hasMany(ServiceItem::class);
+    }
+
+    /**
+     * Scope a query to search for services with a given term.
+     *
+     * @return Builder
+     */
+    public function scopeSearch(Builder $query, ?string $search)
+    {
+        return $query->when($search, function (Builder $query) use ($search) {
+            $query->where('name', 'like', "%$search%")->orWhere('description', 'like', "%$search%");
+        });
     }
 }

@@ -1,19 +1,22 @@
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Service } from '@/types/feature/layanan';
+import { router } from '@inertiajs/react';
+import { X } from 'lucide-react';
+import { Activity, useState } from 'react';
 
-// 1. Local Types
 interface ServiceCardProps {
     title: string;
     description: string;
 }
 
-// 2. Sub-components
 function ServiceHeader() {
     return (
         <div className="flex flex-col gap-3">
@@ -24,6 +27,59 @@ function ServiceHeader() {
                 Pilih layanan yang ingin Anda pesan.
             </p>
         </div>
+    );
+}
+
+interface SearchProps {
+    value: string;
+}
+
+function ServiceSearch({ value }: SearchProps) {
+    const [search, setSearch] = useState(value);
+    const options = { preserveState: true, replace: true };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        router.get('/layanan', { search: search || undefined }, options);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
+
+    const handleClear = () => {
+        setSearch('');
+        router.get('/layanan', {}, options);
+    };
+
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="flex max-w-2xl items-center gap-3"
+        >
+            <Input
+                type="text"
+                placeholder="Cari layanan..."
+                name="search"
+                value={search}
+                onChange={handleChange}
+            />
+            <div className="flex items-center gap-3">
+                <Activity mode={search ? 'visible' : 'hidden'}>
+                    <Button
+                        variant="ghost"
+                        type="button"
+                        onClick={handleClear}
+                        className="cursor-pointer"
+                    >
+                        <X size={16} />
+                    </Button>
+                </Activity>
+                <Button type="submit" className="cursor-pointer">
+                    Cari
+                </Button>
+            </div>
+        </form>
     );
 }
 
@@ -50,12 +106,14 @@ function ServiceCard({ title, description }: ServiceCardProps) {
 // 3. Main Component
 interface Props {
     services: Service[];
+    filters: { search: string };
 }
 
-export function ServiceSection({ services }: Props) {
+export function ServiceSection({ services, filters = { search: '' } }: Props) {
     return (
         <div className="flex flex-col gap-6">
             <ServiceHeader />
+            <ServiceSearch value={filters.search} />
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                 {services.map((service) => (
                     <ServiceCard

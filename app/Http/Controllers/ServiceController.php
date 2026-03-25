@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ServiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $service = Service::all();
+        $search = $request->query('search');
+        $services = Service::search($search)->latest()->get();
 
         return Inertia::render('layanan/layanan', [
-            'services' => $service,
+            'services' => $services,
+            'filters'  => ['search' => $search ?? ''],
         ]);
     }
 }
