@@ -13,6 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('order', 'order/order')->name('order');
     Route::inertia('laporan', 'laporan/laporan')->name('laporan');
     Route::get('layanan', [ServiceController::class, 'index'])->name('layanan.index');
+    Route::get('layanan/{service}', [ServiceController::class, 'show'])->name('layanan.show');
+
 });
 
 require __DIR__.'/settings.php';

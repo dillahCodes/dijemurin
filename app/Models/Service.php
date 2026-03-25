@@ -30,8 +30,6 @@ class Service extends Model
 
     /**
      * Scope a query to search for services with a given term.
-     *
-     * @return Builder
      */
     public function scopeSearch(Builder $query, ?string $search)
     {

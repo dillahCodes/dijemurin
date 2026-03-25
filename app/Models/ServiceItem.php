@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
+
 
 #[Fillable(['name', 'description', 'time', 'price', 'unit', 'service_id'])]
 class ServiceItem extends Model
@@ -29,5 +31,15 @@ class ServiceItem extends Model
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Scope a query to search for service items with a given term.
+     */
+    public function scopeSearch(Builder $query, ?string $search)
+    {
+        return $query->when($search, function (Builder $query) use ($search) {
+            $query->where('name', 'like', "%$search%")->orWhere('description', 'like', "%$search%");
+        });
     }
 }

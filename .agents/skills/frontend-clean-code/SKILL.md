@@ -77,3 +77,63 @@ Di dalam file komponen fitur, gunakan urutan berikut:
 1. **Local Types** (Hanya yang tidak dipakai di file lain).
 2. **Sub-components** (Komponen kecil pendukung fitur tersebut).
 3. **Main Component** (Komponen yang di-export).
+
+---
+
+### Rule 5: Declarative Visibility Control (No Inline Ternary)
+
+Hindari penggunaan operator ternary `{condition ? <A /> : <B />}` atau short-circuit `&&` untuk blok UI yang kompleks atau berbeda kondisi. Hal ini seringkali membuat pohon JSX menjadi berantakan (indentasi terlalu dalam). Gunakan komponen `<Activity />` untuk menjaga struktur JSX tetap datar (_flat_) dan mudah dibaca secara visual.
+
+#### ❌ Bad: Inline Ternary / Nested Conditions
+
+Logika tampilan tercampur dan merusak alur pembacaan struktur DOM/JSX.
+
+```tsx
+export function ServiceList({ search }: Props) {
+    return (
+        <div>
+            {search ? (
+                <p className="text-muted-foreground text-xs">
+                    Tidak ada layanan yang cocok dengan{' '}
+                    <span className="text-foreground font-medium">
+                        "{search}"
+                    </span>
+                </p>
+            ) : (
+                <p className="text-muted-foreground text-xs">
+                    Belum ada layanan yang tersedia saat ini.
+                </p>
+            )}
+        </div>
+    );
+}
+```
+
+#### ✅ Good: Declarative Visibility with `<Activity />`
+
+Struktur jauh lebih bersih dan setiap kondisi didefinisikan secara eksplisit melalui prop `mode`.
+
+```tsx
+import { Activity } from 'react';
+
+export function ServiceList({ search }: Props) {
+    return (
+        <div>
+            <Activity mode={search ? 'visible' : 'hidden'}>
+                <p className="text-muted-foreground text-xs">
+                    Tidak ada layanan yang cocok dengan{' '}
+                    <span className="text-foreground font-medium">
+                        "{search}"
+                    </span>
+                </p>
+            </Activity>
+
+            <Activity mode={search ? 'hidden' : 'visible'}>
+                <p className="text-muted-foreground text-xs">
+                    Belum ada layanan yang tersedia saat ini.
+                </p>
+            </Activity>
+        </div>
+    );
+}
+```

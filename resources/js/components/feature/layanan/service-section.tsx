@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
-import { X } from 'lucide-react';
+import { SearchX, X } from 'lucide-react';
 import { Activity, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -13,6 +14,7 @@ import { cn } from '@/lib/utils';
 import type { Service } from '@/types/feature/layanan';
 
 interface ServiceCardProps {
+    id: number;
     title: string;
     description: string;
 }
@@ -83,9 +85,12 @@ function ServiceSearch({ value }: SearchProps) {
     );
 }
 
-function ServiceCard({ title, description }: ServiceCardProps) {
+function ServiceCard({ id, title, description }: ServiceCardProps) {
+    const handleNavigate = () => router.visit(`/layanan/${id}`);
+
     return (
         <Card
+            onClick={handleNavigate}
             className={cn(
                 'group relative flex w-full cursor-pointer overflow-hidden border-sidebar-border/70 p-4! py-6! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}
@@ -103,6 +108,39 @@ function ServiceCard({ title, description }: ServiceCardProps) {
     );
 }
 
+interface ServiceEmptyProps {
+    search: string;
+}
+
+function ServiceEmpty({ search }: ServiceEmptyProps) {
+    return (
+        <div className="flex flex-col items-center justify-center gap-4 rounded-xl py-16 text-center">
+            <div className="flex size-16 items-center justify-center rounded-full bg-muted">
+                <SearchX className="size-7 text-muted-foreground" />
+            </div>
+            <div className="flex flex-col gap-1">
+                <p className="text-sm font-medium text-foreground">
+                    Layanan tidak ditemukan
+                </p>
+                <Activity mode={search ? 'visible' : 'hidden'}>
+                    <p className="text-xs text-muted-foreground">
+                        Tidak ada layanan yang cocok dengan{' '}
+                        <span className="font-medium text-foreground">
+                            "{search}"
+                        </span>
+                    </p>
+                </Activity>
+
+                <Activity mode={search ? 'hidden' : 'visible'}>
+                    <p className="text-xs text-muted-foreground">
+                        Belum ada layanan yang tersedia saat ini.
+                    </p>
+                </Activity>
+            </div>
+        </div>
+    );
+}
+
 // 3. Main Component
 interface Props {
     services: Service[];
@@ -114,15 +152,23 @@ export function ServiceSection({ services, filters = { search: '' } }: Props) {
         <div className="flex flex-col gap-6">
             <ServiceHeader />
             <ServiceSearch value={filters.search} />
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                {services.map((service) => (
-                    <ServiceCard
-                        key={service.id}
-                        title={service.name}
-                        description={service.description}
-                    />
-                ))}
-            </div>
+
+            <Activity mode={!services.length ? 'visible' : 'hidden'}>
+                <ServiceEmpty search={filters.search} />
+            </Activity>
+
+            <Activity mode={services.length ? 'visible' : 'hidden'}>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    {services.map((service) => (
+                        <ServiceCard
+                            key={service.id}
+                            id={service.id}
+                            title={service.name}
+                            description={service.description}
+                        />
+                    ))}
+                </div>
+            </Activity>
         </div>
     );
 }
