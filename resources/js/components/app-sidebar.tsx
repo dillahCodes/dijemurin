@@ -11,9 +11,15 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, laporan, order } from '@/routes';
+import layanan from '@/routes/layanan';
 import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { FileText, LayoutGrid, ShoppingBag } from 'lucide-react';
+import {
+    FileText,
+    LayoutGrid,
+    ShoppingBag,
+    WashingMachine,
+} from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -25,6 +31,11 @@ const mainNavItems: NavItem[] = [
         title: 'Order',
         href: order(),
         icon: ShoppingBag,
+    },
+    {
+        title: 'Layanan',
+        href: layanan.index(),
+        icon: WashingMachine,
     },
     {
         title: 'Laporan',
