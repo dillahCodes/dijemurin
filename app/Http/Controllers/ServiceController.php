@@ -15,7 +15,7 @@ class ServiceController extends Controller
 
         return Inertia::render('layanan/layanan', [
             'services' => $services,
-            'filters'  => ['search' => $search ?? ''],
+            'filters' => ['search' => $search ?? ''],
         ]);
     }
 }

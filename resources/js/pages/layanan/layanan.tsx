@@ -1,7 +1,7 @@
+import { Head } from '@inertiajs/react';
 import { ServiceSection } from '@/components/feature/layanan/service-section';
 import AppLayout from '@/layouts/app-layout';
-import { Service } from '@/types/feature/layanan';
-import { Head } from '@inertiajs/react';
+import type { Service } from '@/types/feature/layanan';
 
 interface Props {
     services: Service[];

@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import type { BreadcrumbItem } from '@/types';
 import { ChartsGrid } from '@/components/feature/dashboard/charts-grid';
 import { RecentOrdersSection } from '@/components/feature/dashboard/recent-orders-section';
 import { SummaryCardGrid } from '@/components/feature/dashboard/summary-card-grid';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { BreadcrumbItem } from '@/types';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },

@@ -1,3 +1,6 @@
+import { router } from '@inertiajs/react';
+import { X } from 'lucide-react';
+import { Activity, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -7,10 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Service } from '@/types/feature/layanan';
-import { router } from '@inertiajs/react';
-import { X } from 'lucide-react';
-import { Activity, useState } from 'react';
+import type { Service } from '@/types/feature/layanan';
 
 interface ServiceCardProps {
     title: string;
