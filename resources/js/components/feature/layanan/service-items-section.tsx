@@ -28,7 +28,7 @@ export function ServiceItemsSection({
             />
 
             <Activity mode={!items.length ? 'visible' : 'hidden'}>
-                <ServiceItemsEmpty serviceName={service.name} />
+                <ServiceItemsEmpty search={filters.search} />
             </Activity>
 
             <Activity mode={items.length ? 'visible' : 'hidden'}>
@@ -36,6 +36,7 @@ export function ServiceItemsSection({
                     {items.map((item) => (
                         <ServiceItemCard
                             key={item.id}
+                            serviceId={service.id}
                             id={item.id}
                             name={item.name}
                             description={item.description}

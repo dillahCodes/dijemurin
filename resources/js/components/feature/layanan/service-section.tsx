@@ -1,7 +1,5 @@
 import { Activity } from 'react';
-
 import type { Service } from '@/types/feature/layanan';
-
 import { ServiceCard } from './service-card';
 import { ServiceEmpty } from './service-empty';
 import { ServiceHeader } from './service-header';

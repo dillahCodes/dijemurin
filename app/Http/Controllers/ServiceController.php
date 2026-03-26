@@ -31,4 +31,11 @@ class ServiceController extends Controller
             'filters' => ['search' => $search ?? ''],
         ]);
     }
+
+    public function destroy(Service $service)
+    {
+        $service->delete();
+
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil dihapus']);
+    }
 }

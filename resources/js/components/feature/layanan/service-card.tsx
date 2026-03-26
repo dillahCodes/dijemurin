@@ -14,6 +14,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useModal } from '@/components/ui/modal';
+import { toast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 interface ServiceCardProps {
@@ -23,29 +25,56 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ id, title, description }: ServiceCardProps) {
+    const modal = useModal();
+
     const handleNavigate = () => router.visit(`/layanan/${id}`);
 
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
+
         // TODO: implement edit
     };
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // TODO: implement delete
+
+        modal.open({
+            title: `Hapus Layanan`,
+            content: `Apakah anda yakin ingin menghapus layanan ${title}?`,
+            onConfirm: () => {
+                return new Promise((resolve) => {
+                    router.delete(`/layanan/${id}`, {
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            toast('Layanan berhasil dihapus', {
+                                variant: 'success',
+                            });
+                        },
+                        onError: () => {
+                            toast('Layanan gagal dihapus', {
+                                variant: 'error',
+                            });
+                        },
+                        onFinish: () => {
+                            resolve(undefined);
+                        },
+                    });
+                });
+            },
+        });
     };
 
     return (
         <Card
             onClick={handleNavigate}
             className={cn(
-                'group relative flex w-full cursor-pointer flex-row! justify-between border-sidebar-border/70 p-4! py-6! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
+                'group relative flex w-full cursor-pointer flex-row! justify-between overflow-hidden border-sidebar-border/70 p-4! py-6! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}
         >
             <div className="absolute -top-8 -right-8 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
             <div className="absolute bottom-0 left-0 h-1 w-0 flex-none bg-primary transition-all duration-500 ease-out group-hover:w-full" />
 
-            <div className="flex w-full items-start justify-between">
+            <div className="flex w-full items-center justify-between">
                 <CardHeader className="p-0!">
                     <CardTitle className="line-clamp-1 text-base">
                         {title}

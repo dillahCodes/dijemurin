@@ -15,8 +15,12 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useModal } from '@/components/ui/modal';
+import { router } from '@inertiajs/react';
+import { toast } from '@/components/ui/toast';
 
 interface ServiceItemCardProps {
+    serviceId: number;
     id: number;
     name: string;
     description: string;
@@ -26,12 +30,16 @@ interface ServiceItemCardProps {
 }
 
 export function ServiceItemCard({
+    id,
+    serviceId,
     name,
     description,
     price,
     unit,
     time,
 }: ServiceItemCardProps) {
+    const modal = useModal();
+
     const formattedPrice = new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -45,7 +53,31 @@ export function ServiceItemCard({
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // TODO: implement delete
+
+        modal.open({
+            title: `Hapus Price List`,
+            content: `Apakah anda yakin ingin menghapus Price List ${name}?`,
+            onConfirm: () => {
+                return new Promise((resolve) => {
+                    router.delete(`/layanan/${serviceId}/item/${id}`, {
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            toast('Price List berhasil dihapus', {
+                                variant: 'success',
+                            });
+                        },
+                        onError: () => {
+                            toast('Price List gagal dihapus', {
+                                variant: 'error',
+                            });
+                        },
+                        onFinish: () => {
+                            resolve(undefined);
+                        },
+                    });
+                });
+            },
+        });
     };
 
     return (
