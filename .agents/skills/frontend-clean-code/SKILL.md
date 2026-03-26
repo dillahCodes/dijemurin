@@ -82,11 +82,9 @@ Di dalam file komponen fitur, gunakan urutan berikut:
 
 ### Rule 5: Declarative Visibility Control (No Inline Ternary)
 
-Hindari penggunaan operator ternary `{condition ? <A /> : <B />}` atau short-circuit `&&` untuk blok UI yang kompleks atau berbeda kondisi. Hal ini seringkali membuat pohon JSX menjadi berantakan (indentasi terlalu dalam). Gunakan komponen `<Activity />` untuk menjaga struktur JSX tetap datar (_flat_) dan mudah dibaca secara visual.
+Hindari penggunaan operator ternary `{condition ? <A /> : <B />}` atau short-circuit `&&` untuk blok UI yang kompleks atau berbeda kondisi. Gunakan komponen `<Activity />` untuk menjaga struktur JSX tetap datar (_flat_) dan mudah dibaca secara visual.
 
 #### ❌ Bad: Inline Ternary / Nested Conditions
-
-Logika tampilan tercampur dan merusak alur pembacaan struktur DOM/JSX.
 
 ```tsx
 export function ServiceList({ search }: Props) {
@@ -111,8 +109,6 @@ export function ServiceList({ search }: Props) {
 
 #### ✅ Good: Declarative Visibility with `<Activity />`
 
-Struktur jauh lebih bersih dan setiap kondisi didefinisikan secara eksplisit melalui prop `mode`.
-
 ```tsx
 import { Activity } from 'react';
 
@@ -136,4 +132,151 @@ export function ServiceList({ search }: Props) {
         </div>
     );
 }
+```
+
+---
+
+## 📏 Rule 6: File Size Discipline (Max 110 Lines)
+
+Jika satu file `.tsx` melebihi **110 baris**, maka WAJIB dilakukan refactor berbasis SRP **tanpa memecah ke banyak file**. Semua tetap dalam **1 file yang sama**, hanya dipisahkan secara internal.
+
+### ✅ DO (Refactor di DALAM 1 FILE yang sama)
+
+#### 1. Extract Hook
+
+```tsx
+// file: service-item-card.tsx
+
+function useServiceItem() {
+    const handleDelete = () => {
+        /* logic */
+    };
+    return { handleDelete };
+}
+
+export function ServiceItemCard() {
+    const { handleDelete } = useServiceItem();
+    return <button onClick={handleDelete}>Delete</button>;
+}
+```
+
+#### 2. Pecah Sub Component
+
+```tsx
+// file: service-item-card.tsx
+
+function ServiceItemHeader() {
+    return <div>Header</div>;
+}
+
+function ServiceItemFooter() {
+    return <div>Footer</div>;
+}
+
+export function ServiceItemCard() {
+    return (
+        <>
+            <ServiceItemHeader />
+            <ServiceItemFooter />
+        </>
+    );
+}
+```
+
+#### 3. Pisahkan API Function
+
+```tsx
+// file: service-item-card.tsx
+
+async function deleteServiceItem(id: number) {
+    // request logic
+}
+
+function useServiceItem() {
+    const handleDelete = async () => {
+        await deleteServiceItem(1);
+    };
+    return { handleDelete };
+}
+```
+
+---
+
+### ❌ DON'T (Semua Ditumpuk di Satu Component)
+
+#### 1. Semua Logic + API + UI Jadi Satu
+
+```tsx
+export function ServiceItemCard() {
+    const [loading, setLoading] = useState(false);
+
+    const handleDelete = async () => {
+        setLoading(true);
+        await fetch('/api/delete'); // ❌ API inline
+        setLoading(false);
+    };
+
+    return (
+        <div>
+            <div>Header</div>
+            <button onClick={handleDelete}>Delete</button>
+            <div>Footer</div>
+        </div>
+    );
+}
+```
+
+#### 2. JSX Panjang Tanpa Pemecahan
+
+```tsx
+export function ServiceItemCard() {
+    return (
+        <div>
+            <div>Header</div>
+            <div>Content A</div>
+            <div>Content B</div>
+            <div>Footer</div>
+        </div>
+    );
+}
+```
+
+#### 3. Inline Logic di JSX
+
+```tsx
+export function ServiceItemCard({ items }) {
+    return (
+        <ul>
+            {items
+                .filter((x) => x.active)
+                .map((x) => (
+                    <li key={x.id}>{x.name}</li>
+                ))}
+        </ul>
+    );
+}
+```
+
+## 📏 Rule 8: No `any` in Component Props
+
+---
+
+### ❌ DON'T
+
+```tsx
+const Card = ({ name, description, onDelete }: any) => {};
+```
+
+---
+
+### ✅ DO
+
+```tsx
+interface CardProps {
+    name: string;
+    description: string;
+    onDelete: () => void;
+}
+
+const Card = ({ name, description, onDelete }: CardProps) => {};
 ```
