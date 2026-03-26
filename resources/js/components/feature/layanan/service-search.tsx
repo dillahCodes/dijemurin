@@ -28,25 +28,11 @@ export function ServiceSearch({ value }: ServiceSearchProps) {
     };
 
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex max-w-2xl items-center gap-3"
-        >
-            <Input
-                type="text"
-                placeholder="Cari layanan..."
-                name="search"
-                value={search}
-                onChange={handleChange}
-            />
+        <form onSubmit={handleSubmit} className="flex max-w-2xl items-center gap-3">
+            <Input type="text" placeholder="Cari layanan..." name="search" value={search} onChange={handleChange} />
             <div className="flex items-center gap-3">
                 <Activity mode={search ? 'visible' : 'hidden'}>
-                    <Button
-                        variant="ghost"
-                        type="button"
-                        onClick={handleClear}
-                        className="cursor-pointer"
-                    >
+                    <Button variant="ghost" type="button" onClick={handleClear} className="cursor-pointer">
                         <X size={16} />
                     </Button>
                 </Activity>

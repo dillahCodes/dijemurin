@@ -1,9 +1,4 @@
-import {
-    CheckCircle2,
-    DollarSign,
-    LoaderCircle,
-    ShoppingBag,
-} from 'lucide-react';
+import { CheckCircle2, DollarSign, LoaderCircle, ShoppingBag } from 'lucide-react';
 import SummaryCard from '@/components/feature/dashboard/summary-card';
 
 const CARD_DATA = [

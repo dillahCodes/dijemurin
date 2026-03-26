@@ -39,12 +39,7 @@ export default function SummaryCard({
             />
             <CardContent className="relative z-10 flex h-full flex-col justify-between p-6">
                 <div className="flex flex-col gap-4">
-                    <div
-                        className={cn(
-                            'flex size-12 items-center justify-center rounded-xl',
-                            iconBg,
-                        )}
-                    >
+                    <div className={cn('flex size-12 items-center justify-center rounded-xl', iconBg)}>
                         <Icon className={cn('size-6', iconColor)} />
                     </div>
                 </div>

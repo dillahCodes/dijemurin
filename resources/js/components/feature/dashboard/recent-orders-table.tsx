@@ -1,12 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import type { Order } from '@/types/feature/order';
 
@@ -66,10 +59,7 @@ function getStatusBadgeClass(status: Order['status']): string {
  */
 function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
     return (
-        <Badge
-            variant={getStatusBadgeVariant(status)}
-            className={cn('font-medium', getStatusBadgeClass(status))}
-        >
+        <Badge variant={getStatusBadgeVariant(status)} className={cn('font-medium', getStatusBadgeClass(status))}>
             {status}
         </Badge>
     );
@@ -78,22 +68,14 @@ function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
 function OrderTableRow({ order }: OrderTableRowProps) {
     return (
         <TableRow className="group transition-colors">
-            <TableCell className="font-mono text-xs font-semibold text-muted-foreground">
-                {order.id}
-            </TableCell>
+            <TableCell className="font-mono text-xs font-semibold text-muted-foreground">{order.id}</TableCell>
             <TableCell className="font-medium">{order.customer}</TableCell>
-            <TableCell className="text-muted-foreground">
-                {order.service}
-            </TableCell>
+            <TableCell className="text-muted-foreground">{order.service}</TableCell>
             <TableCell>
                 <OrderStatusBadge status={order.status} />
             </TableCell>
-            <TableCell className="text-muted-foreground">
-                {order.date}
-            </TableCell>
-            <TableCell className="text-right font-semibold">
-                {formatCurrency(order.amount)}
-            </TableCell>
+            <TableCell className="text-muted-foreground">{order.date}</TableCell>
+            <TableCell className="text-right font-semibold">{formatCurrency(order.amount)}</TableCell>
         </TableRow>
     );
 }

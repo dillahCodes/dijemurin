@@ -23,11 +23,7 @@ export default function LayananItemsIndex({ service, items, filters }: Props) {
         >
             <Head title={`Price List ${service.name}`} />
             <section className="flex flex-1 flex-col gap-6 p-4 xl:p-6">
-                <ServiceItemsSection
-                    filters={filters}
-                    service={service}
-                    items={items}
-                />
+                <ServiceItemsSection filters={filters} service={service} items={items} />
             </section>
         </AppLayout>
     );

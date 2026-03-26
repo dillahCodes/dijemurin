@@ -11,11 +11,7 @@ interface ServiceItemsSearchProps {
     value: string;
 }
 
-export function ServiceItemsSearch({
-    serviceName,
-    value,
-    serviceId,
-}: ServiceItemsSearchProps) {
+export function ServiceItemsSearch({ serviceName, value, serviceId }: ServiceItemsSearchProps) {
     const [search, setSearch] = useState(value);
     const options = { preserveState: true, replace: true };
 
@@ -35,10 +31,7 @@ export function ServiceItemsSearch({
     };
 
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex max-w-2xl items-center gap-3"
-        >
+        <form onSubmit={handleSubmit} className="flex max-w-2xl items-center gap-3">
             <Input
                 type="text"
                 placeholder={`Cari Price List ${serviceName}...`}
@@ -48,12 +41,7 @@ export function ServiceItemsSearch({
             />
             <div className="flex items-center gap-3">
                 <Activity mode={search ? 'visible' : 'hidden'}>
-                    <Button
-                        variant="ghost"
-                        type="button"
-                        onClick={handleClear}
-                        className="cursor-pointer"
-                    >
+                    <Button variant="ghost" type="button" onClick={handleClear} className="cursor-pointer">
                         <X size={16} />
                     </Button>
                 </Activity>

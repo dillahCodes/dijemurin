@@ -1,28 +1,9 @@
 import { Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useOrderFilters } from '@/hooks/feature/order/use-order-filters';
 import { cn } from '@/lib/utils';
 import type { Order } from '@/types/feature/order';
@@ -139,13 +120,7 @@ const SERVICE_OPTIONS = [
     'Cuci Selimut',
     'Cuci Ekspres',
 ];
-const STATUS_OPTIONS = [
-    'Semua Status',
-    'Selesai',
-    'Diproses',
-    'Pending',
-    'Batal',
-];
+const STATUS_OPTIONS = ['Semua Status', 'Selesai', 'Diproses', 'Pending', 'Batal'];
 
 function formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
@@ -181,14 +156,7 @@ function getStatusBadgeClass(status: Order['status']): string {
 /**
  * 2. Sub-components
  */
-function OrderFilters({
-    search,
-    setSearch,
-    status,
-    setStatus,
-    service,
-    setService,
-}: OrderFiltersProps) {
+function OrderFilters({ search, setSearch, status, setStatus, service, setService }: OrderFiltersProps) {
     return (
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
             <div className="relative flex-1">
@@ -254,36 +222,22 @@ function OrderTable({ orders }: OrderTableProps) {
             </TableHeader>
             <TableBody>
                 {orders.map((order) => (
-                    <TableRow
-                        key={order.id}
-                        className="group transition-colors"
-                    >
+                    <TableRow key={order.id} className="group transition-colors">
                         <TableCell className="font-mono text-xs font-semibold text-muted-foreground">
                             {order.id}
                         </TableCell>
-                        <TableCell className="font-medium">
-                            {order.customer}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                            {order.service}
-                        </TableCell>
+                        <TableCell className="font-medium">{order.customer}</TableCell>
+                        <TableCell className="text-muted-foreground">{order.service}</TableCell>
                         <TableCell>
                             <Badge
                                 variant={getStatusBadgeVariant(order.status)}
-                                className={cn(
-                                    'font-medium',
-                                    getStatusBadgeClass(order.status),
-                                )}
+                                className={cn('font-medium', getStatusBadgeClass(order.status))}
                             >
                                 {order.status}
                             </Badge>
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
-                            {order.date}
-                        </TableCell>
-                        <TableCell className="text-right font-semibold">
-                            {formatCurrency(order.amount)}
-                        </TableCell>
+                        <TableCell className="text-muted-foreground">{order.date}</TableCell>
+                        <TableCell className="text-right font-semibold">{formatCurrency(order.amount)}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -295,26 +249,15 @@ function OrderTable({ orders }: OrderTableProps) {
  * 3. Main Component
  */
 export function OrderDataSection() {
-    const {
-        search,
-        setSearch,
-        status,
-        setStatus,
-        service,
-        setService,
-        filteredOrders,
-    } = useOrderFilters(STATIC_ORDERS);
+    const { search, setSearch, status, setStatus, service, setService, filteredOrders } =
+        useOrderFilters(STATIC_ORDERS);
 
     return (
         <Card className="flex flex-1 flex-col shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between border-b px-6 py-5">
                 <div className="space-y-1">
-                    <CardTitle className="text-lg font-semibold">
-                        Daftar Order
-                    </CardTitle>
-                    <CardDescription>
-                        Kelola dan filter data pesanan laundry Anda.
-                    </CardDescription>
+                    <CardTitle className="text-lg font-semibold">Daftar Order</CardTitle>
+                    <CardDescription>Kelola dan filter data pesanan laundry Anda.</CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-6 p-6">

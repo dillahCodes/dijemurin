@@ -1,12 +1,6 @@
 import { DownloadIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -22,12 +16,9 @@ function LaporanHeader() {
     return (
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-3">
-                <h1 className="text-2xl font-bold tracking-tight">
-                    Laporan & Analitik
-                </h1>
+                <h1 className="text-2xl font-bold tracking-tight">Laporan & Analitik</h1>
                 <p className="text-muted-foreground">
-                    Unduh laporan dan rincian data transaksi berdasarkan rentang
-                    tanggal yang dipilih.
+                    Unduh laporan dan rincian data transaksi berdasarkan rentang tanggal yang dipilih.
                 </p>
             </div>
             <div className="flex flex-wrap items-end gap-3">
@@ -35,21 +26,13 @@ function LaporanHeader() {
                     <Label htmlFor="start-date">
                         Tanggal Mulai <span className="text-red-500">*</span>
                     </Label>
-                    <Input
-                        type="date"
-                        id="start-date"
-                        className="flex items-center justify-center"
-                    />
+                    <Input type="date" id="start-date" className="flex items-center justify-center" />
                 </div>
                 <div className="grid w-full gap-1.5 sm:w-fit">
                     <Label htmlFor="end-date">
                         Tanggal Akhir <span className="text-red-500">*</span>
                     </Label>
-                    <Input
-                        type="date"
-                        id="end-date"
-                        className="flex items-center justify-center"
-                    />
+                    <Input type="date" id="end-date" className="flex items-center justify-center" />
                 </div>
                 <Button variant="default" className="w-full sm:w-fit">
                     Terapkan
@@ -67,10 +50,7 @@ function LaporanCard({ title, description, onDownload }: LaporanCardProps) {
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button
-                    onClick={onDownload}
-                    className="curpo w-full cursor-pointer gap-2 sm:w-auto"
-                >
+                <Button onClick={onDownload} className="curpo w-full cursor-pointer gap-2 sm:w-auto">
                     <DownloadIcon className="h-4 w-4" />
                     Download
                 </Button>

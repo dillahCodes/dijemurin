@@ -6,9 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 
-const BREADCRUMBS: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: dashboard() },
-];
+const BREADCRUMBS: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
 
 export default function Dashboard() {
     return (

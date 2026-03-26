@@ -13,19 +13,11 @@ interface Props {
     filters: { search: string };
 }
 
-export function ServiceItemsSection({
-    service,
-    items,
-    filters = { search: '' },
-}: Props) {
+export function ServiceItemsSection({ service, items, filters = { search: '' } }: Props) {
     return (
         <div className="flex flex-col gap-6">
             <ServiceItemsHeader service={service} />
-            <ServiceItemsSearch
-                value={filters.search}
-                serviceName={service.name}
-                serviceId={service.id}
-            />
+            <ServiceItemsSearch value={filters.search} serviceName={service.name} serviceId={service.id} />
 
             <Activity mode={!items.length ? 'visible' : 'hidden'}>
                 <ServiceItemsEmpty search={filters.search} />

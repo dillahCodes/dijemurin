@@ -8,11 +8,7 @@ export function useSearch(initialValue: string, url: string) {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            router.get(
-                url,
-                { search: search || undefined },
-                { preserveState: true, replace: true },
-            );
+            router.get(url, { search: search || undefined }, { preserveState: true, replace: true });
         }, DEBOUNCEMS);
 
         return () => clearTimeout(timeout);

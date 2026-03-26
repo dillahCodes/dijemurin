@@ -12,22 +12,16 @@ export function ServiceItemsEmpty({ search }: ServiceItemsEmptyProps) {
                 <SearchX className="size-7 text-muted-foreground" />
             </div>
             <div className="flex flex-col gap-1">
-                <p className="text-sm font-medium text-foreground">
-                    Price List tidak ditemukan
-                </p>
+                <p className="text-sm font-medium text-foreground">Price List tidak ditemukan</p>
                 <Activity mode={search ? 'visible' : 'hidden'}>
                     <p className="text-xs text-muted-foreground">
                         Tidak ada Price List yang cocok dengan{' '}
-                        <span className="font-medium text-foreground">
-                            "{search}"
-                        </span>
+                        <span className="font-medium text-foreground">"{search}"</span>
                     </p>
                 </Activity>
 
                 <Activity mode={search ? 'hidden' : 'visible'}>
-                    <p className="text-xs text-muted-foreground">
-                        Belum ada Price List yang tersedia saat ini.
-                    </p>
+                    <p className="text-xs text-muted-foreground">Belum ada Price List yang tersedia saat ini.</p>
                 </Activity>
             </div>
         </div>

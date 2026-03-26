@@ -1,10 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { OrderStatusDataPoint } from '@/components/ui/order-status-pie-chart';
 import { OrderStatusPieChart } from '@/components/ui/order-status-pie-chart';
 import type { RevenueDataPoint } from '@/components/ui/revenue-bar-chart';
@@ -35,12 +29,8 @@ function RevenueChartCard() {
     return (
         <Card className="col-span-1 lg:col-span-4">
             <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold">
-                    Pendapatan 7 Hari Terakhir
-                </CardTitle>
-                <CardDescription>
-                    Total minggu ini mencapai Rp 13.900.000
-                </CardDescription>
+                <CardTitle className="text-base font-semibold">Pendapatan 7 Hari Terakhir</CardTitle>
+                <CardDescription>Total minggu ini mencapai Rp 13.900.000</CardDescription>
             </CardHeader>
             <CardContent>
                 <RevenueBarChart data={REVENUE_DATA} height={280} />
@@ -53,12 +43,8 @@ function OrderStatusChartCard() {
     return (
         <Card className="col-span-1 lg:col-span-3">
             <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold">
-                    Status Pesanan
-                </CardTitle>
-                <CardDescription>
-                    Distribusi status pesanan bulan ini
-                </CardDescription>
+                <CardTitle className="text-base font-semibold">Status Pesanan</CardTitle>
+                <CardDescription>Distribusi status pesanan bulan ini</CardDescription>
             </CardHeader>
             <CardContent>
                 <OrderStatusPieChart data={ORDER_STATUS_DATA} height={200} />

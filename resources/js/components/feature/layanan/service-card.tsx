@@ -3,12 +3,7 @@ import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -68,37 +63,21 @@ interface ServiceHeaderContentProps {
 }
 
 /** 2. Sub-components (UI Units) */
-function ServiceHeaderContent({
-    title,
-    description,
-    onEdit,
-    onDelete,
-}: ServiceHeaderContentProps) {
+function ServiceHeaderContent({ title, description, onEdit, onDelete }: ServiceHeaderContentProps) {
     return (
         <div className="flex w-full items-center justify-between">
             <CardHeader className="p-0!">
-                <CardTitle className="line-clamp-1 text-base">
-                    {title}
-                </CardTitle>
-                <CardDescription className="line-clamp-2 text-xs text-muted-foreground">
-                    {description}
-                </CardDescription>
+                <CardTitle className="line-clamp-1 text-base">{title}</CardTitle>
+                <CardDescription className="line-clamp-2 text-xs text-muted-foreground">{description}</CardDescription>
             </CardHeader>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="z-10 shrink-0 cursor-pointer"
-                    >
+                    <Button variant="ghost" size="icon" className="z-10 shrink-0 cursor-pointer">
                         <EllipsisVertical size={18} />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                        onClick={onEdit}
-                        className="cursor-pointer"
-                    >
+                    <DropdownMenuItem onClick={onEdit} className="cursor-pointer">
                         <Pencil size={14} /> Edit
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -115,8 +94,7 @@ function ServiceHeaderContent({
 
 /** 3. Main Component */
 export function ServiceCard(props: ServiceCardProps) {
-    const { handleNavigate, handleEdit, handleDelete } =
-        useServiceActions(props);
+    const { handleNavigate, handleEdit, handleDelete } = useServiceActions(props);
 
     return (
         <Card
@@ -127,11 +105,7 @@ export function ServiceCard(props: ServiceCardProps) {
         >
             <div className="absolute -top-8 -right-8 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
             <div className="absolute bottom-0 left-0 h-1 w-0 flex-none bg-primary transition-all duration-500 ease-out group-hover:w-full" />
-            <ServiceHeaderContent
-                {...props}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-            />
+            <ServiceHeaderContent {...props} onEdit={handleEdit} onDelete={handleDelete} />
         </Card>
     );
 }

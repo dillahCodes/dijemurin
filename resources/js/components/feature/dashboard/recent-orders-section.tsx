@@ -1,10 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Order } from '@/types/feature/order';
 import { RecentOrdersTable } from './recent-orders-table';
 
@@ -55,12 +49,8 @@ export function RecentOrdersSection() {
     return (
         <Card>
             <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold">
-                    Pesanan Terbaru
-                </CardTitle>
-                <CardDescription>
-                    Daftar pesanan terbaru yang masuk ke sistem
-                </CardDescription>
+                <CardTitle className="text-base font-semibold">Pesanan Terbaru</CardTitle>
+                <CardDescription>Daftar pesanan terbaru yang masuk ke sistem</CardDescription>
             </CardHeader>
             <CardContent>
                 <RecentOrdersTable orders={RECENT_ORDERS} />

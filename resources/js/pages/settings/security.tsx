@@ -42,11 +42,7 @@ export default function Security() {
                         options={{
                             preserveScroll: true,
                         }}
-                        resetOnError={[
-                            'password',
-                            'password_confirmation',
-                            'current_password',
-                        ]}
+                        resetOnError={['password', 'password_confirmation', 'current_password']}
                         resetOnSuccess
                         onError={(errors) => {
                             if (errors.password) {
@@ -62,9 +58,7 @@ export default function Security() {
                         {({ errors, processing, recentlySuccessful }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="current_password">
-                                        Current password
-                                    </Label>
+                                    <Label htmlFor="current_password">Current password</Label>
 
                                     <PasswordInput
                                         id="current_password"
@@ -75,15 +69,11 @@ export default function Security() {
                                         placeholder="Current password"
                                     />
 
-                                    <InputError
-                                        message={errors.current_password}
-                                    />
+                                    <InputError message={errors.current_password} />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password">
-                                        New password
-                                    </Label>
+                                    <Label htmlFor="password">New password</Label>
 
                                     <PasswordInput
                                         id="password"
@@ -98,9 +88,7 @@ export default function Security() {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password_confirmation">
-                                        Confirm password
-                                    </Label>
+                                    <Label htmlFor="password_confirmation">Confirm password</Label>
 
                                     <PasswordInput
                                         id="password_confirmation"
@@ -110,16 +98,11 @@ export default function Security() {
                                         placeholder="Confirm password"
                                     />
 
-                                    <InputError
-                                        message={errors.password_confirmation}
-                                    />
+                                    <InputError message={errors.password_confirmation} />
                                 </div>
 
                                 <div className="flex items-center gap-4">
-                                    <Button
-                                        disabled={processing}
-                                        data-test="update-password-button"
-                                    >
+                                    <Button disabled={processing} data-test="update-password-button">
                                         Save password
                                     </Button>
 
@@ -130,9 +113,7 @@ export default function Security() {
                                         leave="transition ease-in-out"
                                         leaveTo="opacity-0"
                                     >
-                                        <p className="text-sm text-neutral-600">
-                                            Saved
-                                        </p>
+                                        <p className="text-sm text-neutral-600">Saved</p>
                                     </Transition>
                                 </div>
                             </>
