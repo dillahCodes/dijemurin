@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
 import { ServiceAddField } from './service-add';
+import layanan from '@/routes/layanan';
 
 interface ServiceSearchProps {
     value: string;
@@ -20,7 +21,7 @@ export function ServiceSearch({ value }: ServiceSearchProps) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        router.get('/layanan', { search: search || undefined }, options);
+        router.get(layanan.index().url, { search: search || undefined }, options);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +30,7 @@ export function ServiceSearch({ value }: ServiceSearchProps) {
 
     const handleClear = () => {
         setSearch('');
-        router.get('/layanan', {}, options);
+        router.get(layanan.index().url, {}, options);
     };
 
     const handleAddService = () => {

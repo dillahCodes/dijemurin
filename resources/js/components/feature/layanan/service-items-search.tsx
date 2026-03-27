@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
 import { ServiceItemsAdd } from './service-items-add';
+import layanan from '@/routes/layanan';
 
 interface ServiceItemsSearchProps {
     serviceName: string;
@@ -23,7 +24,7 @@ export function ServiceItemsSearch({ serviceName, value, serviceId }: ServiceIte
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const searchParam = { search: search || undefined };
-        router.get(`/layanan/${serviceId}`, searchParam, options);
+        router.get(layanan.show(serviceId).url, searchParam, options);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +33,7 @@ export function ServiceItemsSearch({ serviceName, value, serviceId }: ServiceIte
 
     const handleClear = () => {
         setSearch('');
-        router.get(`/layanan/${serviceId}`, {}, options);
+        router.get(layanan.show(serviceId).url, {}, options);
     };
 
     const handleAddServiceItem = () => {
