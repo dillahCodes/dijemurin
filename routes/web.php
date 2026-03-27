@@ -14,10 +14,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('order', 'order/order')->name('order');
     Route::inertia('laporan', 'laporan/laporan')->name('laporan');
 
-    Route::get('layanan', [ServiceController::class, 'index'])->name('layanan.index');
-    Route::get('layanan/{service}', [ServiceController::class, 'show'])->name('layanan.show');
-    Route::delete('layanan/{service}', [ServiceController::class, 'destroy'])->name('layanan.destroy');
-    Route::delete('layanan/{service}/item/{serviceItem}', [ServiceItemController::class, 'destroy'])->name('layanan.item.destroy');
+    Route::prefix('layanan')->name('layanan.')->group(function () {
+        Route::get('/', [ServiceController::class, 'index'])->name('index');
+        Route::post('/', [ServiceController::class, 'store'])->name('store');
+        Route::get('/{service}', [ServiceController::class, 'show'])->name('show');
+        Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('destroy');
+
+        Route::post('/{service}/items', [ServiceItemController::class, 'store'])->name('items.store');
+        Route::delete('/{service}/items/{serviceItem}', [ServiceItemController::class, 'destroy'])->name('items.destroy');
+    });
 });
 
 require __DIR__.'/settings.php';

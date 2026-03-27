@@ -11,6 +11,7 @@ import { useModal } from '@/components/ui/modal';
 import { formatPrice } from '@/helper/formatted-price';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import layanan from '@/routes/layanan';
 
 interface ServiceItemCardProps {
     serviceId: number;
@@ -43,11 +44,11 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
 ];
 
 /** 1. Internal Hook (Logic) */
-function useServiceItem({ id, serviceId, name, price }: Partial<ServiceItemCardProps>) {
+function useServiceItem({ id, serviceId, name, price }: ServiceItemCardProps) {
     const isMobile = useIsMobile();
     const drawer = useDrawer();
     const modal = useModal();
-    const formattedPrice = formatPrice(price as number);
+    const formattedPrice = formatPrice(price);
 
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -57,29 +58,36 @@ function useServiceItem({ id, serviceId, name, price }: Partial<ServiceItemCardP
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
         modal.open({
+            id: 'modal-confirm-delete-service-item',
             title: `Hapus Price List`,
             content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus Price List {name}?</div>,
             onConfirm: () =>
                 new Promise((resolve) => {
-                    router.delete(`/layanan/${serviceId}/item/${id}`, {
+                    router.delete(layanan.items.destroy({ service: serviceId, serviceItem: id }).url, {
                         preserveScroll: true,
                         onSuccess: () => {
                             toast.success('Price List berhasil dihapus', {
                                 position: 'top-center',
                             });
 
-                            if (isMobile) drawer.close('service-item-drawer');
+                            if (isMobile) {
+drawer.close('service-item-drawer');
+}
                         },
                         onError: () => {
                             toast.error('Price List gagal dihapus', {
                                 position: 'top-center',
                             });
 
-                            if (isMobile) drawer.close('service-item-drawer');
+                            if (isMobile) {
+drawer.close('service-item-drawer');
+}
                         },
                         onFinish: () => resolve(undefined),
                     });
                 }),
+            cancelContent: 'Batal',
+            confirmContent: 'Hapus',
         });
     };
 

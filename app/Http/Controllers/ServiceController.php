@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\service\ServiceStoreRequest;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,5 +38,14 @@ class ServiceController extends Controller
         $service->delete();
 
         return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil dihapus']);
+    }
+
+    public function store(ServiceStoreRequest $request)
+    {
+        $validate = $request->validated();
+
+        Service::create($validate);
+
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil ditambahkan']);
     }
 }

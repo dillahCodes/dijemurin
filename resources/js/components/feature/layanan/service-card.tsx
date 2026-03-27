@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useModal } from '@/components/ui/modal';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import layanan from '@/routes/layanan';
 
 interface ServiceCardProps {
     id: number;
@@ -53,29 +54,36 @@ function useServiceActions({ id, title }: Partial<ServiceCardProps>) {
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
         modal.open({
+            id: 'modal-confirm-delete-service',
             title: `Hapus Layanan`,
             content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus layanan {title}?</div>,
             onConfirm: () =>
                 new Promise((resolve) => {
-                    router.delete(`/layanan/${id}`, {
+                    router.delete(layanan.destroy({ id: id as number }).url, {
                         preserveScroll: true,
                         onSuccess: () => {
                             toast.success('Layanan berhasil dihapus', {
                                 position: 'top-center',
                             });
 
-                            if (isMobile) drawer.close('service-drawer');
+                            if (isMobile) {
+drawer.close('service-drawer');
+}
                         },
                         onError: () => {
                             toast.error('Layanan gagal dihapus', {
                                 position: 'top-center',
                             });
 
-                            if (isMobile) drawer.close('service-drawer');
+                            if (isMobile) {
+drawer.close('service-drawer');
+}
                         },
                         onFinish: () => resolve(undefined),
                     });
                 }),
+            cancelContent: 'Batal',
+            confirmContent: 'Hapus',
         });
     };
 

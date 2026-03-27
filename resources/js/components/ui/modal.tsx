@@ -1,17 +1,23 @@
+"use client";
+
 import {
   createContext,
   useContext,
-  useRef,
   useState,
-  useImperativeHandle,
-  forwardRef,
+  useCallback,
+  useEffect,
   type ReactNode,
-  Activity,
 } from "react";
 import { Button } from "./button";
 
+/* =======================
+   TYPES
+======================= */
+
 type ModalOptions = {
+  id: string | number;
   title?: string;
+  description?: string;
   content?: ReactNode;
   withConfirmButton?: boolean;
   confirmContent?: ReactNode;
@@ -19,129 +25,225 @@ type ModalOptions = {
   withCancelButton?: boolean;
   cancelContent?: ReactNode;
   onCancel?: () => void;
-  wraperClassName?: string;
+  wrapperClassName?: string;
 };
 
-type ModalController = {
-  open: (options?: ModalOptions) => void;
-  close: () => void;
+type ModalState = ModalOptions & {
+  isClosing: boolean;
 };
 
-type ModalHandle = {
-  open: (options?: ModalOptions) => void;
-  close: () => void;
-};
+interface ModalController {
+  open: (options: ModalOptions) => void;
+  close: (id: string | number) => void;
+  closeAll: () => void;
+}
+
+/* =======================
+   CONTEXT
+======================= */
 
 const ModalContext = createContext<ModalController | null>(null);
 
-export function ModalProvider({ children }: { children: ReactNode }) {
-  const modalRef = useRef<ModalHandle | null>(null);
+export function useModal(): ModalController {
+  const context = useContext(ModalContext);
+  if (!context) throw new Error("useModal must be used inside ModalProvider");
+  return context;
+}
 
-  const controller: ModalController = {
-    open: (options) => modalRef.current?.open(options),
-    close: () => modalRef.current?.close(),
-  };
+/* =======================
+   DEFAULT OPTIONS
+======================= */
+
+const DEFAULT_MODAL_OPTIONS: Partial<ModalOptions> = {
+  withCancelButton: true,
+  withConfirmButton: true,
+  confirmContent: "Confirm",
+  cancelContent: "Cancel",
+};
+
+/* =======================
+   PROVIDER
+======================= */
+
+export function ModalProvider({ children }: { children: ReactNode }) {
+  const [modalStack, setModalStack] = useState<ModalState[]>([]);
+
+  const open = useCallback((options: ModalOptions) => {
+    setModalStack((currentStack) => {
+      const stackWithoutSameId = currentStack.filter(
+        (modalItem) => modalItem.id !== options.id
+      );
+
+      return [
+        ...stackWithoutSameId,
+        {
+          ...DEFAULT_MODAL_OPTIONS,
+          ...options,
+          isClosing: false,
+        },
+      ];
+    });
+
+    document.body.classList.add("overflow-hidden");
+  }, []);
+
+  const close = useCallback((id: string | number) => {
+    setModalStack((currentStack) =>
+      currentStack.map((modalItem) =>
+        modalItem.id === id
+          ? { ...modalItem, isClosing: true }
+          : modalItem
+      )
+    );
+  }, []);
+
+  const closeAll = useCallback(() => {
+    setModalStack((currentStack) =>
+      currentStack.map((modalItem) => ({
+        ...modalItem,
+        isClosing: true,
+      }))
+    );
+  }, []);
+
+  const removeModalFromStack = useCallback((id: string | number) => {
+    setModalStack((currentStack) => {
+      const remainingModals = currentStack.filter(
+        (modalItem) => modalItem.id !== id
+      );
+
+      if (remainingModals.length === 0) {
+        document.body.classList.remove("overflow-hidden");
+      }
+
+      return remainingModals;
+    });
+  }, []);
 
   return (
-    <ModalContext.Provider value={controller}>
+    <ModalContext.Provider value={{ open, close, closeAll }}>
       {children}
-      <Modal ref={modalRef} />
+
+      {modalStack.map((modalItem, index) => (
+        <ModalInstance
+          key={modalItem.id}
+          modalItem={modalItem}
+          closeModal={close}
+          removeModal={removeModalFromStack}
+          zIndex={1000 + index}
+        />
+      ))}
     </ModalContext.Provider>
   );
 }
 
-export function useModal(): ModalController {
-  const ctx = useContext(ModalContext);
-  if (!ctx) throw new Error("useModal must be used inside ModalProvider");
-  return ctx;
+/* =======================
+   MODAL INSTANCE
+======================= */
+
+interface ModalInstanceProps {
+  modalItem: ModalState;
+  closeModal: (id: string | number) => void;
+  removeModal: (id: string | number) => void;
+  zIndex: number;
 }
 
-const DEFAULT_OPTIONS: ModalOptions = {
-  content: null,
-  confirmContent: "Confirm",
-  cancelContent: "Cancel",
-  withCancelButton: true,
-  withConfirmButton: true,
-};
+function ModalInstance({
+  modalItem,
+  closeModal,
+  removeModal,
+  zIndex,
+}: ModalInstanceProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-const Modal = forwardRef<ModalHandle>(function Modal(_, ref) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState<ModalOptions>(DEFAULT_OPTIONS);
+  useEffect(() => {
+    if (!modalItem.isClosing) {
+      const animationFrame = requestAnimationFrame(() =>
+        setIsVisible(true)
+      );
+      return () => cancelAnimationFrame(animationFrame);
+    }
 
-  const modalController = (): ModalController => ({
-    open: (newOptions) => {
-      setOptions((prev) => ({ ...DEFAULT_OPTIONS, ...prev, ...newOptions }));
-      setIsOpen(true);
-      document.body.classList.add("overflow-hidden");
-    },
-    close: () => {
-      setIsOpen(false);
-      document.body.classList.remove("overflow-hidden");
-    },
-  });
+    setIsVisible(false);
 
-  useImperativeHandle(ref, modalController, []);
+    const timeout = setTimeout(() => {
+      modalItem.onCancel?.();
+      removeModal(modalItem.id);
+    }, 100);
 
-  const modalButtonsHandler = {
-    confirm: async () => {
-      if (isLoading) return;
-      setIsLoading(true);
+    return () => clearTimeout(timeout);
+  }, [modalItem, removeModal]);
 
-      try {
-        await options.onConfirm?.();
-        setIsOpen(false);
-      } finally {
-        setIsLoading(false);
-        document.body.classList.remove("overflow-hidden");
-      }
-    },
+  const handleConfirmClick = async () => {
+    if (isProcessing) return;
 
-    cancel: () => {
-      if (isLoading) return;
+    setIsProcessing(true);
 
-      options.onCancel?.();
-      setIsOpen(false);
-      document.body.classList.remove("overflow-hidden");
-    },
+    try {
+      await modalItem.onConfirm?.();
+      closeModal(modalItem.id);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  if (!isOpen) return null;
+  const handleCancelClick = () => {
+    if (isProcessing) return;
+
+    modalItem.onCancel?.();
+    closeModal(modalItem.id);
+  };
 
   return (
     <section
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/50"
-      onClick={modalButtonsHandler.cancel}
+      style={{ zIndex }}
+      className={`fixed inset-0 flex items-center justify-center transition ${
+        isVisible ? "bg-black/50" : "bg-black/0 pointer-events-none"
+      }`}
+      onClick={handleCancelClick}
     >
       <div
-        className={`w-full max-w-md bg-white m-3 dark:bg-black p-6 z-40 rounded-xl ${options.wraperClassName}`}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
+        className={`w-full max-w-md m-3 rounded-xl bg-white p-6 dark:bg-black ${
+          modalItem.wrapperClassName ?? ""
+        }`}
       >
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{options.title}</h2>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">{modalItem.title}</h2>
+          <p className="text-sm">{modalItem.description}</p>
         </div>
 
         {/* Content */}
-        <div className="text-sm">{options.content}</div>
+        <div>{modalItem.content}</div>
 
         {/* Footer */}
-        <Activity name="buttons" mode={!options.withCancelButton && !options.withConfirmButton ? "hidden" : "visible"}>
-          <div className="mt-6 flex justify-end flex-wrap gap-2">
-            <Activity name="cancel button" mode={!options.withCancelButton ? "hidden" : "visible"}>
-              <Button variant="outline" onClick={modalButtonsHandler.cancel} className="flex-1" disabled={isLoading}>
-                {options.cancelContent}
+        {(modalItem.withCancelButton || modalItem.withConfirmButton) && (
+          <div className="mt-6 flex gap-2">
+            {modalItem.withCancelButton && (
+              <Button
+                variant="outline"
+                onClick={handleCancelClick}
+                disabled={isProcessing}
+                className="flex-1"
+              >
+                {modalItem.cancelContent}
               </Button>
-            </Activity>
+            )}
 
-            <Activity name="confirm button" mode={!options.withConfirmButton ? "hidden" : "visible"}>
-              <Button variant="default" onClick={modalButtonsHandler.confirm} className="flex-1" disabled={isLoading}>
-                {isLoading ? "Processing..." : options.confirmContent}
+            {modalItem.withConfirmButton && (
+              <Button
+                onClick={handleConfirmClick}
+                disabled={isProcessing}
+                className="flex-1"
+              >
+                {isProcessing ? "Processing..." : modalItem.confirmContent}
               </Button>
-            </Activity>
+            )}
           </div>
-        </Activity>
+        )}
       </div>
     </section>
   );
-});
+}
