@@ -31,11 +31,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <Heading
-                        variant="small"
-                        title="Profile information"
-                        description="Update your name and email address"
-                    />
+                    <Heading variant="small" title="Profile information" description="Update your name and email address" />
 
                     <Form
                         {...ProfileController.update.form()}

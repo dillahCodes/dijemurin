@@ -110,11 +110,11 @@ const Modal = forwardRef<ModalHandle>(function Modal(_, ref) {
 
   return (
     <section
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/50"
       onClick={modalButtonsHandler.cancel}
     >
       <div
-        className={`w-full max-w-md bg-white dark:bg-black p-6 ${options.wraperClassName}`}
+        className={`w-full max-w-md bg-white m-3 dark:bg-black p-6 z-40 rounded-xl ${options.wraperClassName}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -123,19 +123,19 @@ const Modal = forwardRef<ModalHandle>(function Modal(_, ref) {
         </div>
 
         {/* Content */}
-        <div className="text-sm ">{options.content}</div>
+        <div className="text-sm">{options.content}</div>
 
         {/* Footer */}
         <Activity name="buttons" mode={!options.withCancelButton && !options.withConfirmButton ? "hidden" : "visible"}>
-          <div className="mt-6 flex justify-end gap-2">
+          <div className="mt-6 flex justify-end flex-wrap gap-2">
             <Activity name="cancel button" mode={!options.withCancelButton ? "hidden" : "visible"}>
-              <Button variant="outline" onClick={modalButtonsHandler.cancel} disabled={isLoading}>
+              <Button variant="outline" onClick={modalButtonsHandler.cancel} className="flex-1" disabled={isLoading}>
                 {options.cancelContent}
               </Button>
             </Activity>
 
             <Activity name="confirm button" mode={!options.withConfirmButton ? "hidden" : "visible"}>
-              <Button variant="default" onClick={modalButtonsHandler.confirm} disabled={isLoading}>
+              <Button variant="default" onClick={modalButtonsHandler.confirm} className="flex-1" disabled={isLoading}>
                 {isLoading ? "Processing..." : options.confirmContent}
               </Button>
             </Activity>

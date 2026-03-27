@@ -112,14 +112,7 @@ const STATIC_ORDERS: Order[] = [
     },
 ];
 
-const SERVICE_OPTIONS = [
-    'Semua Layanan',
-    'Cuci Komplit',
-    'Setrika Saja',
-    'Cuci Kering',
-    'Cuci Selimut',
-    'Cuci Ekspres',
-];
+const SERVICE_OPTIONS = ['Semua Layanan', 'Cuci Komplit', 'Setrika Saja', 'Cuci Kering', 'Cuci Selimut', 'Cuci Ekspres'];
 const STATUS_OPTIONS = ['Semua Status', 'Selesai', 'Diproses', 'Pending', 'Batal'];
 
 function formatCurrency(amount: number): string {
@@ -223,9 +216,7 @@ function OrderTable({ orders }: OrderTableProps) {
             <TableBody>
                 {orders.map((order) => (
                     <TableRow key={order.id} className="group transition-colors">
-                        <TableCell className="font-mono text-xs font-semibold text-muted-foreground">
-                            {order.id}
-                        </TableCell>
+                        <TableCell className="font-mono text-xs font-semibold text-muted-foreground">{order.id}</TableCell>
                         <TableCell className="font-medium">{order.customer}</TableCell>
                         <TableCell className="text-muted-foreground">{order.service}</TableCell>
                         <TableCell>
@@ -249,8 +240,7 @@ function OrderTable({ orders }: OrderTableProps) {
  * 3. Main Component
  */
 export function OrderDataSection() {
-    const { search, setSearch, status, setStatus, service, setService, filteredOrders } =
-        useOrderFilters(STATIC_ORDERS);
+    const { search, setSearch, status, setStatus, service, setService, filteredOrders } = useOrderFilters(STATIC_ORDERS);
 
     return (
         <Card className="flex flex-1 flex-col shadow-sm">

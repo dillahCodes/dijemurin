@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import '../css/app.css';
 import { initializeTheme } from '@/hooks/use-appearance';
+import { DrawerProvider } from './components/ui/drawer';
 import { ModalProvider } from './components/ui/modal';
 import { Toaster } from './components/ui/sonner';
 
@@ -20,7 +21,9 @@ createInertiaApp({
             <StrictMode>
                 <TooltipProvider delayDuration={0}>
                     <ModalProvider>
-                        <App {...props} />
+                        <DrawerProvider>
+                            <App {...props} />
+                        </DrawerProvider>
                     </ModalProvider>
                     <Toaster />
                 </TooltipProvider>

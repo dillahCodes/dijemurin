@@ -15,8 +15,7 @@ export function ServiceEmpty({ search }: ServiceEmptyProps) {
                 <p className="text-sm font-medium text-foreground">Layanan tidak ditemukan</p>
                 <Activity mode={search ? 'visible' : 'hidden'}>
                     <p className="text-xs text-muted-foreground">
-                        Tidak ada layanan yang cocok dengan{' '}
-                        <span className="font-medium text-foreground">"{search}"</span>
+                        Tidak ada layanan yang cocok dengan <span className="font-medium text-foreground">"{search}"</span>
                     </p>
                 </Activity>
 
