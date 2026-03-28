@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import { ServiceItemsSection } from '@/components/feature/layanan/service-items-section';
 import AppLayout from '@/layouts/app-layout';
 import type { Service, ServiceItem } from '@/types/feature/layanan';
+import layanan from '@/routes/layanan';
 
 interface Props {
     service: Service;
@@ -14,10 +15,10 @@ export default function LayananItemsIndex({ service, items, filters }: Props) {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Layanan', href: '/layanan' },
+                { title: 'Layanan', href: layanan.index() },
                 {
                     title: `Price List ${service.name}`,
-                    href: `/layanan/${service.id}`,
+                    href: layanan.show(service.id),
                 },
             ]}
         >
