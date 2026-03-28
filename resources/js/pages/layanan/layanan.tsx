@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import { ServiceSection } from '@/components/feature/layanan/service-section';
 import AppLayout from '@/layouts/app-layout';
-import type { Service } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
+import type { Service } from '@/types/feature/layanan';
 
 interface Props {
     services: Service[];

@@ -8,6 +8,7 @@ import { initializeTheme } from '@/hooks/use-appearance';
 import { DrawerProvider } from './components/ui/drawer';
 import { ModalProvider } from './components/ui/modal';
 import { Toaster } from './components/ui/sonner';
+import { SelectedOrderServiceItemsProvider } from './context/selected-order-service-items';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -19,14 +20,16 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <TooltipProvider delayDuration={0}>
-                    <ModalProvider>
-                        <DrawerProvider>
-                            <App {...props} />
-                        </DrawerProvider>
-                    </ModalProvider>
-                    <Toaster />
-                </TooltipProvider>
+                <SelectedOrderServiceItemsProvider>
+                    <TooltipProvider delayDuration={0}>
+                        <ModalProvider>
+                            <DrawerProvider>
+                                <App {...props} />
+                            </DrawerProvider>
+                        </ModalProvider>
+                        <Toaster />
+                    </TooltipProvider>
+                </SelectedOrderServiceItemsProvider>
             </StrictMode>,
         );
     },

@@ -125,7 +125,6 @@ export function ServiceItemsEdit({ service_id, service_item_id, defaultData }: S
                                 setData('price', Number(rawValue));
                                 clearErrors('price');
                             }}
-                            defaultValue={data.price}
                         />
                         <Activity mode={errors.price ? 'visible' : 'hidden'}>
                             <FieldDescription className="text-destructive">{errors.price}</FieldDescription>

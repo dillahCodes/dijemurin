@@ -149,8 +149,10 @@ function ServiceItemHeader({ name, description, onEdit, onDelete }: ServiceItemH
     return (
         <div className="flex items-start justify-between">
             <CardHeader className="p-0!">
-                <CardTitle className="line-clamp-1 text-base">{name}</CardTitle>
-                <CardDescription className="line-clamp-2 text-xs text-muted-foreground">{description}</CardDescription>
+                <CardTitle className="line-clamp-1 text-sm sm:text-base md:text-lg">{name}</CardTitle>
+                <CardDescription className="line-clamp-2 text-xs text-muted-foreground sm:text-sm md:text-base">
+                    {description}
+                </CardDescription>
             </CardHeader>
 
             {/* dekstop dropdown */}

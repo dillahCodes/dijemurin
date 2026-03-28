@@ -1,8 +1,8 @@
 export function ServiceHeader() {
     return (
-        <div className="flex flex-col gap-3">
-            <h1 className="text-2xl font-bold tracking-tight">Daftar Layanan</h1>
-            <p className="text-muted-foreground">Pilih layanan yang ingin Anda pesan.</p>
+        <div className="flex flex-col gap-1">
+            <h1 className="text-lg font-bold tracking-tight sm:text-xl md:text-2xl lg:text-3xl">Daftar Layanan</h1>
+            <p className="text-sm text-muted-foreground sm:text-base md:text-lg">Pilih layanan yang ingin Anda pesan.</p>
         </div>
     );
 }

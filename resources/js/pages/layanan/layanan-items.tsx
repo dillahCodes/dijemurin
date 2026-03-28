@@ -2,8 +2,8 @@ import { Head } from '@inertiajs/react';
 
 import { ServiceItemsSection } from '@/components/feature/layanan/service-items-section';
 import AppLayout from '@/layouts/app-layout';
-import type { Service, ServiceItem } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
+import type { Service, ServiceItem } from '@/types/feature/layanan';
 
 interface Props {
     service: Service;

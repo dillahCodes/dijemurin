@@ -143,8 +143,10 @@ function ServiceHeaderContent({ title, description, onEdit, onDelete }: ServiceH
     return (
         <div className="flex w-full items-center justify-between">
             <CardHeader className="p-0!">
-                <CardTitle className="line-clamp-1 text-base">{title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-xs text-muted-foreground">{description}</CardDescription>
+                <CardTitle className="line-clamp-1 text-sm sm:text-base md:text-lg">{title}</CardTitle>
+                <CardDescription className="line-clamp-2 text-xs text-muted-foreground sm:text-sm md:text-base">
+                    {description}
+                </CardDescription>
             </CardHeader>
 
             {/* dekstop dropdown menu, mobile bottom sheet */}
