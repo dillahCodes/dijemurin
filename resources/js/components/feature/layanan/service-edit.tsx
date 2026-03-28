@@ -1,11 +1,11 @@
+import { useForm } from '@inertiajs/react';
+import { Activity } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
 import layanan from '@/routes/layanan';
-import { useForm } from '@inertiajs/react';
-import { Activity } from 'react';
-import { toast } from 'sonner';
 
 interface ServiceEditProps {
     serviceId: number;

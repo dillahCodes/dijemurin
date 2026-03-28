@@ -30,7 +30,7 @@ class ServiceItemUpdateRequest extends FormRequest
             'time' => ['sometimes', 'required', 'string', 'max:255'],
             'price' => ['sometimes', 'required', 'numeric', 'min:1'],
             'unit' => ['sometimes', 'required', 'string', 'max:255'],
-            'service_id' => ['sometimes', 'required', 'integer', Rule::exists('services','id')],
+            'service_id' => ['sometimes', 'required', 'integer', Rule::exists('services', 'id')],
         ];
     }
 

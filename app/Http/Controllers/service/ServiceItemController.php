@@ -26,7 +26,8 @@ class ServiceItemController extends Controller
         return redirect()->route('layanan.show', $validate['service_id'])->with(['success' => 'Price List berhasil ditambahkan']);
     }
 
-    public function update(ServiceItemUpdateRequest $request, Service $service, ServiceItem $serviceItem) {
+    public function update(ServiceItemUpdateRequest $request, Service $service, ServiceItem $serviceItem)
+    {
         $validate = $request->validated();
 
         $serviceItem->update($validate);
