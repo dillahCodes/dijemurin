@@ -5,8 +5,9 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/com
 import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
 import layanan from '@/routes/layanan';
+import { toast } from 'sonner';
 
-export function ServiceAddField() {
+export function ServiceAdd() {
     const modal = useModal();
     const { setData, post, processing, errors, clearErrors } = useForm({ name: '', description: '' });
 
@@ -22,6 +23,10 @@ export function ServiceAddField() {
             onSuccess: () => {
                 clearErrors();
                 modal.close('modal-add-service');
+                toast.success('Layanan berhasil ditambahkan', { position: 'top-center' });
+            },
+            onError: () => {
+                toast.error('Gagal menambahkan layanan', { position: 'top-center' });
             },
         });
     };

@@ -12,6 +12,7 @@ import { formatPrice } from '@/helper/formatted-price';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import layanan from '@/routes/layanan';
+import { ServiceItemsEdit } from './service-items-edit';
 
 interface ServiceItemCardProps {
     serviceId: number;
@@ -44,7 +45,10 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
 ];
 
 /** 1. Internal Hook (Logic) */
-function useServiceItem({ id, serviceId, name, price }: ServiceItemCardProps) {
+function useServiceItem(props: ServiceItemCardProps) {
+    const { id, serviceId, name, price, description, time, unit } = props;
+    const defaultData = { name, description, time, price, unit };
+
     const isMobile = useIsMobile();
     const drawer = useDrawer();
     const modal = useModal();
@@ -52,7 +56,15 @@ function useServiceItem({ id, serviceId, name, price }: ServiceItemCardProps) {
 
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // TODO: implement edit
+
+        modal.open({
+            id: 'modal-edit-service-item',
+            title: 'Edit Price List',
+            description: 'Isi form untuk mengedit price list.',
+            withCancelButton: false,
+            withConfirmButton: false,
+            content: <ServiceItemsEdit service_id={serviceId} service_item_id={id} defaultData={defaultData} />,
+        });
     };
 
     const handleDelete = (e: React.MouseEvent) => {
@@ -63,7 +75,7 @@ function useServiceItem({ id, serviceId, name, price }: ServiceItemCardProps) {
             content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus Price List {name}?</div>,
             onConfirm: () =>
                 new Promise((resolve) => {
-                    router.delete(layanan.items.destroy({ service: serviceId, serviceItem: id }).url, {
+                    router.delete(layanan.items.destroy([serviceId, id]).url, {
                         preserveScroll: true,
                         onSuccess: () => {
                             toast.success('Price List berhasil dihapus', {
@@ -71,8 +83,8 @@ function useServiceItem({ id, serviceId, name, price }: ServiceItemCardProps) {
                             });
 
                             if (isMobile) {
-drawer.close('service-item-drawer');
-}
+                                drawer.close('service-item-drawer');
+                            }
                         },
                         onError: () => {
                             toast.error('Price List gagal dihapus', {
@@ -80,8 +92,8 @@ drawer.close('service-item-drawer');
                             });
 
                             if (isMobile) {
-drawer.close('service-item-drawer');
-}
+                                drawer.close('service-item-drawer');
+                            }
                         },
                         onFinish: () => resolve(undefined),
                     });

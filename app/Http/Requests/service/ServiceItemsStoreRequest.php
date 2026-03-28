@@ -28,7 +28,7 @@ class ServiceItemsStoreRequest extends FormRequest
             'time' => 'required|string|max:255',
             'price' => 'required|numeric|min:1',
             'unit' => 'required|string|max:255',
-            'service_id' => 'required|integer',
+            'service_id' => 'required|integer|exists:services,id',
         ];
     }
 

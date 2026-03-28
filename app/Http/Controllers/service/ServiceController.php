@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\service;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\service\ServiceStoreRequest;
+use App\Http\Requests\service\ServiceUpdateRequest;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,5 +49,14 @@ class ServiceController extends Controller
         Service::create($validate);
 
         return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil ditambahkan']);
+    }
+
+    public function update(ServiceUpdateRequest $request, Service $service)
+    {
+        $validate = $request->validated();
+
+        $service->update($validate);
+
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil diupdate']);
     }
 }

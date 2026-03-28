@@ -5,7 +5,7 @@ import { Activity, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
-import { ServiceAddField } from './service-add';
+import { ServiceAdd } from './service-add';
 import layanan from '@/routes/layanan';
 
 interface ServiceSearchProps {
@@ -40,7 +40,7 @@ export function ServiceSearch({ value }: ServiceSearchProps) {
             description: 'Isi form untuk menambah layanan.',
             withCancelButton: false,
             withConfirmButton: false,
-            content: <ServiceAddField />,
+            content: <ServiceAdd />,
         });
     };
 

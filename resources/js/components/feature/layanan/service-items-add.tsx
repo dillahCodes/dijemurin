@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useModal } from '@/components/ui/modal';
 import { formatPrice } from '@/helper/formatted-price';
 import layanan from '@/routes/layanan';
+import { toast } from 'sonner';
 
 interface ServiceItemsAddProps {
     service_id: number;
@@ -30,10 +31,14 @@ export function ServiceItemsAdd({ service_id }: ServiceItemsAddProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        post(layanan.items.store(service_id).url, {
+        post(layanan.items.store([service_id]).url, {
             onSuccess: () => {
                 clearErrors();
                 modal.close('modal-add-price-list');
+                toast.success('Price list berhasil ditambahkan', { position: 'top-center' });
+            },
+            onError: () => {
+                toast.error('Gagal menambahkan price list', { position: 'top-center' });
             },
         });
     };
@@ -54,7 +59,7 @@ export function ServiceItemsAdd({ service_id }: ServiceItemsAddProps) {
                             }}
                             id="name"
                             type="text"
-                            placeholder="Contoh: Laundry Karpet"
+                            placeholder="Contoh: Laundry 4 Jam Selesai"
                         />
                         <Activity mode={errors.name ? 'visible' : 'hidden'}>
                             <FieldDescription className="text-destructive">{errors.name}</FieldDescription>
@@ -73,7 +78,7 @@ export function ServiceItemsAdd({ service_id }: ServiceItemsAddProps) {
                             }}
                             id="description"
                             type="text"
-                            placeholder="Contoh: Jasa cuci karpet"
+                            placeholder="Contoh: Cuci Kering + Setrika + Packing"
                         />
                         <Activity mode={errors.description ? 'visible' : 'hidden'}>
                             <FieldDescription className="text-destructive">{errors.description}</FieldDescription>

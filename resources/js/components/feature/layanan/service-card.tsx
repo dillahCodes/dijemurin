@@ -11,6 +11,7 @@ import { useModal } from '@/components/ui/modal';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import layanan from '@/routes/layanan';
+import { ServiceEdit } from './service-edit';
 
 interface ServiceCardProps {
     id: number;
@@ -39,7 +40,7 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
 ];
 
 /** 1. Internal Hook (Logic) */
-function useServiceActions({ id, title }: Partial<ServiceCardProps>) {
+function useServiceActions({ id, title, description }: ServiceCardProps) {
     const isMobile = useIsMobile();
     const modal = useModal();
     const drawer = useDrawer();
@@ -48,7 +49,15 @@ function useServiceActions({ id, title }: Partial<ServiceCardProps>) {
 
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // TODO: implement edit
+
+        modal.open({
+            id: 'modal-edit-service',
+            title: 'Edit Layanan',
+            description: 'Isi form untuk mengedit layanan.',
+            withCancelButton: false,
+            withConfirmButton: false,
+            content: <ServiceEdit serviceId={id} description={description} title={title} />,
+        });
     };
 
     const handleDelete = (e: React.MouseEvent) => {
@@ -67,8 +76,8 @@ function useServiceActions({ id, title }: Partial<ServiceCardProps>) {
                             });
 
                             if (isMobile) {
-drawer.close('service-drawer');
-}
+                                drawer.close('service-drawer');
+                            }
                         },
                         onError: () => {
                             toast.error('Layanan gagal dihapus', {
@@ -76,8 +85,8 @@ drawer.close('service-drawer');
                             });
 
                             if (isMobile) {
-drawer.close('service-drawer');
-}
+                                drawer.close('service-drawer');
+                            }
                         },
                         onFinish: () => resolve(undefined),
                     });
