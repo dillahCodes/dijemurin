@@ -1,133 +1,210 @@
 # Skill: Frontend Clean Code
 
-**Name:** `frontend-clean-code`  
-**Description:** Menegakkan struktur modular berbasis fitur. Memisahkan UI, Logika (Hooks), dan Definisi (Types) ke dalam direktori fitur masing-masing untuk mencapai SRP dan DRY yang maksimal.
+**Name:** `frontend-clean-code`
+**Description:** Menegakkan struktur modular berbasis fitur. Memisahkan UI, Logika (Hooks), dan Definisi (Types) secara ketat ke dalam direktori fitur masing-masing untuk mencapai SRP (Single Responsibility Principle) dan DRY yang maksimal.
 
 ---
-
-## 🎯 Core Principle
-
-**Page is a Canvas, Feature is the Content.** Halaman (Page) hanya bertugas menyusun komponen-komponen fitur. Detail implementasi (UI, Logic, Types) harus dibungkus di dalam folder `features/`.
-
----
-
-## 🏗️ Architecture Rules
 
 ### Rule 1: Minimalist Page Component
 
-File di folder `pages/` harus sangat bersih.
+Halaman (file di dalam folder `pages/`) hanya bertugas sebagai kanvas untuk menyusun komponen-komponen fitur. File page harus sangat bersih dari implementasi detail.
 
-- **Tugas:** Impor komponen dari folder `features` dan atur tata letaknya.
-- **Dilarang:** Mengelola state kompleks, mendefinisikan tipe data, atau menulis logika bisnis.
+**❌ DON'T: Menulis Logika di Page**
+Jangan mengelola _state_ kompleks, mendefinisikan tipe data, atau menulis logika bisnis dan _fetching_ langsung di dalam file _page_ (halaman utama).
 
-### Rule 2: Feature-Based Organization
+```tsx
+// ❌ DON'T: src/pages/dashboard.tsx
+import { useState, useEffect } from 'react';
 
-Setiap modul besar harus memiliki folder sendiri di bawah kategori `features`.
+export default function DashboardPage() {
+    const [data, setData] = useState([]);
 
-**Struktur Folder Standar:**
+    useEffect(() => {
+        fetch('/api/dashboard')
+            .then((res) => res.json())
+            .then(setData);
+    }, []);
 
-```text
-src/
-├── pages/
-│   └── dashboard.tsx               <-- Entry point (Clean)
-├── components/feature/order/
-│   ├── order-table.tsx             <-- UI Components
-│   └── order-filters.tsx
-├── hooks/feature/order/
-│   └── use-order-filters.ts        <-- Business Logic
-└── types/feature/order/
-    └── index.ts                    <-- Feature Types
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            {data.map((item) => (
+                <div key={item.id}>{item.name}</div>
+            ))}
+        </div>
+    );
+}
+```
+
+**✅ DO: Impor dan Susun Komponen**
+Impor komponen UI murni dari folder `features` dan atur tata letaknya secara deklaratif tanpa menyimpan _state_ bisnis.
+
+```tsx
+// ✅ DO: src/pages/dashboard.tsx
+import { DashboardHeader } from '@/components/feature/dashboard/dashboard-header';
+import { DashboardStats } from '@/components/feature/dashboard/dashboard-stats';
+
+export default function DashboardPage() {
+    return (
+        <main className="flex flex-col gap-4">
+            <DashboardHeader />
+            <DashboardStats />
+        </main>
+    );
+}
 ```
 
 ---
 
-## 🛠️ Implementation Rules
+### Rule 2: Feature-Based Organization
 
-### Rule 3: Logic Extraction to Feature Hooks
+Setiap modul besar harus memiliki folder sendiri di bawah kategori fitur. Struktur proyek harus dikelompokkan berdasarkan area fungsionalitas (fitur), bukan berdasarkan tipe file secara mentah.
 
-Dilarang keras menulis `useMemo`, `useCallback`, atau `useState` yang berhubungan dengan data fitur langsung di dalam komponen UI jika logikanya lebih dari 3 baris. Ekstrak ke `hooks/feature/<feature-name>/`.
+**❌ DON'T: Mencampur File Berdasarkan Tipe (Flat Structure)**
+Jangan meletakkan semua komponen dari berbagai fitur di satu folder `components/` yang datar, atau menumpuk semua hook di satu folder `hooks/` tanpa pengelompokan.
 
-#### ❌ Bad: Logika bercampur di UI
+```text
+// ❌ DON'T: Struktur yang berantakan
+src/
+├── components/
+│   ├── order-table.tsx
+│   ├── user-profile.tsx
+│   └── product-card.tsx
+├── hooks/
+│   ├── use-orders.ts
+│   └── use-users.ts
+```
+
+**✅ DO: Kelompokkan Berdasarkan Fitur**
+Pisahkan komponen UI, hook logika, dan tipe data ke dalam direktori spesifik yang diberi nama sesuai dengan nama fiturnya.
+
+```text
+// ✅ DO: Struktur modular berbasis fitur
+src/
+├── components/feature/order/
+│   ├── order-table.tsx               <-- STRICTLY UI Components
+│   └── order-filters.tsx
+├── hooks/feature/order/
+│   └── use-order-filters.ts          <-- Business Logic & API Calls
+└── types/feature/order/
+    └── index.ts                      <-- Feature Types
+```
+
+---
+
+### Rule 3: Strict Logic Extraction to Feature Hooks
+
+Semua logika fitur (`useMemo`, `useCallback`, `useState`, atau fungsi API) wajib diekstrak ke direktori `hooks/feature/<nama-fitur>/`. Komponen UI hanya bertugas menerima data dan _handler_.
+
+**❌ DON'T: Logika dan API Bercampur di File UI**
+Dilarang keras mendefinisikan _state_ atau menjalankan pemanggilan fungsi _fetch_/_API_ di dalam file komponen presentasional (`.tsx`).
 
 ```tsx
-// src/components/feature/order/order-list.tsx
+// ❌ DON'T: src/components/feature/order/order-list.tsx
+import { useState } from 'react';
+
 export function OrderList() {
-    const [search, setSearch] = useState(''); // Logic dalam UI
-    const filtered = orders.filter(...);      // Logic dalam UI
+    const [search, setSearch] = useState('');
+
+    const handleDelete = async (id: string) => {
+        await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+    };
+
     return <div>...</div>;
 }
 ```
 
-#### ✅ Good: Logika di-import dari Feature Hook
+**✅ DO: Logika Murni Di-import dari Feature Hook**
+Pastikan UI murni hanya mengonsumsi data dan aksi (fungsi) yang di-import dari _hook_ fitur khusus.
 
 ```tsx
-// src/components/feature/order/order-list.tsx
-import { useOrderFilters } from '@/hooks/feature/order/use-order-filters';
+// ✅ DO: src/components/feature/order/order-list.tsx
+import { useOrderList } from '@/hooks/feature/order/use-order-list';
 
 export function OrderList() {
-    const { search, setSearch, filteredOrders } = useOrderFilters();
-    return <Table data={filteredOrders} />;
+    const { search, setSearch, handleDelete, filteredOrders } = useOrderList();
+
+    return <Table data={filteredOrders} onDelete={handleDelete} />;
 }
 ```
 
+---
+
 ### Rule 4: Component Internal Order
 
-Di dalam file komponen fitur, gunakan urutan berikut:
+Menjaga urutan deklarasi di dalam file komponen UI agar terstandarisasi, konsisten secara internal, dan mudah dibaca oleh seluruh anggota tim.
 
-1. **Local Types** (Hanya yang tidak dipakai di file lain).
-2. **Sub-components** (Komponen kecil pendukung fitur tersebut).
-3. **Main Component** (Komponen yang di-export).
+**❌ DON'T: Urutan Deklarasi Berantakan**
+Jangan menempatkan tipe data di bawah komponen utama, atau menyisipkan sub-komponen secara acak di bagian bawah setelah komponen utama diekspor.
+
+```tsx
+// ❌ DON'T: Urutan acak
+export function MainComponent() {
+    return <SubComponent data={data} />;
+}
+
+interface LocalProps {
+    id: string;
+}
+
+function SubComponent({ data }: { data: any }) {
+    return <div>{data}</div>;
+}
+```
+
+**✅ DO: Urutan Standar (Types -> Sub-components -> Main)**
+Tulis _Local Types_ di bagian paling atas, diikuti _Sub-components_ (komponen UI pendukung murni visual), lalu _Main Component_ yang di-export di posisi terbawah.
+
+```tsx
+// ✅ DO: Urutan terstruktur
+// 1. Local Types
+interface ItemProps {
+    title: string;
+}
+
+// 2. Sub-components
+function ItemHeader({ title }: ItemProps) {
+    return <h2>{title}</h2>;
+}
+
+// 3. Main Component
+export function ItemList() {
+    return <ItemHeader title="Daftar Item" />;
+}
+```
 
 ---
 
 ### Rule 5: Declarative Visibility Control (No Inline Ternary)
 
-Hindari penggunaan operator ternary `{condition ? <A /> : <B />}` atau short-circuit `&&` untuk blok UI yang kompleks atau berbeda kondisi. Gunakan komponen `<Activity />` untuk menjaga struktur JSX tetap datar (_flat_) dan mudah dibaca secara visual.
+Menghindari percabangan kondisi UI yang kompleks di dalam JSX. Gunakan pendekatan deklaratif agar kode JSX tetap datar (flat) dan mudah di-scan secara visual.
 
-#### ❌ Bad: Inline Ternary / Nested Conditions
+**❌ DON'T: Inline Ternary / Nested Conditions**
+Jangan menggunakan operator _ternary_ (`? :`) atau _short-circuit_ (`&&`) bersarang yang menyebabkan identasi JSX masuk terlalu dalam.
 
 ```tsx
+// ❌ DON'T: Menggunakan ternary operator
 export function ServiceList({ search }: Props) {
-    return (
-        <div>
-            {search ? (
-                <p className="text-muted-foreground text-xs">
-                    Tidak ada layanan yang cocok dengan{' '}
-                    <span className="text-foreground font-medium">
-                        "{search}"
-                    </span>
-                </p>
-            ) : (
-                <p className="text-muted-foreground text-xs">
-                    Belum ada layanan yang tersedia saat ini.
-                </p>
-            )}
-        </div>
-    );
+    return <div>{search ? <p>Tidak ada layanan untuk "{search}"</p> : <p>Belum ada layanan saat ini.</p>}</div>;
 }
 ```
 
-#### ✅ Good: Declarative Visibility with `<Activity />`
+**✅ DO: Menggunakan Komponen Deklaratif**
+Gunakan komponen deklaratif seperti `<Activity />` untuk membungkus kondisi visualisasi elemen UI.
 
 ```tsx
-import { Activity } from 'react';
+// ✅ DO: Menggunakan komponen Activity
+import { Activity } from '@/components/ui/activity';
 
 export function ServiceList({ search }: Props) {
     return (
         <div>
             <Activity mode={search ? 'visible' : 'hidden'}>
-                <p className="text-muted-foreground text-xs">
-                    Tidak ada layanan yang cocok dengan{' '}
-                    <span className="text-foreground font-medium">
-                        "{search}"
-                    </span>
-                </p>
+                <p>Tidak ada layanan untuk "{search}"</p>
             </Activity>
 
             <Activity mode={search ? 'hidden' : 'visible'}>
-                <p className="text-muted-foreground text-xs">
-                    Belum ada layanan yang tersedia saat ini.
-                </p>
+                <p>Belum ada layanan saat ini.</p>
             </Activity>
         </div>
     );
@@ -136,147 +213,96 @@ export function ServiceList({ search }: Props) {
 
 ---
 
-## 📏 Rule 6: File Size Discipline (Max 110 Lines)
+### Rule 6: File Size Discipline (Max 110 Lines) & Separation
 
-Jika satu file `.tsx` melebihi **110 baris**, maka WAJIB dilakukan refactor berbasis SRP **tanpa memecah ke banyak file**. Semua tetap dalam **1 file yang sama**, hanya dipisahkan secara internal.
+Menjaga agar satu file `.tsx` UI tidak membengkak melebihi 110 baris. Jika lebih, wajib dievaluasi dengan cara mengekstrak logika atau memecah komponen UI.
 
-### ✅ DO (Refactor di DALAM 1 FILE yang sama)
-
-#### 1. Extract Hook
+**❌ DON'T: Menumpuk Segala Hal dalam Satu File Panjang**
+Jangan mendefinisikan _hook_ buatan sendiri di dalam file `.tsx` yang sama, dan dilarang keras menuliskan logika _filter_/_map_ yang kompleks secara _inline_ di dalam blok JSX.
 
 ```tsx
-// file: service-item-card.tsx
-
+// ❌ DON'T: File membengkak karena hook dan inline logic
 function useServiceItem() {
     const handleDelete = () => {
-        /* logic */
+        /* ... */
     };
     return { handleDelete };
 }
 
-export function ServiceItemCard() {
-    const { handleDelete } = useServiceItem();
-    return <button onClick={handleDelete}>Delete</button>;
-}
-```
-
-#### 2. Pecah Sub Component
-
-```tsx
-// file: service-item-card.tsx
-
-function ServiceItemHeader() {
-    return <div>Header</div>;
-}
-
-function ServiceItemFooter() {
-    return <div>Footer</div>;
-}
-
-export function ServiceItemCard() {
-    return (
-        <>
-            <ServiceItemHeader />
-            <ServiceItemFooter />
-        </>
-    );
-}
-```
-
-#### 3. Pisahkan API Function
-
-```tsx
-// file: service-item-card.tsx
-
-async function deleteServiceItem(id: number) {
-    // request logic
-}
-
-function useServiceItem() {
-    const handleDelete = async () => {
-        await deleteServiceItem(1);
-    };
-    return { handleDelete };
-}
-```
-
----
-
-### ❌ DON'T (Semua Ditumpuk di Satu Component)
-
-#### 1. Semua Logic + API + UI Jadi Satu
-
-```tsx
-export function ServiceItemCard() {
-    const [loading, setLoading] = useState(false);
-
-    const handleDelete = async () => {
-        setLoading(true);
-        await fetch('/api/delete'); // ❌ API inline
-        setLoading(false);
-    };
-
-    return (
-        <div>
-            <div>Header</div>
-            <button onClick={handleDelete}>Delete</button>
-            <div>Footer</div>
-        </div>
-    );
-}
-```
-
-#### 2. JSX Panjang Tanpa Pemecahan
-
-```tsx
-export function ServiceItemCard() {
-    return (
-        <div>
-            <div>Header</div>
-            <div>Content A</div>
-            <div>Content B</div>
-            <div>Footer</div>
-        </div>
-    );
-}
-```
-
-#### 3. Inline Logic di JSX
-
-```tsx
 export function ServiceItemCard({ items }) {
+    const { handleDelete } = useServiceItem();
     return (
         <ul>
             {items
                 .filter((x) => x.active)
                 .map((x) => (
-                    <li key={x.id}>{x.name}</li>
+                    <li key={x.id} onClick={handleDelete}>
+                        {x.name}
+                    </li>
                 ))}
         </ul>
     );
 }
 ```
 
-## 📏 Rule 8: No `any` in Component Props
-
----
-
-### ❌ DON'T
+**✅ DO: Ekstrak Logika dan Pecah Sub-Component**
+Pastikan logika yang tertinggal pindah ke `hooks/feature/`. Jika JSX masih terlalu panjang, pecah menjadi sub-komponen UI kecil di dalam file yang sama selama masih di bawah batas maksimal baris.
 
 ```tsx
-const Card = ({ name, description, onDelete }: any) => {};
+// ✅ DO: Logika terpisah, UI terpecah rapi
+import { useServiceItem } from '@/hooks/feature/service/use-service-item';
+
+// Sub-component murni visual
+function ServiceItemHeader() {
+    return <div>Header</div>;
+}
+
+// Sub-component murni visual
+function ServiceItemFooter() {
+    return <div>Footer</div>;
+}
+
+// Main component
+export function ServiceItemCard() {
+    const { handleDelete } = useServiceItem();
+    return (
+        <>
+            <ServiceItemHeader />
+            <button onClick={() => handleDelete(1)}>Delete</button>
+            <ServiceItemFooter />
+        </>
+    );
+}
 ```
 
 ---
 
-### ✅ DO
+### Rule 7: No `any` in Component Props
+
+Menjaga _Type Safety_ secara maksimal. TypeScript harus digunakan semestinya untuk mencegah _bug_ tipe data (runtime error) dan mempermudah auto-complete.
+
+**❌ DON'T: Menggunakan Tipe Data `any`**
+Dilarang keras mendefinisikan _props_ sebuah komponen dengan tipe `any`.
 
 ```tsx
+// ❌ DON'T: Mengabaikan type safety
+const Card = ({ name, description, onDelete }: any) => {
+    return <div>{name}</div>;
+};
+```
+
+**✅ DO: Mendefinisikan Interface / Tipe yang Jelas**
+Semua _props_ komponen wajib memiliki _interface_ atau deklarasi _type_ spesifik untuk setiap nilai dan fungsinya.
+
+```tsx
+// ✅ DO: Menggunakan Interface
 interface CardProps {
     name: string;
     description: string;
     onDelete: () => void;
 }
 
-const Card = ({ name, description, onDelete }: CardProps) => {};
+const Card = ({ name, description, onDelete }: CardProps) => {
+    return <div onClick={onDelete}>{name}</div>;
+};
 ```
