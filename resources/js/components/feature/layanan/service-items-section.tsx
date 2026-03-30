@@ -26,16 +26,7 @@ export function ServiceItemsSection({ service, items, filters = { search: '' } }
             <Activity mode={items.length ? 'visible' : 'hidden'}>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {items.map((item) => (
-                        <ServiceItemCard
-                            key={item.id}
-                            serviceId={service.id}
-                            id={item.id}
-                            name={item.name}
-                            description={item.description}
-                            price={item.price}
-                            unit={item.unit}
-                            time={item.time}
-                        />
+                        <ServiceItemCard key={item.id} {...item} />
                     ))}
                 </div>
             </Activity>

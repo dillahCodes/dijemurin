@@ -1,8 +1,7 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
-import { ShoppingCart } from 'lucide-react';
-import { Avatar, AvatarBadge, AvatarFallback } from './ui/avatar';
+import { AppSidebarCart } from './app-sidebar-cart';
 
 export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: BreadcrumbItemType[] }) {
     return (
@@ -11,13 +10,7 @@ export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: Breadcrum
                 <SidebarTrigger className="-ml-1" />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
-
-            <Avatar className="size-10">
-                <AvatarFallback className="flex items-center justify-center">
-                    <ShoppingCart className="size-5" />
-                </AvatarFallback>
-                <AvatarBadge className="top-0! size-4! bg-destructive text-sm">6</AvatarBadge>
-            </Avatar>
+            <AppSidebarCart />
         </header>
     );
 }

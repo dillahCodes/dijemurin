@@ -2,7 +2,7 @@
 
 import { createContext, type ReactNode, useContext, useState, useEffect, useCallback } from "react";
 
-type DrawerPlacement = "bottom" | "top";
+type DrawerPlacement = "bottom" | "top" | "right" | "left";
 
 export interface DrawerOptions {
   id: string | number;
@@ -55,17 +55,34 @@ function DrawerInstance({ drawerItem, close, removeDrawer }: DrawerInstanceProps
     return () => clearTimeout(timer);
   }, [drawerItem, removeDrawer]);
 
-  const isBottom = (drawerItem.placement || "bottom") === "bottom";
-  const translateClass = isOpen ? "translate-y-0" : isBottom ? "translate-y-full" : "-translate-y-full";
+  const placement = drawerItem.placement || "bottom";
+
+  const getPlacementClasses = () => {
+    switch (placement) {
+      case "top":
+        return `top-0 left-0 right-0 w-full ${isOpen ? "translate-y-0" : "-translate-y-full"}`;
+      case "bottom":
+        return `bottom-0 left-0 right-0 w-full ${isOpen ? "translate-y-0" : "translate-y-full"}`;
+      case "left":
+        return `top-0 bottom-0 left-0 h-full overflow-y-auto ${isOpen ? "translate-x-0" : "-translate-x-full"}`;
+      case "right":
+        return `top-0 bottom-0 right-0 h-full overflow-y-auto ${isOpen ? "translate-x-0" : "translate-x-full"}`;
+      default:
+        return `bottom-0 left-0 right-0 w-full ${isOpen ? "translate-y-0" : "translate-y-full"}`;
+    }
+  };
 
   return (
     <section
       className={`fixed inset-0 z-50 transition-opacity duration-300 ${isOpen ? "bg-black/50" : "pointer-events-none bg-black/0"}`}
-      onClick={() => close(drawerItem.id)}
+      onClick={() => {
+        close(drawerItem.id)
+        drawerItem.onDrawerClose?.();
+      }}
     >
       <div
         onClick={(event) => event.stopPropagation()}
-        className={`fixed left-0 w-full bg-white/95 transition-transform duration-300 ease-out dark:bg-zinc-900 ${drawerItem.wrapperClassName ?? ""} ${isBottom ? "bottom-0" : "top-0"} ${translateClass}`}
+        className={`fixed bg-white/95 transition-transform duration-300 ease-out dark:bg-zinc-900 ${getPlacementClasses()} ${drawerItem.wrapperClassName ?? ""}`}
       >
         {drawerItem.content}
       </div>

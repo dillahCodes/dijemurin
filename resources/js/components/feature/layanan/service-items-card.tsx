@@ -1,8 +1,3 @@
-import { router } from '@inertiajs/react';
-import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
-import { Activity } from 'react';
-import { toast } from 'sonner';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
@@ -12,17 +7,15 @@ import { formatPrice } from '@/helper/formatted-price';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import layanan from '@/routes/layanan';
+import type { ServiceItem } from '@/types/feature/layanan';
+import { router } from '@inertiajs/react';
+import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
+import { Activity } from 'react';
+import { toast } from 'sonner';
+import { ServiceItemsSetQty } from './service-items-set-qty';
 import { ServiceItemsEdit } from './service-items-edit';
 
-interface ServiceItemCardProps {
-    serviceId: number;
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    unit: string;
-    time: string;
-}
+type ServiceItemCardProps = ServiceItem;
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -46,7 +39,7 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
 
 /** 1. Internal Hook (Logic) */
 function useServiceItem(props: ServiceItemCardProps) {
-    const { id, serviceId, name, price, description, time, unit } = props;
+    const { id, service_id, name, price, description, time, unit } = props;
     const defaultData = { name, description, time, price, unit };
 
     const isMobile = useIsMobile();
@@ -63,7 +56,7 @@ function useServiceItem(props: ServiceItemCardProps) {
             description: 'Isi form untuk mengedit price list.',
             withCancelButton: false,
             withConfirmButton: false,
-            content: <ServiceItemsEdit service_id={serviceId} service_item_id={id} defaultData={defaultData} />,
+            content: <ServiceItemsEdit service_id={service_id} service_item_id={id} defaultData={defaultData} />,
         });
     };
 
@@ -75,7 +68,7 @@ function useServiceItem(props: ServiceItemCardProps) {
             content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus Price List {name}?</div>,
             onConfirm: () =>
                 new Promise((resolve) => {
-                    router.delete(layanan.items.destroy([serviceId, id]).url, {
+                    router.delete(layanan.items.destroy([service_id, id]).url, {
                         preserveScroll: true,
                         onSuccess: () => {
                             toast.success('Price List berhasil dihapus', {
@@ -104,6 +97,38 @@ function useServiceItem(props: ServiceItemCardProps) {
     };
 
     return { formattedPrice, handleEdit, handleDelete };
+}
+
+interface UseCreateItemOrderProps {
+    item: ServiceItem;
+}
+
+export function useCreateItemOrder({ item }: UseCreateItemOrderProps) {
+    const modal = useModal();
+
+    const modalId = `service-item-modal-${item.id}`;
+
+    const handleOpenModalItemOrder = () => {
+        modal.open({
+            id: modalId,
+            title: 'Buat Pesanan',
+            description: 'Lengkapi form untuk membuat pesanan',
+            content: (
+                <ServiceItemsSetQty
+                    mode="SET_ITEM"
+                    item={item}
+                    afterSubmit={() => modal.close(modalId)}
+                    onCancel={() => modal.close(modalId)}
+                />
+            ),
+            withCancelButton: false,
+            withConfirmButton: false,
+        });
+    };
+
+    return {
+        handleOpenModalItemOrder,
+    };
 }
 
 interface DrawerMenu {
@@ -197,12 +222,14 @@ function ServiceItemFooter({ formattedPrice, unit, time }: any) {
 
 /** 3. Main Component */
 export function ServiceItemCard(props: ServiceItemCardProps) {
+    const { handleOpenModalItemOrder } = useCreateItemOrder({ item: props });
     const { handleEdit, handleDelete, formattedPrice } = useServiceItem(props);
 
     return (
         <Card
+            onClick={handleOpenModalItemOrder}
             className={cn(
-                'group relative w-full border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
+                'group relative w-full cursor-pointer border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}
         >
             <div className="absolute -top-8 -right-8 z-0 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
