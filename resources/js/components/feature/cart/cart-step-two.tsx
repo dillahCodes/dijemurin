@@ -13,6 +13,7 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
         totalBayar,
         kembalian,
         disabledSubmitButton,
+        errors,
         handleSubmit,
         handleBack,
         setCustomerName,
@@ -39,6 +40,9 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                             value={customerName}
                             onChange={(e) => setCustomerName(e.target.value)}
                         />
+                        {errors?.customerName && (
+                            <p className="text-[0.8rem] font-medium text-destructive">{errors.customerName[0]}</p>
+                        )}
                     </Field>
 
                     <Field>
@@ -74,6 +78,9 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                                 value={formatPrice(paymentAmount)}
                                 onChange={(e) => setPaymentAmount(e.target.value)}
                             />
+                            {errors?.paymentAmount && (
+                                <p className="text-[0.8rem] font-medium text-destructive">{errors.paymentAmount[0]}</p>
+                            )}
                         </Field>
                     </Activity>
 

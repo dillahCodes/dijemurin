@@ -1,5 +1,6 @@
 import { useModal } from '@/components/ui/modal';
 import { useCart } from '@/context/feature/cart/cart-context';
+import { checkoutSchema } from '@/schema/feature/cart/checkout-schema';
 
 export function useCartStepTwo(onCancel: () => void) {
     const { state, dispatch } = useCart();
@@ -15,13 +16,16 @@ export function useCartStepTwo(onCancel: () => void) {
     const totalBayar = items.reduce((acc, item) => acc + item.qty * item.data.price, 0);
     const kembalian = paymentAmount - totalBayar;
 
-    const disabledSubmitButtonConditions = [
-        !items.length,
-        !customerName,
-        !paymentMethod,
-        paymentMethod === 'cash' && paymentAmount < totalBayar,
-    ];
-    const disabledSubmitButton = disabledSubmitButtonConditions.some((condition) => condition);
+    const formValidation = checkoutSchema.safeParse({
+        customerName,
+        paymentMethod,
+        paymentAmount,
+        totalBayar,
+        itemsLength: items.length,
+    });
+
+    const disabledSubmitButton = !formValidation.success;
+    const errors = !formValidation.success ? formValidation.error.flatten().fieldErrors : null;
 
     const handleConfirmSubmit = () => {
         console.log('sukses');
@@ -65,6 +69,7 @@ export function useCartStepTwo(onCancel: () => void) {
         totalBayar,
         kembalian,
         disabledSubmitButton,
+        errors,
         items,
         handleSubmit,
         handleBack,
