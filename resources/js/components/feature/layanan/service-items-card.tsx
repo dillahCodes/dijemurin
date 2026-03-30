@@ -229,7 +229,7 @@ export function ServiceItemCard(props: ServiceItemCardProps) {
         <Card
             onClick={handleOpenModalItemOrder}
             className={cn(
-                'group relative w-full cursor-pointer border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
+                'group relative w-full cursor-pointer overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}
         >
             <div className="absolute -top-8 -right-8 z-0 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
