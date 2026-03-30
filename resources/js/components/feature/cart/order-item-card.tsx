@@ -1,49 +1,16 @@
+import { Pencil, Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { CartItemType } from '@/context/feature/cart/cart-context';
 import { useCart } from '@/context/feature/cart/cart-context';
 import { formatPrice } from '@/helper/formatted-price';
-import { Pencil, Trash } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useModal } from '@/components/ui/modal';
-import { ServiceItemsSetQty } from '../layanan/service-items-set-qty';
+import { useCartEditItemQty } from '@/hooks/feature/cart/uce-cart-edit-item-qty';
 
 interface OrderItemCardProps {
     item: CartItemType;
 }
 
-function useModalCart(item: CartItemType) {
-    const modal = useModal();
-    const modalId = `modal-edit-service-item-${item.data.id}`;
-
-    const handleCloseModal = () => modal.close(modalId);
-
-    const baseConfig = {
-        content: (
-            <ServiceItemsSetQty
-                mode="SET_QTY"
-                item={item.data}
-                defaultQty={item.qty}
-                onCancel={handleCloseModal}
-                afterSubmit={handleCloseModal}
-            />
-        ),
-    };
-
-    const handleOpenModalEdit = () => {
-        modal.open({
-            ...baseConfig,
-            id: modalId,
-            title: 'Edit Kuantitas',
-            description: 'Isi form untuk mengedit kuantitas.',
-            withCancelButton: false,
-            withConfirmButton: false,
-        });
-    };
-
-    return { handleOpenModalEdit };
-}
-
 export function OrderItemCard({ item }: OrderItemCardProps) {
-    const { handleOpenModalEdit } = useModalCart(item);
+    const { handleOpenModalEdit } = useCartEditItemQty({ item });
     const { dispatch } = useCart();
 
     const id = item.data.id;

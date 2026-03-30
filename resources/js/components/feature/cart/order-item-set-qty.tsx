@@ -1,14 +1,14 @@
+import { Weight } from 'lucide-react';
+import { Activity, useState } from 'react';
+import z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { useCart } from '@/context/feature/cart/cart-context';
 import { cartItemSchema } from '@/schema/feature/cart/cart-item-schema';
 import type { ServiceItem } from '@/types/feature/layanan';
-import { Weight } from 'lucide-react';
-import { Activity, useState } from 'react';
-import z from 'zod';
 
-interface ServiceItemsSetQtyProps {
+interface OrderItemSetQtyProps {
     item: ServiceItem;
     mode: 'SET_ITEM' | 'SET_QTY';
     defaultQty?: number;
@@ -18,7 +18,7 @@ interface ServiceItemsSetQtyProps {
 
 type ErrorQty = string | null;
 
-export function ServiceItemsSetQty({ item, defaultQty, onCancel, afterSubmit, mode }: ServiceItemsSetQtyProps) {
+export function OrderItemSetQty({ item, defaultQty, onCancel, afterSubmit, mode }: OrderItemSetQtyProps) {
     const [error, setError] = useState<ErrorQty>(null);
     const { dispatch } = useCart();
 
@@ -27,7 +27,9 @@ export function ServiceItemsSetQty({ item, defaultQty, onCancel, afterSubmit, mo
     };
 
     const handleChange = () => {
-        if (error) setError(null);
+        if (error) {
+            setError(null);
+        }
     };
 
     const handleValidateQty = (qty: number) => {
@@ -51,7 +53,10 @@ export function ServiceItemsSetQty({ item, defaultQty, onCancel, afterSubmit, mo
         const qty = Number(formData.get('qty'));
 
         const isError = handleValidateQty(qty);
-        if (isError) return;
+
+        if (isError) {
+            return;
+        }
 
         const isSetItem = mode === 'SET_ITEM';
         isSetItem

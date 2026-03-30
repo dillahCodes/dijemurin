@@ -71,7 +71,11 @@ function cartReducer(state: CartStateType, action: CartAction): CartStateType {
 
         case 'SET_PAYMENT_METHOD':
             newState = { ...state, payment_method: action.payload };
-            if (action.payload === 'qris') newState.payment_amount = 0;
+
+            if (action.payload === 'qris') {
+                newState.payment_amount = 0;
+            }
+
             break;
 
         case 'SET_PAYMENT_AMOUNT':
@@ -80,6 +84,7 @@ function cartReducer(state: CartStateType, action: CartAction): CartStateType {
 
         case 'CLEAR':
             localStorage.removeItem('cartFeatureContext');
+
             return initialState;
 
         default:

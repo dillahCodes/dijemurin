@@ -1,51 +1,15 @@
-import { router } from '@inertiajs/react';
 import { Plus, X } from 'lucide-react';
-import { Activity, useState } from 'react';
+import { Activity } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useModal } from '@/components/ui/modal';
-import layanan from '@/routes/layanan';
-import { ServiceItemsAdd } from './service-items-add';
+import { useServiceItemsSearch } from '@/hooks/feature/layanan/use-service-items-search';
+import type { ServiceItemsSearchProps } from '@/hooks/feature/layanan/use-service-items-search';
 
-interface ServiceItemsSearchProps {
-    serviceName: string;
-    serviceId: number;
-    value: string;
-}
-
-export function ServiceItemsSearch({ serviceName, value, serviceId }: ServiceItemsSearchProps) {
-    const modal = useModal();
-
-    const [search, setSearch] = useState(value);
-    const shouldDisableSearch = !value.length && !search.length;
-    const options = { preserveState: true, replace: true };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const searchParam = { search: search || undefined };
-        router.get(layanan.show(serviceId).url, searchParam, options);
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
-    const handleClear = () => {
-        setSearch('');
-        router.get(layanan.show(serviceId).url, {}, options);
-    };
-
-    const handleAddServiceItem = () => {
-        modal.open({
-            id: 'modal-add-price-list',
-            title: 'Tambah Price List',
-            description: 'Isi form untuk menambah price list.',
-            withCancelButton: false,
-            withConfirmButton: false,
-            content: <ServiceItemsAdd service_id={serviceId} />,
-        });
-    };
+export function ServiceItemsSearch(props: ServiceItemsSearchProps) {
+    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleAddServiceItem } =
+        useServiceItemsSearch(props);
+    const { serviceName } = props;
 
     return (
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">

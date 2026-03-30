@@ -1,23 +1,14 @@
-import { router } from '@inertiajs/react';
 import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import { Activity } from 'react';
-import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useModal } from '@/components/ui/modal';
+import { useServiceActions } from '@/hooks/feature/layanan/use-service-actions';
+import type { ServiceCardProps } from '@/hooks/feature/layanan/use-service-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import layanan from '@/routes/layanan';
-import { ServiceEdit } from './service-edit';
-
-interface ServiceCardProps {
-    id: number;
-    title: string;
-    description: string;
-}
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -38,66 +29,6 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
         iconClassName: 'text-destructive',
     },
 ];
-
-/** 1. Internal Hook (Logic) */
-function useServiceActions({ id, title, description }: ServiceCardProps) {
-    const isMobile = useIsMobile();
-    const modal = useModal();
-    const drawer = useDrawer();
-
-    const handleNavigate = () => router.visit(`/layanan/${id}`);
-
-    const handleEdit = (e: React.MouseEvent) => {
-        e.stopPropagation();
-
-        modal.open({
-            id: 'modal-edit-service',
-            title: 'Edit Layanan',
-            description: 'Isi form untuk mengedit layanan.',
-            withCancelButton: false,
-            withConfirmButton: false,
-            content: <ServiceEdit serviceId={id} description={description} title={title} />,
-        });
-    };
-
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        modal.open({
-            id: 'modal-confirm-delete-service',
-            title: `Hapus Layanan`,
-            content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus layanan {title}?</div>,
-            onConfirm: () =>
-                new Promise((resolve) => {
-                    router.delete(layanan.destroy({ id: id as number }).url, {
-                        preserveScroll: true,
-                        onSuccess: () => {
-                            toast.success('Layanan berhasil dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-drawer');
-                            }
-                        },
-                        onError: () => {
-                            toast.error('Layanan gagal dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-drawer');
-                            }
-                        },
-                        onFinish: () => resolve(undefined),
-                    });
-                }),
-            cancelContent: 'Batal',
-            confirmContent: 'Hapus',
-        });
-    };
-
-    return { handleNavigate, handleEdit, handleDelete };
-}
 
 interface DrawerMenu {
     menu: ReturnType<typeof getMenus>;

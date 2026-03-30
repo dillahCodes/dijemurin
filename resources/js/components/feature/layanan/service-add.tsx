@@ -1,35 +1,11 @@
-import { useForm } from '@inertiajs/react';
 import { Activity } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useModal } from '@/components/ui/modal';
-import layanan from '@/routes/layanan';
+import { useServiceAdd } from '@/hooks/feature/layanan/use-service-add';
 
 export function ServiceAdd() {
-    const modal = useModal();
-    const { setData, post, processing, errors, clearErrors } = useForm({ name: '', description: '' });
-
-    const handleCancel = () => {
-        clearErrors();
-        modal.close('modal-add-service');
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        post(layanan.store().url, {
-            onSuccess: () => {
-                clearErrors();
-                modal.close('modal-add-service');
-                toast.success('Layanan berhasil ditambahkan', { position: 'top-center' });
-            },
-            onError: () => {
-                toast.error('Gagal menambahkan layanan', { position: 'top-center' });
-            },
-        });
-    };
+    const { setData, processing, errors, clearErrors, handleCancel, handleSubmit } = useServiceAdd();
 
     return (
         <form onSubmit={handleSubmit} className="mt-8 w-full">

@@ -1,21 +1,14 @@
+import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useModal } from '@/components/ui/modal';
-import { formatPrice } from '@/helper/formatted-price';
+import { useCartAddItem } from '@/hooks/feature/cart/use-cart-add-item';
+import { useServiceItemActions } from '@/hooks/feature/layanan/use-service-item-actions';
+import type { ServiceItemCardProps } from '@/hooks/feature/layanan/use-service-item-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import layanan from '@/routes/layanan';
-import type { ServiceItem } from '@/types/feature/layanan';
-import { router } from '@inertiajs/react';
-import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
-import { Activity } from 'react';
-import { toast } from 'sonner';
-import { ServiceItemsSetQty } from './service-items-set-qty';
-import { ServiceItemsEdit } from './service-items-edit';
-
-type ServiceItemCardProps = ServiceItem;
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -36,100 +29,6 @@ const getMenus = ({ handleEdit, handleDelete }: GetMenus) => [
         iconClassName: 'text-destructive',
     },
 ];
-
-/** 1. Internal Hook (Logic) */
-function useServiceItem(props: ServiceItemCardProps) {
-    const { id, service_id, name, price, description, time, unit } = props;
-    const defaultData = { name, description, time, price, unit };
-
-    const isMobile = useIsMobile();
-    const drawer = useDrawer();
-    const modal = useModal();
-    const formattedPrice = formatPrice(price);
-
-    const handleEdit = (e: React.MouseEvent) => {
-        e.stopPropagation();
-
-        modal.open({
-            id: 'modal-edit-service-item',
-            title: 'Edit Price List',
-            description: 'Isi form untuk mengedit price list.',
-            withCancelButton: false,
-            withConfirmButton: false,
-            content: <ServiceItemsEdit service_id={service_id} service_item_id={id} defaultData={defaultData} />,
-        });
-    };
-
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        modal.open({
-            id: 'modal-confirm-delete-service-item',
-            title: `Hapus Price List`,
-            content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus Price List {name}?</div>,
-            onConfirm: () =>
-                new Promise((resolve) => {
-                    router.delete(layanan.items.destroy([service_id, id]).url, {
-                        preserveScroll: true,
-                        onSuccess: () => {
-                            toast.success('Price List berhasil dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-item-drawer');
-                            }
-                        },
-                        onError: () => {
-                            toast.error('Price List gagal dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-item-drawer');
-                            }
-                        },
-                        onFinish: () => resolve(undefined),
-                    });
-                }),
-            cancelContent: 'Batal',
-            confirmContent: 'Hapus',
-        });
-    };
-
-    return { formattedPrice, handleEdit, handleDelete };
-}
-
-interface UseCreateItemOrderProps {
-    item: ServiceItem;
-}
-
-export function useCreateItemOrder({ item }: UseCreateItemOrderProps) {
-    const modal = useModal();
-
-    const modalId = `service-item-modal-${item.id}`;
-
-    const handleOpenModalItemOrder = () => {
-        modal.open({
-            id: modalId,
-            title: 'Buat Pesanan',
-            description: 'Lengkapi form untuk membuat pesanan',
-            content: (
-                <ServiceItemsSetQty
-                    mode="SET_ITEM"
-                    item={item}
-                    afterSubmit={() => modal.close(modalId)}
-                    onCancel={() => modal.close(modalId)}
-                />
-            ),
-            withCancelButton: false,
-            withConfirmButton: false,
-        });
-    };
-
-    return {
-        handleOpenModalItemOrder,
-    };
-}
 
 interface DrawerMenu {
     menu: ReturnType<typeof getMenus>;
@@ -208,7 +107,13 @@ function ServiceItemHeader({ name, description, onEdit, onDelete }: ServiceItemH
     );
 }
 
-function ServiceItemFooter({ formattedPrice, unit, time }: any) {
+interface ServiceItemFooterProps {
+    formattedPrice: string;
+    unit: string;
+    time: string;
+}
+
+function ServiceItemFooter({ formattedPrice, unit, time }: ServiceItemFooterProps) {
     return (
         <div className="flex items-end justify-between">
             <div className="flex flex-col gap-0.5">
@@ -222,12 +127,12 @@ function ServiceItemFooter({ formattedPrice, unit, time }: any) {
 
 /** 3. Main Component */
 export function ServiceItemCard(props: ServiceItemCardProps) {
-    const { handleOpenModalItemOrder } = useCreateItemOrder({ item: props });
-    const { handleEdit, handleDelete, formattedPrice } = useServiceItem(props);
+    const { handleOpenModalAddItem } = useCartAddItem({ item: props });
+    const { handleEdit, handleDelete, formattedPrice } = useServiceItemActions(props);
 
     return (
         <Card
-            onClick={handleOpenModalItemOrder}
+            onClick={handleOpenModalAddItem}
             className={cn(
                 'group relative w-full cursor-pointer overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}

@@ -1,47 +1,13 @@
-import { useForm } from '@inertiajs/react';
 import { Activity } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useModal } from '@/components/ui/modal';
 import { formatPrice } from '@/helper/formatted-price';
-import layanan from '@/routes/layanan';
+import { useServiceItemsAdd } from '@/hooks/feature/layanan/use-service-items-add';
+import type { ServiceItemsAddProps } from '@/hooks/feature/layanan/use-service-items-add';
 
-interface ServiceItemsAddProps {
-    service_id: number;
-}
-
-export function ServiceItemsAdd({ service_id }: ServiceItemsAddProps) {
-    const modal = useModal();
-    const { data, setData, post, processing, errors, clearErrors } = useForm({
-        name: '',
-        description: '',
-        time: '',
-        price: 0,
-        unit: '',
-        service_id,
-    });
-
-    const handleCancel = () => {
-        clearErrors();
-        modal.close('modal-add-price-list');
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        post(layanan.items.store([service_id]).url, {
-            onSuccess: () => {
-                clearErrors();
-                modal.close('modal-add-price-list');
-                toast.success('Price list berhasil ditambahkan', { position: 'top-center' });
-            },
-            onError: () => {
-                toast.error('Gagal menambahkan price list', { position: 'top-center' });
-            },
-        });
-    };
+export function ServiceItemsAdd(props: ServiceItemsAddProps) {
+    const { data, setData, processing, errors, clearErrors, handleCancel, handleSubmit } = useServiceItemsAdd(props);
 
     return (
         <form onSubmit={handleSubmit} className="mt-8 max-h-[40dvh] w-full overflow-y-auto">

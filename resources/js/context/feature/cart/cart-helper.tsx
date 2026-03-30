@@ -1,4 +1,4 @@
-import { CartItemType, CartStateType } from './cart-context';
+import type { CartItemType, CartStateType } from './cart-context';
 
 export const itemHasExsist = (state: CartStateType, payload: CartItemType) => {
     const service_items = state.service_items || [];

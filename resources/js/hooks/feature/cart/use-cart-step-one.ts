@@ -2,7 +2,7 @@ import { useCart } from '@/context/feature/cart/cart-context';
 
 export function useCartStepOne(onCancel: () => void) {
     const { state, dispatch } = useCart();
-    
+
     const items = state.service_items;
     const hasItems = items.length > 0;
 

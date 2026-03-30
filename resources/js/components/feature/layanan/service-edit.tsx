@@ -1,41 +1,13 @@
-import { useForm } from '@inertiajs/react';
 import { Activity } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { useModal } from '@/components/ui/modal';
-import layanan from '@/routes/layanan';
+import { useServiceEdit } from '@/hooks/feature/layanan/use-service-edit';
+import type { ServiceEditProps } from '@/hooks/feature/layanan/use-service-edit';
 
-interface ServiceEditProps {
-    serviceId: number;
-    title: string;
-    description: string;
-}
-
-export function ServiceEdit({ serviceId, title, description }: ServiceEditProps) {
-    const modal = useModal();
-    const { setData, patch, processing, errors, clearErrors } = useForm({ name: title, description: description });
-
-    const handleCancel = () => {
-        clearErrors();
-        modal.close('modal-edit-service');
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        patch(layanan.update(serviceId).url, {
-            onSuccess: () => {
-                clearErrors();
-                modal.close('modal-edit-service');
-                toast.success('Layanan berhasil diupdate', { position: 'top-center' });
-            },
-            onError: () => {
-                toast.error('Layanan gagal diupdate', { position: 'top-center' });
-            },
-        });
-    };
+export function ServiceEdit(props: ServiceEditProps) {
+    const { setData, processing, errors, clearErrors, handleCancel, handleSubmit } = useServiceEdit(props);
+    const { title, description } = props;
 
     return (
         <form onSubmit={handleSubmit} className="mt-8 w-full">

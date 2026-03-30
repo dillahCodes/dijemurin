@@ -1,5 +1,5 @@
-import { useCart } from '@/context/feature/cart/cart-context';
 import { useModal } from '@/components/ui/modal';
+import { useCart } from '@/context/feature/cart/cart-context';
 
 export function useCartStepTwo(onCancel: () => void) {
     const { state, dispatch } = useCart();

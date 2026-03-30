@@ -1,8 +1,8 @@
-import { formatPrice } from '@/helper/formatted-price';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Activity } from 'react';
+import { formatPrice } from '@/helper/formatted-price';
 import { useCartStepTwo } from '@/hooks/feature/cart/use-cart-step-two';
 
 export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
@@ -17,13 +17,16 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
         handleBack,
         setCustomerName,
         setPaymentMethod,
-        setPaymentAmount
+        setPaymentAmount,
     } = useCartStepTwo(onCancel);
 
     return (
-        <form onSubmit={handleSubmit} className="flex w-full shrink-0 flex-col flex-1 min-h-0 pt-2 pb-4 overflow-y-auto px-1">
-            <FieldSet className="flex-1 flex flex-col">
-                <FieldGroup className="flex flex-col flex-1">
+        <form
+            onSubmit={handleSubmit}
+            className="flex min-h-0 w-full flex-1 shrink-0 flex-col overflow-y-auto px-1 pt-2 pb-4"
+        >
+            <FieldSet className="flex flex-1 flex-col">
+                <FieldGroup className="flex flex-1 flex-col">
                     <Field>
                         <FieldLabel htmlFor="costumer_name">
                             Nama Pelanggan <span className="text-destructive">*</span>
@@ -75,7 +78,7 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                     </Activity>
 
                     {/* Summary Section */}
-                    <div className="flex flex-col items-center pt-2 text-sm mt-auto mb-4">
+                    <div className="mt-auto mb-4 flex flex-col items-center pt-2 text-sm">
                         <div className="grid w-full max-w-[250px] grid-cols-[auto_auto] items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                             {[
                                 { label: 'Nama Pelanggan', value: customerName || '-', show: true },
@@ -99,7 +102,10 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                         </div>
                     </div>
 
-                    <Field orientation="horizontal" className="flex items-center gap-3 pt-4 border-t border-sidebar-border mt-auto shrink-0">
+                    <Field
+                        orientation="horizontal"
+                        className="mt-auto flex shrink-0 items-center gap-3 border-t border-sidebar-border pt-4"
+                    >
                         <Button onClick={handleBack} type="button" variant="outline" className="flex-1 cursor-pointer">
                             Kembali
                         </Button>

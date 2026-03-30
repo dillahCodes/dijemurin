@@ -1,48 +1,14 @@
-import { router } from '@inertiajs/react';
 import { Plus, X } from 'lucide-react';
-import { Activity, useState } from 'react';
+import { Activity } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useModal } from '@/components/ui/modal';
-import layanan from '@/routes/layanan';
-import { ServiceAdd } from './service-add';
+import { useServiceSearch } from '@/hooks/feature/layanan/use-service-search';
+import type { ServiceSearchProps } from '@/hooks/feature/layanan/use-service-search';
 
-interface ServiceSearchProps {
-    value: string;
-}
-
-export function ServiceSearch({ value }: ServiceSearchProps) {
-    const modal = useModal();
-
-    const [search, setSearch] = useState(value);
-    const shouldDisableSearch = !value.length && !search.length;
-    const options = { preserveState: true, replace: true };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        router.get(layanan.index().url, { search: search || undefined }, options);
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
-    const handleClear = () => {
-        setSearch('');
-        router.get(layanan.index().url, {}, options);
-    };
-
-    const handleAddService = () => {
-        modal.open({
-            id: 'modal-add-service',
-            title: 'Tambah Layanan',
-            description: 'Isi form untuk menambah layanan.',
-            withCancelButton: false,
-            withConfirmButton: false,
-            content: <ServiceAdd />,
-        });
-    };
+export function ServiceSearch(props: ServiceSearchProps) {
+    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleAddService } =
+        useServiceSearch(props);
 
     return (
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">

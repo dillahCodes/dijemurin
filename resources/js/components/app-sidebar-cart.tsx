@@ -1,7 +1,7 @@
-import { useCart } from '@/context/feature/cart/cart-context';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { ShoppingCart } from 'lucide-react';
 import { Activity } from 'react';
+import { useCart } from '@/context/feature/cart/cart-context';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { CartStepOne } from './feature/cart/cart-step-one';
 import { CartStepTwo } from './feature/cart/cart-step-two';
 import { Avatar, AvatarBadge, AvatarFallback } from './ui/avatar';
