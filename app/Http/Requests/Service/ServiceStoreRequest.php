@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\service;
+namespace App\Http\Requests\Service;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class ServiceUpdateRequest extends FormRequest
+class ServiceStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +23,8 @@ class ServiceUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('services', 'name')->ignore($this->service), //  Route::patch('/{service}'.. visit web.php
-            ],
-            'description' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-            ],
+            'name' => 'required|string|max:255|unique:services,name',
+            'description' => 'required|string|max:255',
         ];
     }
 

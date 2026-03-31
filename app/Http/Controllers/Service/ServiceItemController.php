@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\service;
+namespace App\Http\Controllers\Service;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\service\ServiceItemsStoreRequest;
-use App\Http\Requests\service\ServiceItemUpdateRequest;
+use App\Http\Requests\Service\ServiceItemsStoreRequest;
+use App\Http\Requests\Service\ServiceItemUpdateRequest;
 use App\Models\Service;
 use App\Models\ServiceItem;
 

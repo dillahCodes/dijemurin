@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\service\ServiceController;
-use App\Http\Controllers\service\ServiceItemController;
+use App\Http\Controllers\Service\ServiceController;
+use App\Http\Controllers\Service\ServiceItemController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
