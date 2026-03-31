@@ -20,3 +20,14 @@ export interface ServiceItem {
     created_at: string;
     updated_at: string;
 }
+
+export type ServicePageProps = {
+    services: Service[];
+    filters: { search: string };
+};
+
+export type ServiceItemPageProps = {
+    service: Service;
+    items: ServiceItem[];
+    filters: { search: string };
+};

@@ -1,19 +1,16 @@
 import { Activity } from 'react';
 
-import type { Service, ServiceItem } from '@/types/feature/layanan';
+import type { ServiceItemPageProps } from '@/types/feature/layanan';
 
+import { usePage } from '@inertiajs/react';
 import { ServiceItemCard } from './service-items-card';
 import { ServiceItemsEmpty } from './service-items-empty';
 import { ServiceItemsHeader } from './service-items-header';
 import { ServiceItemsSearch } from './service-items-search';
 
-interface Props {
-    service: Service;
-    items: ServiceItem[];
-    filters: { search: string };
-}
+export function ServiceItemsSection() {
+    const { service, items, filters } = usePage<ServiceItemPageProps>().props;
 
-export function ServiceItemsSection({ service, items, filters = { search: '' } }: Props) {
     return (
         <div className="flex flex-col gap-6">
             <ServiceItemsHeader service={service} />

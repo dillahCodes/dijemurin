@@ -1,30 +1,23 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 
 import { ServiceItemsSection } from '@/components/feature/layanan/service-items-section';
 import AppLayout from '@/layouts/app-layout';
 import layanan from '@/routes/layanan';
-import type { Service, ServiceItem } from '@/types/feature/layanan';
+import type { ServiceItemPageProps } from '@/types/feature/layanan';
 
-interface Props {
-    service: Service;
-    items: ServiceItem[];
-    filters: { search: string };
-}
+export default function LayananItemsIndex() {
+    const { service } = usePage<ServiceItemPageProps>().props;
 
-export default function LayananItemsIndex({ service, items, filters }: Props) {
     return (
         <AppLayout
             breadcrumbs={[
                 { title: 'Layanan', href: layanan.index() },
-                {
-                    title: `Price List ${service.name}`,
-                    href: layanan.show(service.id),
-                },
+                { title: `Price List ${service.name}`, href: layanan.show(service.id) },
             ]}
         >
             <Head title={`Price List ${service.name}`} />
             <section className="flex flex-1 flex-col gap-6 p-4 xl:p-6">
-                <ServiceItemsSection filters={filters} service={service} items={items} />
+                <ServiceItemsSection />
             </section>
         </AppLayout>
     );
