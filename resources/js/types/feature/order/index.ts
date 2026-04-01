@@ -1,8 +1,11 @@
 export interface Order {
-    id: string;
-    customer: string;
-    service: string;
-    status: 'Selesai' | 'Diproses' | 'Pending' | 'Batal';
-    date: string;
-    amount: number;
+    id: number;
+    order_code: string;
+    customer_name: string;
+    status: string;
+    total_price: number;
+    order_at: string;
+    created_at: string;
+    updated_at: string;
+    payment_method: string;
 }

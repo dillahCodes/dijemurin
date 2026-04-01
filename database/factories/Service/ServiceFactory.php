@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Service;
 
-use App\Models\Service;
+use App\Models\Service\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

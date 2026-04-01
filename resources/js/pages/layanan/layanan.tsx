@@ -1,7 +1,7 @@
+import { Head } from '@inertiajs/react';
 import { ServiceSection } from '@/components/feature/layanan/service-section';
 import AppLayout from '@/layouts/app-layout';
 import layanan from '@/routes/layanan';
-import { Head } from '@inertiajs/react';
 
 export default function ServicesIndex() {
     return (

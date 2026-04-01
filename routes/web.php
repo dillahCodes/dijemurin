@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceItemController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{service}/items', [ServiceItemController::class, 'store'])->name('items.store');
         Route::delete('/{service}/items/{serviceItem}', [ServiceItemController::class, 'destroy'])->name('items.destroy');
         Route::patch('/{service}/items/{serviceItem}', [ServiceItemController::class, 'update'])->name('items.update');
+    });
+
+    Route::prefix('order')->name('order.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
     });
 });
 

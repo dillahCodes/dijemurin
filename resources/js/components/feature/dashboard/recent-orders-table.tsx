@@ -13,7 +13,7 @@ interface RecentOrdersTableProps {
 }
 
 interface OrderStatusBadgeProps {
-    status: Order['status'];
+    status: string;
 }
 
 interface OrderTableRowProps {
@@ -31,27 +31,62 @@ function formatCurrency(amount: number): string {
     }).format(amount);
 }
 
-function getStatusBadgeVariant(status: Order['status']): BadgeVariant {
-    const variantMap: Record<Order['status'], BadgeVariant> = {
-        Selesai: 'default',
-        Batal: 'destructive',
-        Pending: 'secondary',
-        Diproses: 'outline',
-    };
+function getStatusBadgeVariant(status: string): BadgeVariant {
+    const normalizedStatus = status.toLowerCase();
 
-    return variantMap[status];
+    switch (normalizedStatus) {
+        case 'selesai':
+            return 'default';
+        case 'batal':
+            return 'destructive';
+        case 'pending':
+            return 'secondary';
+        case 'diproses':
+            return 'outline';
+        default:
+            return 'outline';
+    }
 }
 
-function getStatusBadgeClass(status: Order['status']): string {
-    if (status === 'Selesai') {
+function getStatusBadgeClass(status: string): string {
+    const normalizedStatus = status.toLowerCase();
+
+    if (normalizedStatus === 'selesai') {
         return 'border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-600';
     }
 
-    if (status === 'Diproses') {
+    if (normalizedStatus === 'diproses') {
         return 'border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400';
     }
 
     return '';
+}
+
+function displayStatus(status: string): string {
+    if (!status) {
+return '-';
+}
+
+    // capitalize first letter
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
+function displayDate(isoDateString: string): string {
+    if (!isoDateString) {
+return '-';
+}
+
+    try {
+        const date = new Date(isoDateString);
+
+        return new Intl.DateTimeFormat('id-ID', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+        }).format(date);
+    } catch {
+        return isoDateString;
+    }
 }
 
 /**
@@ -60,7 +95,7 @@ function getStatusBadgeClass(status: Order['status']): string {
 function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
     return (
         <Badge variant={getStatusBadgeVariant(status)} className={cn('font-medium', getStatusBadgeClass(status))}>
-            {status}
+            {displayStatus(status)}
         </Badge>
     );
 }
@@ -68,14 +103,14 @@ function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
 function OrderTableRow({ order }: OrderTableRowProps) {
     return (
         <TableRow className="group transition-colors">
-            <TableCell className="font-mono text-xs font-semibold text-muted-foreground">{order.id}</TableCell>
-            <TableCell className="font-medium">{order.customer}</TableCell>
-            <TableCell className="text-muted-foreground">{order.service}</TableCell>
+            <TableCell className="font-mono text-xs font-semibold text-muted-foreground">{order.order_code}</TableCell>
+            <TableCell className="font-medium">{order.customer_name}</TableCell>
+            <TableCell className="text-xs text-muted-foreground uppercase">{order.payment_method}</TableCell>
             <TableCell>
                 <OrderStatusBadge status={order.status} />
             </TableCell>
-            <TableCell className="text-muted-foreground">{order.date}</TableCell>
-            <TableCell className="text-right font-semibold">{formatCurrency(order.amount)}</TableCell>
+            <TableCell className="text-muted-foreground">{displayDate(order.order_at)}</TableCell>
+            <TableCell className="text-right font-semibold">{formatCurrency(order.total_price)}</TableCell>
         </TableRow>
     );
 }
@@ -90,7 +125,7 @@ export function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
                 <TableRow className="hover:bg-transparent">
                     <TableHead className="text-xs">Order ID</TableHead>
                     <TableHead className="text-xs">Pelanggan</TableHead>
-                    <TableHead className="text-xs">Layanan</TableHead>
+                    <TableHead className="text-xs">Metode</TableHead>
                     <TableHead className="text-xs">Status</TableHead>
                     <TableHead className="text-xs">Tanggal</TableHead>
                     <TableHead className="text-right text-xs">Total</TableHead>

@@ -1,8 +1,8 @@
+import { usePage } from '@inertiajs/react';
 import { Activity } from 'react';
 
 import type { ServiceItemPageProps } from '@/types/feature/layanan';
 
-import { usePage } from '@inertiajs/react';
 import { ServiceItemCard } from './service-items-card';
 import { ServiceItemsEmpty } from './service-items-empty';
 import { ServiceItemsHeader } from './service-items-header';

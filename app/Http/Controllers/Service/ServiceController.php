@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Service;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceStoreRequest;
 use App\Http\Requests\Service\ServiceUpdateRequest;
-use App\Models\Service;
+use App\Models\Service\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;

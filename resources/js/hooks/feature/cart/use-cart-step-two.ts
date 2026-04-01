@@ -1,6 +1,14 @@
+import { router } from '@inertiajs/react';
+import { toast } from 'sonner';
 import { useModal } from '@/components/ui/modal';
+import type { CartItemType} from '@/context/feature/cart/cart-context';
 import { useCart } from '@/context/feature/cart/cart-context';
+import order from '@/routes/order';
 import { checkoutSchema } from '@/schema/feature/cart/checkout-schema';
+
+function changeItemsData(items: CartItemType[]) {
+    return items.map((item) => ({ id: item.data.id, qty: item.qty }));
+}
 
 export function useCartStepTwo(onCancel: () => void) {
     const { state, dispatch } = useCart();
@@ -12,6 +20,8 @@ export function useCartStepTwo(onCancel: () => void) {
         payment_method: paymentMethod,
         payment_amount: paymentAmount,
     } = state;
+
+    const simplifiedCartItems = changeItemsData(items);
 
     const totalBayar = items.reduce((acc, item) => acc + item.qty * item.data.price, 0);
     const kembalian = paymentAmount - totalBayar;
@@ -29,8 +39,29 @@ export function useCartStepTwo(onCancel: () => void) {
 
     const handleConfirmSubmit = () => {
         console.log('sukses');
-        dispatch({ type: 'CLEAR' });
-        onCancel();
+        console.log({ simplifiedCartItems });
+
+        const payload = {
+            cart_items: simplifiedCartItems,
+            customer_name: customerName,
+            payment_method: paymentMethod,
+            payment_amount: paymentAmount,
+        };
+
+        router.post(order.store().url, payload, {
+            onSuccess: () => {
+                dispatch({ type: 'CLEAR' });
+                onCancel();
+                toast.success('Pesanan berhasil ditambahkan', {
+                    position: 'top-center',
+                });
+            },
+            onError: () => {
+                toast.error('Gagal menambahkan pesanan', {
+                    position: 'top-center',
+                });
+            },
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {

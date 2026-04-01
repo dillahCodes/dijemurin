@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input';
 import { useServiceSearch } from '@/hooks/feature/layanan/use-service-search';
 import type { ServiceSearchProps } from '@/hooks/feature/layanan/use-service-search';
 
-export function ServiceSearch(props: ServiceSearchProps) {
-    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleAddService } =
-        useServiceSearch(props);
+export function ServiceSearch({ value }: ServiceSearchProps) {
+    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleAddService } = useServiceSearch({
+        value,
+    });
 
     return (
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">

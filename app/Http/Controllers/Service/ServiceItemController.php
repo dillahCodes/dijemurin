@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Service;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceItemsStoreRequest;
 use App\Http\Requests\Service\ServiceItemUpdateRequest;
-use App\Models\Service;
-use App\Models\ServiceItem;
+use App\Models\Service\Service;
+use App\Models\Service\ServiceItem;
 
 class ServiceItemController extends Controller
 {

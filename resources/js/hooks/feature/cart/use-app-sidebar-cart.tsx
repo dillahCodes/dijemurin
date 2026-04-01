@@ -1,7 +1,7 @@
+import type React from 'react';
 import { useDrawer } from '@/components/ui/drawer';
 import { useCart } from '@/context/feature/cart/cart-context';
 import { useIsMobile } from '@/hooks/use-mobile';
-import React from 'react';
 
 export function useAppSidebarCart() {
     const isMobile = useIsMobile();
