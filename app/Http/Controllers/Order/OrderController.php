@@ -19,14 +19,18 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // search params
         $search = $request->query('search');
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
         $status = $request->query('status', '');
         $paymentMethod = $request->query('payment_method', '');
 
+        // convert string to enum
         $statusEnum = OrderStatus::tryFrom($status);
         $paymentMethodEnum = PaymentMethod::tryFrom($paymentMethod);
+        
+        // query orders with payment relationship
         $orders = Order::with('payment')->search($search)
             ->filterStatus($statusEnum)
             ->filterPaymentMethod($paymentMethodEnum)
