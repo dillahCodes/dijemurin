@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { LaravelPaginator } from '@/hooks/feature/order/use-pagination';
+import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Order } from '@/types/feature/order';
 import { OrderFilters } from './order-filters';
 import { OrderTable } from './order-table';
