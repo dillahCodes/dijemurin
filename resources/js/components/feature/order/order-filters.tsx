@@ -55,6 +55,12 @@ function OrderDateFilterModalContent({ initialState, onFilterDate }: OrderDateFi
     const modal = useModal();
     const [formData, setFormData] = useState(initialState);
 
+    const isEmpty = (v: string) => v.trim() === '';
+
+    const isOneEmpty =
+        (isEmpty(formData.start_date) && !isEmpty(formData.end_date)) ||
+        (!isEmpty(formData.start_date) && isEmpty(formData.end_date));
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -122,7 +128,9 @@ function OrderDateFilterModalContent({ initialState, onFilterDate }: OrderDateFi
                         <Button type="button" variant="outline" onClick={() => modal.close('order-date-filter')}>
                             Batal
                         </Button>
-                        <Button type="submit">Simpan</Button>
+                        <Button type="submit" disabled={isOneEmpty}>
+                            Simpan
+                        </Button>
                     </div>
                 </FieldGroup>
             </FieldSet>

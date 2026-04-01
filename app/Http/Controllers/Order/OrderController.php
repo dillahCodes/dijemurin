@@ -36,7 +36,7 @@ class OrderController extends Controller
             ->filterPaymentMethod($paymentMethodEnum)
             ->filterDateRange($startDate, $endDate)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('order/order', [
             'orderStatusOptions' => OrderStatus::options(),

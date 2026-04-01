@@ -1,7 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import type { LaravelPaginator } from '@/hooks/feature/order/use-pagination';
 import type { Order } from '@/types/feature/order';
 import { OrderFilters } from './order-filters';
 import { OrderTable } from './order-table';
+import { OrderTablePagination } from './order-table-pagination';
 
 export type OrderOption = {
     label: string;
@@ -20,7 +22,7 @@ export type OrderPageProps = {
     orderStatusOptions: OrderOption[];
     paymentMethodOptions: OrderOption[];
     filters: OrderFilterPageProps;
-    orders: { data: Order[] };
+    orders: LaravelPaginator<Order>;
 };
 
 export function OrderDataSection() {
@@ -32,11 +34,12 @@ export function OrderDataSection() {
                     <CardDescription>Kelola dan filter data pesanan laundry Anda.</CardDescription>
                 </div>
             </CardHeader>
-            <CardContent className="flex flex-col gap-6 p-6">
+            <CardContent className="flex flex-col gap-6 p-6 py-0!">
                 <OrderFilters />
                 <div className="rounded-md border">
                     <OrderTable />
                 </div>
+                <OrderTablePagination />
             </CardContent>
         </Card>
     );
