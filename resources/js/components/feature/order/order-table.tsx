@@ -1,5 +1,3 @@
-import { usePage } from '@inertiajs/react';
-import { Eye, Pencil, ShoppingBag } from 'lucide-react';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,6 +8,8 @@ import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
 import { cn } from '@/lib/utils';
 import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
+import { usePage } from '@inertiajs/react';
+import { Eye, Pencil, Printer, ShoppingBag } from 'lucide-react';
 import type { OrderPageProps } from './order-data-section';
 import { OrderTableEdit } from './order-table-edit';
 
@@ -126,6 +126,9 @@ export function OrderTable() {
                                 </Button>
                                 <Button size="icon" disabled={disabledButtonEdit} onClick={handleOpenEditModal(order)}>
                                     <Pencil />
+                                </Button>
+                                <Button size="icon" variant="secondary">
+                                    <Printer />
                                 </Button>
                             </TableCell>
                         </TableRow>
