@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Helpers\StringHelper;
 use App\Models\Order\Order;
@@ -59,6 +60,41 @@ class OrderService
             return $order;
         });
 
+    }
+
+    public static function updateOrder(array $data, Order $order): Order
+    {
+        return DB::transaction(function () use ($data, $order) {
+            $currentStatus = $order->status;
+            $newStatus = $data['status'];
+
+            if ($currentStatus === OrderStatus::PICKED_UP->value) {
+                throw ValidationException::withMessages([
+                    'status' => 'Pesanan sudah diambil.',
+                ]);
+            }
+
+            if ($currentStatus === OrderStatus::CANCELLED->value) {
+                throw ValidationException::withMessages([
+                    'status' => 'Pesanan sudah dibatalkan.',
+                ]);
+            }
+
+            $isNewStatusDone = $newStatus === OrderStatus::DONE->value;
+            $isCurrentStatusDone = $currentStatus === OrderStatus::DONE->value;
+
+            if ($isNewStatusDone && ! $isCurrentStatusDone) {
+                $data['completed_at'] = now();
+            }
+
+            if ($isCurrentStatusDone && ! $isNewStatusDone) {
+                $data['completed_at'] = null;
+            }
+
+            $order->update($data);
+
+            return $order;
+        });
     }
 
     public static function validatePayment(array $data, int $totalPrice): void

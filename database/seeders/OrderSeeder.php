@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Models\Service\ServiceItem;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -48,11 +49,11 @@ class OrderSeeder extends Seeder
 
             return [
                 'service_item_id' => $item->id,
-                'item_name'       => $item->name,
-                'item_price'      => $item->price,
-                'unit'            => $item->unit,
-                'quantity'        => $quantity,
-                'subtotal'        => $subtotal,
+                'item_name' => $item->name,
+                'item_price' => $item->price,
+                'unit' => $item->unit,
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
             ];
         });
 
@@ -60,12 +61,12 @@ class OrderSeeder extends Seeder
 
         // Insert order
         $orderId = DB::table('orders')->insertGetId([
-            'order_code'   => $this->generateOrderCode($index),
+            'order_code' => $this->generateOrderCode($index),
             'customer_name' => $this->randomCustomerName(),
-            'status'        => $status->value,
-            'total_price'   => $totalPrice,
-            'order_at'      => $orderAt,
-            'completed_at'  => in_array($status, [OrderStatus::DONE, OrderStatus::PICKED_UP])
+            'status' => $status->value,
+            'total_price' => $totalPrice,
+            'order_at' => $orderAt,
+            'completed_at' => in_array($status, [OrderStatus::DONE, OrderStatus::PICKED_UP])
                 ? $orderAt->copy()->addDays(rand(1, 3))
                 : null,
             'created_at' => $orderAt,
@@ -75,7 +76,7 @@ class OrderSeeder extends Seeder
         // Insert order_items
         $orderItemsData = $orderItems->map(fn (array $item) => [
             ...$item,
-            'order_id'   => $orderId,
+            'order_id' => $orderId,
             'created_at' => $orderAt,
             'updated_at' => $orderAt,
         ])->toArray();
@@ -89,26 +90,26 @@ class OrderSeeder extends Seeder
     /**
      * Buat payment untuk order.
      */
-    private function createPayment(int $orderId, int $totalPrice, \Carbon\CarbonInterface $orderAt): void
+    private function createPayment(int $orderId, int $totalPrice, CarbonInterface $orderAt): void
     {
         $method = $this->randomPaymentMethod();
 
         $cashPaymentAmount = null;
-        $cashChangeAmount  = null;
+        $cashChangeAmount = null;
 
         if ($method === PaymentMethod::CASH) {
             // Bulatkan ke atas ke nominal yang lazim (+ kembalian)
             $cashPaymentAmount = $this->roundUpCash($totalPrice);
-            $cashChangeAmount  = $cashPaymentAmount - $totalPrice;
+            $cashChangeAmount = $cashPaymentAmount - $totalPrice;
         }
 
         DB::table('payments')->insert([
-            'order_id'            => $orderId,
-            'method'              => $method->value,
+            'order_id' => $orderId,
+            'method' => $method->value,
             'cash_payment_amount' => $cashPaymentAmount,
-            'cash_change_amount'  => $cashChangeAmount,
-            'created_at'          => $orderAt,
-            'updated_at'          => $orderAt,
+            'cash_change_amount' => $cashChangeAmount,
+            'created_at' => $orderAt,
+            'updated_at' => $orderAt,
         ]);
     }
 
@@ -118,7 +119,7 @@ class OrderSeeder extends Seeder
 
     private function generateOrderCode(int $index): string
     {
-        return 'ORD-' . now()->format('Ymd') . '-' . str_pad($index, 4, '0', STR_PAD_LEFT);
+        return 'ORD-'.now()->format('Ymd').'-'.str_pad($index, 4, '0', STR_PAD_LEFT);
     }
 
     private function randomStatus(): OrderStatus
@@ -141,11 +142,11 @@ class OrderSeeder extends Seeder
     private function randomQuantity(string $unit): float
     {
         return match ($unit) {
-            'kg'     => round(rand(10, 100) / 10, 1),   // 1.0 – 10.0 kg
-            'pcs'    => rand(1, 5),
+            'kg' => round(rand(10, 100) / 10, 1),   // 1.0 – 10.0 kg
+            'pcs' => rand(1, 5),
             'pasang' => rand(1, 3),
-            'buah'   => rand(1, 4),
-            default  => rand(1, 5),
+            'buah' => rand(1, 4),
+            default => rand(1, 5),
         };
     }
 

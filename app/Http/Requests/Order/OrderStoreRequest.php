@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Enums\Payment\PaymentMethod;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class OrderStoreRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class OrderStoreRequest extends FormRequest
     {
         return [
             'customer_name' => ['required', 'string', 'max:255'],
-            'payment_method' => ['required', 'in:cash,qris'],
+            'payment_method' => ['required', new Enum(PaymentMethod::class)],
             'payment_amount' => ['required', 'numeric', 'min:0'],
             'cart_items' => ['required', 'array', 'min:1'],
             'cart_items.*.id' => ['required', 'integer', 'exists:service_items,id'],
@@ -38,7 +40,7 @@ class OrderStoreRequest extends FormRequest
             'customer_name.required' => 'Nama pelanggan wajib diisi.',
             'customer_name.max' => 'Nama pelanggan maksimal 255 karakter.',
             'payment_method.required' => 'Metode pembayaran wajib diisi.',
-            'payment_method.in' => 'Metode pembayaran harus cash atau qris.',
+            'payment_method.enum' => 'Metode pembayaran harus cash atau qris.',
             'payment_amount.required' => 'Jumlah pembayaran wajib diisi.',
             'payment_amount.numeric' => 'Jumlah pembayaran harus berupa angka.',
             'payment_amount.min' => 'Jumlah pembayaran minimal 0.',

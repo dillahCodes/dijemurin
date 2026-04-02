@@ -6,6 +6,7 @@ use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderStoreRequest;
+use App\Http\Requests\Order\OrderUpdateRequest;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
 use App\Services\Order\OrderService;
@@ -29,7 +30,7 @@ class OrderController extends Controller
         // convert string to enum
         $statusEnum = OrderStatus::tryFrom($status);
         $paymentMethodEnum = PaymentMethod::tryFrom($paymentMethod);
-        
+
         // query orders with payment relationship
         $orders = Order::with('payment')->search($search)
             ->filterStatus($statusEnum)
@@ -91,9 +92,12 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(OrderUpdateRequest $request, Order $order)
     {
-        //
+        $data = $request->validated();
+        OrderService::updateOrder($data, $order);
+
+        return redirect()->back()->with(['success' => 'Pesanan berhasil diupdate']);
     }
 
     /**

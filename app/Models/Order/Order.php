@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
-#[Fillable(['order_code', 'customer_name', 'total_price'])]
+#[Fillable(['order_code', 'customer_name', 'total_price', 'status', 'completed_at'])]
 class Order extends Model
 {
     protected function casts(): array

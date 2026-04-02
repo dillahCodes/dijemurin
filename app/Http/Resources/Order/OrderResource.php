@@ -19,12 +19,15 @@ class OrderResource extends JsonResource
                 'id',
                 'order_code',
                 'customer_name',
-                'status',
                 'total_price',
                 'order_at',
                 'created_at',
                 'updated_at',
             ]),
+            'status' => [
+                'label' => $this->status->IndonesianLabel(),
+                'value' => $this->status->value,
+            ],
             'payment_method' => $this->payment?->method,
         ];
     }
