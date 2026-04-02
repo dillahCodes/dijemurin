@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOrderEdit } from '@/hooks/feature/order/use-order-edit';
-import { Order } from '@/types/feature/order';
+import type { Order } from '@/types/feature/order';
 import type { OrderOption } from './order-data-section';
 
 interface OrderTableEditProps {

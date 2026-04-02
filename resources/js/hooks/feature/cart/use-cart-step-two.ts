@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
 import { useModal } from '@/components/ui/modal';
-import type { CartItemType} from '@/context/feature/cart/cart-context';
+import type { CartItemType } from '@/context/feature/cart/cart-context';
 import { useCart } from '@/context/feature/cart/cart-context';
 import order from '@/routes/order';
 import { checkoutSchema } from '@/schema/feature/cart/checkout-schema';

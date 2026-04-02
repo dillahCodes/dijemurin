@@ -7,7 +7,9 @@ export function OrderTablePagination() {
     const { orders } = usePage<OrderPageProps>().props;
     const { paginationItems, currentPage, handleNavigate } = usePagination(orders);
 
-    if (!orders.data.length) return null;
+    if (!orders.data.length) {
+        return null;
+    }
 
     return (
         <Pagination>

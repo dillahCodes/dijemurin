@@ -34,8 +34,8 @@ export const getPaginationPages = ({ currentPage, totalData, perPage, mode = 'de
     const totalPages = Math.ceil(totalData / perPage);
 
     if (totalPages === FIRST_PAGE) {
-return [FIRST_PAGE];
-}
+        return [FIRST_PAGE];
+    }
 
     // 1. Tentukan jumlah tetangga
     const siblingCount = mode === 'desktop' ? SIBLING_COUNT_DESKTOP : SIBLING_COUNT_MOBILE;

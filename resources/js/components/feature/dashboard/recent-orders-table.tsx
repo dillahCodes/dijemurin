@@ -64,8 +64,8 @@ function getStatusBadgeClass(status: string): string {
 
 function displayStatus(status: string): string {
     if (!status) {
-return '-';
-}
+        return '-';
+    }
 
     // capitalize first letter
     return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
@@ -73,8 +73,8 @@ return '-';
 
 function displayDate(isoDateString: string): string {
     if (!isoDateString) {
-return '-';
-}
+        return '-';
+    }
 
     try {
         const date = new Date(isoDateString);

@@ -1,7 +1,7 @@
 export function formatDate(isoDateString: string): string {
     if (!isoDateString) {
-return '-';
-}
+        return '-';
+    }
 
     try {
         const date = new Date(isoDateString);

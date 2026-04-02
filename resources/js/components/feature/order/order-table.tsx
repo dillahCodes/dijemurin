@@ -1,4 +1,7 @@
-import { Badge, BadgeVariant } from '@/components/ui/badge';
+import { usePage } from '@inertiajs/react';
+import { Eye, Pencil, ShoppingBag } from 'lucide-react';
+import type { BadgeVariant } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { useModal } from '@/components/ui/modal';
@@ -6,9 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
 import { cn } from '@/lib/utils';
-import { Order, OrderStatusIndonesian } from '@/types/feature/order';
-import { usePage } from '@inertiajs/react';
-import { Eye, Pencil, ShoppingBag } from 'lucide-react';
+import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
 import type { OrderPageProps } from './order-data-section';
 import { OrderTableEdit } from './order-table-edit';
 
@@ -75,7 +76,9 @@ export function OrderTable() {
         });
     };
 
-    if (!ordersData.length) return <OrderTableEmpty />;
+    if (!ordersData.length) {
+        return <OrderTableEmpty />;
+    }
 
     return (
         <Table>
