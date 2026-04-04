@@ -1,3 +1,7 @@
+import { usePage } from '@inertiajs/react';
+import { Eye, Loader2, Pencil, Printer, ShoppingBag } from 'lucide-react';
+import { Activity, useEffect, useEffectEvent, useState } from 'react';
+import { Fragment } from 'react/jsx-runtime';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -5,17 +9,13 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
+import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
 import { useOrderTableActions } from '@/hooks/feature/order/use-order-table-actions';
 import { usePrintElement } from '@/hooks/use-print-element';
 import { cn } from '@/lib/utils';
-import type { Order, OrderDetail, OrderStatusIndonesian } from '@/types/feature/order';
-import { usePage } from '@inertiajs/react';
-import { Eye, Loader2, Pencil, Printer, ShoppingBag } from 'lucide-react';
-import type { OrderPageProps } from './order-data-section';
-import { Fragment } from 'react/jsx-runtime';
-import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
+import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
 import { OrderPrintReceiptSection } from './detail/order-print-receipt';
-import { Activity, useEffect, useState } from 'react';
+import type { OrderPageProps } from './order-data-section';
 
 export function getStatusBadgeVariant(status: OrderStatusIndonesian): BadgeVariant {
     const normalizedStatus = status.toLowerCase();
@@ -94,17 +94,21 @@ function OrderRowPrint({ order }: OrderRowPrintProps) {
         setIsPrinting(true);
     };
 
+    const handlePrintEffect = useEffectEvent(() => {
+        handlePrint(`Struk-Pesanan-${order.order_code}`);
+        setIsPrinting(false);
+    });
+
     useEffect(() => {
         if (isPrinting && orderPrintData?.data) {
-            handlePrint(`Struk-Pesanan-${order.order_code}`);
-            setIsPrinting(false);
+            handlePrintEffect();
         }
     }, [isPrinting, orderPrintData]);
 
     return (
         <Fragment>
-            <Activity mode={orderPrintData?.data ? 'visible' : 'hidden'}>
-                <OrderPrintReceiptSection order={orderPrintData?.data!} ref={printRef} />
+            <Activity mode={isPrinting ? 'visible' : 'hidden'}>
+                <OrderPrintReceiptSection order={orderPrintData?.data} ref={printRef} />
             </Activity>
 
             <Button size="icon" variant="secondary" onClick={handlePrintAction} disabled={isLoadingOrderPrintData}>

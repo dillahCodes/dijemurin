@@ -1,6 +1,6 @@
+import { usePage } from '@inertiajs/react';
 import type { OrderDetail } from '@/types/feature/order';
 import type { ApiResponse } from '@/types/response';
-import { usePage } from '@inertiajs/react';
 import { OrderDetailHeader } from './order-detail-header';
 import { OrderInfo } from './order-info';
 import { OrderItems } from './order-items';

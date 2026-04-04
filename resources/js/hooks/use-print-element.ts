@@ -10,6 +10,7 @@ const createHiddenIframe = (): HTMLIFrameElement => {
         border: 'none',
     });
     document.body.appendChild(iframe);
+
     return iframe;
 };
 
@@ -27,7 +28,10 @@ const setupIframeContent = (iframeDoc: Document, title: string, contentHTML: str
 // --- 3. Fungsi untuk eksekusi print dan hapus iframe ---
 const executePrintAndCleanup = (iframe: HTMLIFrameElement, originalTitle: string) => {
     const contentWindow = iframe.contentWindow;
-    if (!contentWindow) return;
+
+    if (!contentWindow) {
+        return;
+    }
 
     // Fungsi helper untuk cleanup agar tidak ada duplikasi kode
     const cleanup = () => {
@@ -52,7 +56,9 @@ export function usePrintElement<T extends HTMLElement>() {
     const printRef = useRef<T | null>(null);
 
     const handlePrint = (documentTitle: string) => {
-        if (!printRef.current) return;
+        if (!printRef.current) {
+            return;
+        }
 
         const originalTitle = document.title;
         document.title = documentTitle; // Ubah title sementara untuk nama file PDF/Print
@@ -66,7 +72,10 @@ export function usePrintElement<T extends HTMLElement>() {
         } else {
             // Fallback error handling jika iframe gagal dirender
             document.title = originalTitle;
-            if (document.body.contains(iframe)) document.body.removeChild(iframe);
+
+            if (document.body.contains(iframe)) {
+                document.body.removeChild(iframe);
+            }
         }
     };
 

@@ -1,6 +1,6 @@
+import { Activity } from 'react';
 import { formatDate } from '@/helper/formatted-date';
 import type { OrderDetail } from '@/types/feature/order';
-import { Activity } from 'react';
 
 interface OrderPrintReceiptProps {
     order?: OrderDetail;
@@ -41,7 +41,9 @@ function Divider() {
 }
 
 export function OrderPrintReceiptSection({ order, ref }: OrderPrintReceiptProps) {
-    if (!order) return <div className="hidden print:block" ref={ref} />;
+    if (!order) {
+        return <div className="hidden print:block" ref={ref} />;
+    }
 
     const { order_code, customer_name, order_at, order_items, payment, total_price } = order;
     const isCashPayment = payment?.method === 'cash';
