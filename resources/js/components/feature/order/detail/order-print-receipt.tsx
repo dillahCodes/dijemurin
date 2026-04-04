@@ -1,10 +1,10 @@
-import { Activity } from 'react';
 import { formatDate } from '@/helper/formatted-date';
-import { useOrderPrintReceipt } from '@/hooks/feature/order/use-order-print-receipt';
 import type { OrderDetail } from '@/types/feature/order';
+import { Activity } from 'react';
 
 interface OrderPrintReceiptProps {
-    order: OrderDetail;
+    order?: OrderDetail;
+    ref?: React.RefObject<HTMLDivElement | null>;
 }
 
 interface DotRowProps {
@@ -40,12 +40,14 @@ function Divider() {
     return <hr style={{ borderTop: '1px dashed #000', margin: '4px 0' }} />;
 }
 
-export function OrderPrintReceiptSection({ order }: OrderPrintReceiptProps) {
+export function OrderPrintReceiptSection({ order, ref }: OrderPrintReceiptProps) {
+    if (!order) return <div className="hidden print:block" ref={ref} />;
+
     const { order_code, customer_name, order_at, order_items, payment, total_price } = order;
-    const { isCashPayment } = useOrderPrintReceipt(order);
+    const isCashPayment = payment?.method === 'cash';
 
     return (
-        <div className="hidden print:block">
+        <div className="hidden print:block" ref={ref}>
             <div
                 style={{
                     fontFamily: "'Courier New', Courier, monospace",

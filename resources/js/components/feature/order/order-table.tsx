@@ -1,5 +1,3 @@
-import { usePage } from '@inertiajs/react';
-import { Eye, Pencil, Printer, ShoppingBag } from 'lucide-react';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,9 +6,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
 import { useOrderTableActions } from '@/hooks/feature/order/use-order-table-actions';
+import { usePrintElement } from '@/hooks/use-print-element';
 import { cn } from '@/lib/utils';
-import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
+import type { Order, OrderDetail, OrderStatusIndonesian } from '@/types/feature/order';
+import { usePage } from '@inertiajs/react';
+import { Eye, Loader2, Pencil, Printer, ShoppingBag } from 'lucide-react';
 import type { OrderPageProps } from './order-data-section';
+import { Fragment } from 'react/jsx-runtime';
+import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
+import { OrderPrintReceiptSection } from './detail/order-print-receipt';
+import { Activity, useEffect, useState } from 'react';
 
 export function getStatusBadgeVariant(status: OrderStatusIndonesian): BadgeVariant {
     const normalizedStatus = status.toLowerCase();
@@ -75,6 +80,40 @@ function OrderTableHead() {
     );
 }
 
+interface OrderRowPrintProps {
+    order: Order;
+}
+
+function OrderRowPrint({ order }: OrderRowPrintProps) {
+    const [isPrinting, setIsPrinting] = useState(false);
+    const { data: orderPrintData, isLoading: isLoadingOrderPrintData, refetch } = useOrderPrintData(order);
+    const { printRef, handlePrint } = usePrintElement<HTMLDivElement>();
+
+    const handlePrintAction = async () => {
+        await refetch();
+        setIsPrinting(true);
+    };
+
+    useEffect(() => {
+        if (isPrinting && orderPrintData?.data) {
+            handlePrint(`Struk-Pesanan-${order.order_code}`);
+            setIsPrinting(false);
+        }
+    }, [isPrinting, orderPrintData]);
+
+    return (
+        <Fragment>
+            <Activity mode={orderPrintData?.data ? 'visible' : 'hidden'}>
+                <OrderPrintReceiptSection order={orderPrintData?.data!} ref={printRef} />
+            </Activity>
+
+            <Button size="icon" variant="secondary" onClick={handlePrintAction} disabled={isLoadingOrderPrintData}>
+                {isLoadingOrderPrintData ? <Loader2 className="animate-spin" /> : <Printer />}
+            </Button>
+        </Fragment>
+    );
+}
+
 interface OrderTableBodyProps {
     ordersData: Order[];
 }
@@ -117,9 +156,7 @@ function OrderTableBody({ ordersData }: OrderTableBodyProps) {
                             <Button size="icon" disabled={disabledButtonEdit} onClick={handleOpenEditModal(order)}>
                                 <Pencil />
                             </Button>
-                            <Button size="icon" variant="outline">
-                                <Printer />
-                            </Button>
+                            <OrderRowPrint order={order} />
                         </TableCell>
                     </TableRow>
                 );

@@ -26,7 +26,6 @@ class OrderController extends Controller
             'paymentMethodOptions' => PaymentMethod::options(),
             'filters' => $request->only(['search', 'status', 'payment_method', 'start_date', 'end_date']),
             'orders' => $this->getOrdersData($request),
-            'detailOrder' => null,
         ]);
     }
 
@@ -61,6 +60,17 @@ class OrderController extends Controller
         return Inertia::render('order/order-detail', [
             'detailOrder' => $orderDetail,
         ]);
+    }
+
+    /**
+     * Print the specified resource.
+     */
+    public function print(Order $order)
+    {
+        $loadOrderDetail = $order->load(['orderItem', 'payment']);
+        $orderDetail = new OrderDetailResource($loadOrderDetail);
+
+        return $orderDetail;
     }
 
     private function getOrdersData(Request $request)

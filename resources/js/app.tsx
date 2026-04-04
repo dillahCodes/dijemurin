@@ -9,6 +9,7 @@ import { DrawerProvider } from './components/ui/drawer';
 import { ModalProvider } from './components/ui/modal';
 import { Toaster } from './components/ui/sonner';
 import { CartProvider } from './context/feature/cart/cart-context';
+import QueryProvider from './context/query-client-provider';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -20,16 +21,18 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <CartProvider>
-                    <TooltipProvider delayDuration={0}>
-                        <ModalProvider>
-                            <DrawerProvider>
-                                <Toaster />
-                                <App {...props} />
-                            </DrawerProvider>
-                        </ModalProvider>
-                    </TooltipProvider>
-                </CartProvider>
+                <QueryProvider>
+                    <CartProvider>
+                        <TooltipProvider delayDuration={0}>
+                            <ModalProvider>
+                                <DrawerProvider>
+                                    <Toaster />
+                                    <App {...props} />
+                                </DrawerProvider>
+                            </ModalProvider>
+                        </TooltipProvider>
+                    </CartProvider>
+                </QueryProvider>
             </StrictMode>,
         );
     },
