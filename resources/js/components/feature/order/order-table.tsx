@@ -89,6 +89,8 @@ function OrderRowPrint({ order }: OrderRowPrintProps) {
     const { data: orderPrintData, isLoading: isLoadingOrderPrintData, refetch } = useOrderPrintData(order);
     const { printRef, handlePrint } = usePrintElement<HTMLDivElement>();
 
+    const isOrderCancelled = order.status.value === 'cancelled';
+
     const handlePrintAction = async () => {
         await refetch();
         setIsPrinting(true);
@@ -111,7 +113,12 @@ function OrderRowPrint({ order }: OrderRowPrintProps) {
                 <OrderPrintReceiptSection order={orderPrintData?.data} ref={printRef} />
             </Activity>
 
-            <Button size="icon" variant="secondary" onClick={handlePrintAction} disabled={isLoadingOrderPrintData}>
+            <Button
+                size="icon"
+                variant="secondary"
+                onClick={handlePrintAction}
+                disabled={isLoadingOrderPrintData || isOrderCancelled}
+            >
                 {isLoadingOrderPrintData ? <Loader2 className="animate-spin" /> : <Printer />}
             </Button>
         </Fragment>

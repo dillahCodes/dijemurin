@@ -46,7 +46,11 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
                         <Activity mode={shouldShowWarning ? 'visible' : 'hidden'}>
                             <FieldDescription className="flex gap-1 text-xs text-yellow-600">
                                 <TriangleAlert className="size-4" />
-                                <span>Status tidak bisa diubah jika sudah diambil atau dibatalkan</span>
+                                <span>
+                                    Status tidak bisa diubah kembali jika sudah{' '}
+                                    <span className="font-semibold italic">diambil</span> atau{' '}
+                                    <span className="font-semibold italic">dibatalkan</span>
+                                </span>
                             </FieldDescription>
                         </Activity>
                     </Field>
