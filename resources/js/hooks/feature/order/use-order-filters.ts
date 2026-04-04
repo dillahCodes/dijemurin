@@ -59,7 +59,9 @@ export function useOrderFilters(initialValues: OrderFilterPageProps) {
         setQuery({ start_date: start_date || undefined, end_date: end_date || undefined });
     };
 
-    const shouldDisableSearch = !filterState.search.length && !initialValues.search;
+    const searchLength = filterState.search?.length ?? 0;
+    const initialSearchLength = initialValues?.search?.length ?? 0;
+    const shouldDisableSearch = !searchLength && !initialSearchLength;
 
     return {
         filterState,

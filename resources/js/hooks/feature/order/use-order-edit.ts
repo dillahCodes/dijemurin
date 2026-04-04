@@ -13,6 +13,11 @@ export function useOrderEdit(orderData: Order) {
     const hasPickedUp = orderData.status.value === 'picked up';
     const hasCancelled = orderData.status.value === 'cancelled';
 
+    const isSelectedPickedUp = statusValue === 'picked up';
+    const isSelectedCancelled = statusValue === 'cancelled';
+
+    const shouldShowWarning = isSelectedPickedUp || isSelectedCancelled;
+
     const shouldDisableStatusSelect = hasPickedUp || hasCancelled;
     const shouldDisableSaveButton = statusValue === orderData.status.value || processing;
 
@@ -48,5 +53,6 @@ export function useOrderEdit(orderData: Order) {
         statusValue,
         handleSubmit,
         shouldDisableStatusSelect,
+        shouldShowWarning,
     };
 }

@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOrderEdit } from '@/hooks/feature/order/use-order-edit';
 import type { Order } from '@/types/feature/order';
 import type { OrderOption } from './order-data-section';
+import { TriangleAlert } from 'lucide-react';
+import { Activity } from 'react';
 
 interface OrderTableEditProps {
     order: Order;
@@ -19,6 +21,7 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
         handleSubmit,
         statusValue,
         shouldDisableStatusSelect,
+        shouldShowWarning,
     } = useOrderEdit(order);
 
     return (
@@ -28,7 +31,7 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
                     <Field>
                         <FieldLabel htmlFor="status">Status</FieldLabel>
                         <Select value={statusValue} onValueChange={handleStatusChange} disabled={shouldDisableStatusSelect}>
-                            <SelectTrigger className="w-full cursor-pointer">
+                            <SelectTrigger id="status" className="w-full cursor-pointer">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
 
@@ -40,6 +43,12 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
                                 ))}
                             </SelectContent>
                         </Select>
+                        <Activity mode={shouldShowWarning ? 'visible' : 'hidden'}>
+                            <FieldDescription className="flex gap-1 text-xs text-yellow-600">
+                                <TriangleAlert className="size-4" />
+                                <span>Status tidak bisa diubah jika sudah diambil atau dibatalkan</span>
+                            </FieldDescription>
+                        </Activity>
                     </Field>
                 </FieldGroup>
             </FieldSet>

@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::post('/', [OrderController::class, 'store'])->name('store');
         Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     });
 });
 

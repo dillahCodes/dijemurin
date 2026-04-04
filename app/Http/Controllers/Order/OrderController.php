@@ -7,6 +7,7 @@ use App\Enums\Payment\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderStoreRequest;
 use App\Http\Requests\Order\OrderUpdateRequest;
+use App\Http\Resources\Order\OrderDetailResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
 use App\Services\Order\OrderService;
@@ -20,36 +21,12 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        // search params
-        $search = $request->query('search');
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
-        $status = $request->query('status', '');
-        $paymentMethod = $request->query('payment_method', '');
-
-        // convert string to enum
-        $statusEnum = OrderStatus::tryFrom($status);
-        $paymentMethodEnum = PaymentMethod::tryFrom($paymentMethod);
-
-        // query orders with payment relationship
-        $orders = Order::with('payment')->search($search)
-            ->filterStatus($statusEnum)
-            ->filterPaymentMethod($paymentMethodEnum)
-            ->filterDateRange($startDate, $endDate)
-            ->latest()
-            ->paginate(10);
-
         return Inertia::render('order/order', [
             'orderStatusOptions' => OrderStatus::options(),
             'paymentMethodOptions' => PaymentMethod::options(),
-            'filters' => [
-                'search' => $search ?? '',
-                'status' => $status ?? '',
-                'payment_method' => $paymentMethod ?? '',
-                'start_date' => $startDate ?? '',
-                'end_date' => $endDate ?? '',
-            ],
-            'orders' => OrderResource::collection($orders),
+            'filters' => $request->only(['search', 'status', 'payment_method', 'start_date', 'end_date']),
+            'orders' => $this->getOrdersData($request),
+            'detailOrder' => null,
         ]);
     }
 
@@ -78,7 +55,29 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $loadOrderDetail = $order->load(['orderItem', 'payment']);
+        $orderDetail = new OrderDetailResource($loadOrderDetail);
+
+        return Inertia::render('order/order-detail', [
+            'detailOrder' => $orderDetail,
+        ]);
+    }
+
+    private function getOrdersData(Request $request)
+    {
+        $statusEnum = OrderStatus::tryFrom($request->query('status', ''));
+        $paymentMethodEnum = PaymentMethod::tryFrom($request->query('payment_method', ''));
+
+        $orders = Order::with('payment')
+            ->search($request->query('search'))
+            ->filterStatus($statusEnum)
+            ->filterPaymentMethod($paymentMethodEnum)
+            ->filterDateRange($request->query('start_date'), $request->query('end_date'))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return OrderResource::collection($orders);
     }
 
     /**

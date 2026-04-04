@@ -193,8 +193,8 @@ export function ServiceList({ search }: Props) {
 Gunakan komponen deklaratif seperti `<Activity />` untuk membungkus kondisi visualisasi elemen UI.
 
 ```tsx
-// ✅ DO: Menggunakan komponen Activity
-import { Activity } from '@/components/ui/activity';
+// ✅ DO: Menggunakan komponen Activity dari react versi terbaru
+import { Activity } from 'react';
 
 export function ServiceList({ search }: Props) {
     return (

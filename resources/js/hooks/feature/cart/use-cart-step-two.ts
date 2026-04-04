@@ -38,9 +38,6 @@ export function useCartStepTwo(onCancel: () => void) {
     const errors = !formValidation.success ? formValidation.error.flatten().fieldErrors : null;
 
     const handleConfirmSubmit = () => {
-        console.log('sukses');
-        console.log({ simplifiedCartItems });
-
         const payload = {
             cart_items: simplifiedCartItems,
             customer_name: customerName,
