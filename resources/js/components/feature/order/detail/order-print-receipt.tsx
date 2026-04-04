@@ -1,6 +1,6 @@
 import { Activity } from 'react';
-import { useOrderPrintReceipt } from '@/hooks/feature/order/use-order-print-receipt';
 import { formatDate } from '@/helper/formatted-date';
+import { useOrderPrintReceipt } from '@/hooks/feature/order/use-order-print-receipt';
 import type { OrderDetail } from '@/types/feature/order';
 
 interface OrderPrintReceiptProps {

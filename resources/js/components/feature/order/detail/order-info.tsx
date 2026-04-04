@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/helper/formatted-date';
+import { cn } from '@/lib/utils';
 import type { OrderDetail } from '@/types/feature/order';
 import { getStatusBadgeClass, getStatusBadgeVariant } from '../order-table';
-import { cn } from '@/lib/utils';
 
 interface OrderInfoProps {
     order: OrderDetail;

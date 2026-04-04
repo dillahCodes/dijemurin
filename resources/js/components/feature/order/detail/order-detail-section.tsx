@@ -1,9 +1,9 @@
+import { usePage } from '@inertiajs/react';
+import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrderPrintReceipt } from '@/hooks/feature/order/use-order-print-receipt';
 import type { OrderDetail } from '@/types/feature/order';
 import type { ApiResponse } from '@/types/response';
-import { usePage } from '@inertiajs/react';
-import { Printer } from 'lucide-react';
 import { OrderDetailHeader } from './order-detail-header';
 import { OrderInfo } from './order-info';
 import { OrderItems } from './order-items';
