@@ -55,7 +55,7 @@ function OrderDateFilterModalContent({ initialState, onFilterDate }: OrderDateFi
     const modal = useModal();
     const [formData, setFormData] = useState(initialState);
 
-    const isEmpty = (v: string) => v.trim() === '';
+    const isEmpty = (v?: string) => v?.trim() === '';
 
     const isOneEmpty =
         (isEmpty(formData.start_date) && !isEmpty(formData.end_date)) ||

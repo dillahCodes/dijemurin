@@ -23,7 +23,7 @@ export function useServiceItemsSearch({ serviceId, value }: ServiceItemsSearchPr
     const modal = useModal();
 
     const [search, setSearch] = useState(value);
-    const shouldDisableSearch = !value.length && !search.length;
+    const shouldDisableSearch = !value?.length && !search?.length;
     const options = { preserveState: true, replace: true };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

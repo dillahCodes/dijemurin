@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Order;
 
+use App\DTOs\Order\OrderFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderStoreRequest;
 use App\Http\Requests\Order\OrderUpdateRequest;
-use App\Http\Resources\Order\OrderDetailResource;
-use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
 use App\Services\Order\OrderService;
 use Illuminate\Http\Request;
@@ -21,20 +20,19 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('order/order', [
-            'orderStatusOptions' => OrderStatus::options(),
-            'paymentMethodOptions' => PaymentMethod::options(),
-            'filters' => $request->only(['search', 'status', 'payment_method', 'start_date', 'end_date']),
-            'orders' => $this->getOrdersData($request),
-        ]);
-    }
+        $filterOrder = OrderFilterDTO::fromRequest($request);
+        $orders = OrderService::getOrdersData($filterOrder);
+        $filters = $filterOrder->toArray();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(array $data)
-    {
-        //
+        $paymentMethodOptions = PaymentMethod::options();
+        $orderStatusOptions = OrderStatus::options();
+
+        return Inertia::render('order/order', [
+            'orderStatusOptions' => $orderStatusOptions,
+            'paymentMethodOptions' => $paymentMethodOptions,
+            'filters' => $filters,
+            'orders' => $orders,
+        ]);
     }
 
     /**
@@ -54,8 +52,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $loadOrderDetail = $order->load(['orderItem', 'payment']);
-        $orderDetail = new OrderDetailResource($loadOrderDetail);
+        $orderDetail = OrderService::getOrderDetail($order);
 
         return Inertia::render('order/order-detail', [
             'detailOrder' => $orderDetail,
@@ -67,35 +64,21 @@ class OrderController extends Controller
      */
     public function print(Order $order)
     {
-        $loadOrderDetail = $order->load(['orderItem', 'payment']);
-        $orderDetail = new OrderDetailResource($loadOrderDetail);
+        $orderDetail = OrderService::getOrderDetail($order);
 
         return $orderDetail;
     }
 
-    private function getOrdersData(Request $request)
-    {
-        $statusEnum = OrderStatus::tryFrom($request->query('status', ''));
-        $paymentMethodEnum = PaymentMethod::tryFrom($request->query('payment_method', ''));
-
-        $orders = Order::with('payment')
-            ->search($request->query('search'))
-            ->filterStatus($statusEnum)
-            ->filterPaymentMethod($paymentMethodEnum)
-            ->filterDateRange($request->query('start_date'), $request->query('end_date'))
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
-        return OrderResource::collection($orders);
-    }
-
     /**
-     * Show the form for editing the specified resource.
+     * Get recent orders data for dashboard
      */
-    public function edit(Order $order)
+    public function getRecentOrders()
     {
-        //
+        $filterOrder = OrderFilterDTO::fromRequestDashboard();
+
+        $ordersData = OrderService::getOrdersData($filterOrder);
+
+        return $ordersData;
     }
 
     /**
@@ -104,16 +87,9 @@ class OrderController extends Controller
     public function update(OrderUpdateRequest $request, Order $order)
     {
         $data = $request->validated();
+
         OrderService::updateOrder($data, $order);
 
         return redirect()->back()->with(['success' => 'Pesanan berhasil diupdate']);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
     }
 }

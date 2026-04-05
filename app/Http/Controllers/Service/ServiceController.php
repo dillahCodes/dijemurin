@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\DTOs\Service\ServiceFilterDTO;
+use App\DTOs\Service\ServiceItemFilterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceStoreRequest;
 use App\Http\Requests\Service\ServiceUpdateRequest;
 use App\Models\Service\Service;
+use App\Services\Service\ServiceService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,24 +17,26 @@ class ServiceController extends Controller
 {
     public function index(Request $request): Response
     {
-        $search = $request->query('search');
-        $services = Service::search($search)->latest()->get();
+        $filterService = ServiceFilterDTO::fromRequest($request);
+        $services = ServiceService::getServicesData($filterService);
+        $filters = $filterService->toArray();
 
         return Inertia::render('layanan/layanan', [
             'services' => $services,
-            'filters' => ['search' => $search ?? ''],
+            'filters' => $filters,
         ]);
     }
 
     public function show(Service $service, Request $request): Response
     {
-        $search = $request->query('search');
-        $items = $service->items()->search($search)->latest()->get();
+        $filterServiceItem = ServiceItemFilterDTO::fromRequest($request);
+        $items = ServiceService::getServiceItems($service, $filterServiceItem);
+        $filters = $filterServiceItem->toArray();
 
         return Inertia::render('layanan/layanan-items', [
             'service' => $service,
             'items' => $items,
-            'filters' => ['search' => $search ?? ''],
+            'filters' => $filters,
         ]);
     }
 

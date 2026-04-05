@@ -2,9 +2,11 @@
 
 namespace App\Services\Order;
 
+use App\DTOs\Order\OrderFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Helpers\StringHelper;
+use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
 use App\Models\Service\ServiceItem;
 use Illuminate\Support\Collection;
@@ -14,6 +16,9 @@ use Illuminate\Validation\ValidationException;
 
 class OrderService
 {
+    /**
+     * Create a new order
+     */
     public static function createOrder(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -62,6 +67,9 @@ class OrderService
 
     }
 
+    /**
+     * Update an existing order
+     */
     public static function updateOrder(array $data, Order $order): Order
     {
         return DB::transaction(function () use ($data, $order) {
@@ -95,6 +103,33 @@ class OrderService
 
             return $order;
         });
+    }
+
+    /**
+     * Get orders data with filters
+     */
+    public static function getOrdersData(OrderFilterDTO $filter)
+    {
+        $orders = Order::with('payment')
+            ->search($filter->search)
+            ->filterStatus($filter->status)
+            ->filterPaymentMethod($filter->paymentMethod)
+            ->filterDateRange($filter->startDate, $filter->endDate)
+            ->latest()
+            ->paginate($filter->limit)
+            ->withQueryString();
+
+        return OrderResource::collection($orders);
+    }
+
+    /**
+     * Get Order detail
+     */
+    public static function getOrderDetail(Order $order)
+    {
+        $order->load(['orderItem', 'payment']);
+
+        return new OrderResource($order);
     }
 
     public static function validatePayment(array $data, int $totalPrice): void
