@@ -1,10 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { OrderStatusDataPoint } from '@/components/ui/order-status-pie-chart';
-import { OrderStatusPieChart } from '@/components/ui/order-status-pie-chart';
-import type { RevenueDataPoint } from '@/components/ui/revenue-bar-chart';
-import { RevenueBarChart } from '@/components/ui/revenue-bar-chart';
 
-const REVENUE_DATA: RevenueDataPoint[] = [
+const REVENUE_DATA = [
     { name: 'Senin', total: 1500000 },
     { name: 'Selasa', total: 1200000 },
     { name: 'Rabu', total: 1800000 },
@@ -14,7 +10,7 @@ const REVENUE_DATA: RevenueDataPoint[] = [
     { name: 'Minggu', total: 3200000 },
 ];
 
-const ORDER_STATUS_DATA: OrderStatusDataPoint[] = [
+const ORDER_STATUS_DATA = [
     { name: 'Pending', value: 25, color: '#3b82f6' },
     { name: 'Selesai', value: 1495, color: '#22c55e' },
     { name: 'Diproses', value: 12, color: '#eab308' },
@@ -32,9 +28,7 @@ function RevenueChartCard() {
                 <CardTitle className="text-base font-semibold">Pendapatan 7 Hari Terakhir</CardTitle>
                 <CardDescription>Total minggu ini mencapai Rp 13.900.000</CardDescription>
             </CardHeader>
-            <CardContent>
-                <RevenueBarChart data={REVENUE_DATA} height={280} />
-            </CardContent>
+            <CardContent>{/* <RevenueBarChart data={REVENUE_DATA} height={280} /> */}</CardContent>
         </Card>
     );
 }
@@ -46,9 +40,7 @@ function OrderStatusChartCard() {
                 <CardTitle className="text-base font-semibold">Status Pesanan</CardTitle>
                 <CardDescription>Distribusi status pesanan bulan ini</CardDescription>
             </CardHeader>
-            <CardContent>
-                <OrderStatusPieChart data={ORDER_STATUS_DATA} height={200} />
-            </CardContent>
+            <CardContent>{/* <OrderStatusPieChart data={ORDER_STATUS_DATA} height={200} /> */}</CardContent>
         </Card>
     );
 }

@@ -6,6 +6,7 @@ use App\DTOs\Order\OrderFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use App\Helpers\StringHelper;
+use App\Http\Resources\Order\OrderDetailResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
 use App\Models\Service\ServiceItem;
@@ -76,18 +77,6 @@ class OrderService
             $currentStatus = $order->status;
             $newStatus = $data['status'];
 
-            if ($currentStatus === OrderStatus::PICKED_UP->value) {
-                throw ValidationException::withMessages([
-                    'status' => 'Pesanan sudah diambil.',
-                ]);
-            }
-
-            if ($currentStatus === OrderStatus::CANCELLED->value) {
-                throw ValidationException::withMessages([
-                    'status' => 'Pesanan sudah dibatalkan.',
-                ]);
-            }
-
             $isNewStatusDone = $newStatus === OrderStatus::DONE->value;
             $isCurrentStatusDone = $currentStatus === OrderStatus::DONE->value;
 
@@ -129,7 +118,41 @@ class OrderService
     {
         $order->load(['orderItem', 'payment']);
 
-        return new OrderResource($order);
+        return new OrderDetailResource($order);
+    }
+
+    public static function getTodayOrderCount(): int
+    {
+        return Order::whereBetween('created_at', [
+            now()->startOfDay(),
+            now()->endOfDay(),
+        ])
+            ->whereNot('status', OrderStatus::CANCELLED->value)
+            ->count();
+    }
+
+    /**
+     * Get Process Order Count
+     */
+    public static function getProcessOrderCount(): int
+    {
+        return Order::process()->count();
+    }
+
+    /**
+     * Get Done Order Count
+     */
+    public static function getDoneOrderCount(): int
+    {
+        return Order::done()->count();
+    }
+
+    /**
+     * Get Today Revenue
+     */
+    public static function getTodayRevenue(): int
+    {
+        return Order::today()->revenueStatuses()->sum('total_price');
     }
 
     public static function validatePayment(array $data, int $totalPrice): void

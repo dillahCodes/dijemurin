@@ -85,6 +85,44 @@ class Order extends Model
         });
     }
 
+    /**
+     * Scope today
+     */
+    public function scopeToday(Builder $query): Builder
+    {
+        return $query->whereBetween('created_at', [
+            now()->startOfDay(),
+            now()->endOfDay(),
+        ]);
+    }
+
+    /**
+     * Scope Done
+     */
+    public function scopeDone(Builder $query): Builder
+    {
+        return $query->where('status', OrderStatus::DONE->value);
+    }
+
+    /**
+     * Scope Process
+     */
+    public function scopeProcess(Builder $query): Builder
+    {
+        return $query->where('status', OrderStatus::PROCESS->value);
+    }
+
+    /**
+     * Scope Revenue Statues
+     */
+    public function scopeRevenueStatuses($query)
+    {
+        return $query->whereIn('status', [
+            OrderStatus::DONE->value,
+            OrderStatus::PICKED_UP->value,
+        ]);
+    }
+
     /*
     * Generate order code
     */

@@ -28,7 +28,7 @@ class OrderDetailResource extends JsonResource
             'payment' => $this->whenLoaded('payment'),
 
             'status' => [
-                'label' => $this->status->IndonesianLabel(),
+                'label' => $this->status->indonesianLabel(),
                 'value' => $this->status->value,
             ],
         ];

@@ -15,7 +15,7 @@ enum OrderStatus: string
         return array_column(self::cases(), 'value');
     }
 
-    public function IndonesianLabel(): string
+    public function indonesianLabel(): string
     {
         return match ($this) {
             self::PENDING => 'Menunggu',
@@ -29,8 +29,36 @@ enum OrderStatus: string
     public static function options(): array
     {
         return collect(self::cases())->map(fn ($case) => [
-            'label' => $case->IndonesianLabel(),
+            'label' => $case->indonesianLabel(),
             'value' => $case->value,
         ])->toArray();
+    }
+
+    /**
+     * Define allowed transition rules for Frontend & Backend
+     */
+    public static function allowedTransitions(): array
+    {
+        return [
+            self::PENDING->value => [self::PROCESS->value, self::CANCELLED->value],
+            self::PROCESS->value => [self::DONE->value],
+            self::DONE->value => [self::PICKED_UP->value],
+            self::PICKED_UP->value => [],
+            self::CANCELLED->value => [],
+        ];
+    }
+
+    /**
+     * validation transition logic
+     */
+    public function canTransitionTo(self $newStatus): bool
+    {
+        if ($this === $newStatus) {
+            return true;
+        }
+
+        $allowedTransitions = $this->allowedTransitions();
+
+        return \in_array($newStatus->value, $allowedTransitions[$this->value], true);
     }
 }

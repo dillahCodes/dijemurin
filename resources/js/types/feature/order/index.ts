@@ -46,3 +46,5 @@ export enum OrderStatusEnglish {
     PICKED_UP = 'picked up',
     CANCELLED = 'cancelled',
 }
+
+export type OrderTransitionRules = Record<OrderStatusEnglish, OrderStatusEnglish[]>;

@@ -4,15 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOrderEdit } from '@/hooks/feature/order/use-order-edit';
-import type { Order } from '@/types/feature/order';
+import type { Order, OrderStatusEnglish, OrderTransitionRules } from '@/types/feature/order';
 import type { OrderOption } from './order-data-section';
 
 interface OrderTableEditProps {
     order: Order;
     orderStatusOptions: OrderOption[];
+    orderTransitionRules: OrderTransitionRules;
 }
 
-export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProps) {
+export function OrderTableEdit({ order, orderStatusOptions, orderTransitionRules }: OrderTableEditProps) {
     const {
         processing,
         handleCloseModal,
@@ -23,6 +24,13 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
         shouldDisableStatusSelect,
         shouldShowWarning,
     } = useOrderEdit(order);
+
+    const allowedStatuses = orderTransitionRules[order.status.value] ?? [];
+
+    const isDisabled = (value: string) => {
+        if (value === order.status.value) return false;
+        return !allowedStatuses.includes(value as OrderStatusEnglish);
+    };
 
     return (
         <form className="mt-8 flex flex-col gap-8" onSubmit={handleSubmit}>
@@ -37,7 +45,7 @@ export function OrderTableEdit({ order, orderStatusOptions }: OrderTableEditProp
 
                             <SelectContent className="z-1000">
                                 {orderStatusOptions.map((opt: OrderOption) => (
-                                    <SelectItem key={opt.value} value={opt.value}>
+                                    <SelectItem key={opt.value} value={opt.value} disabled={isDisabled(opt.value)}>
                                         {opt.label}
                                     </SelectItem>
                                 ))}

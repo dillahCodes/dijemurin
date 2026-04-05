@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { router } from '@inertiajs/react';
 
 interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
@@ -10,6 +11,7 @@ interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
     iconColor?: string;
     iconBg?: string;
     accentColor?: string;
+    href?: string;
 }
 
 export default function SummaryCard({
@@ -21,13 +23,24 @@ export default function SummaryCard({
     iconBg = 'bg-primary/10',
     accentColor = 'bg-primary',
     className,
+    href,
     ...props
 }: SummaryCardProps) {
+    const handleClick = () => {
+        if (href) {
+            router.get(href);
+        }
+    };
+
     return (
         <Card
+            onClick={handleClick}
             className={cn(
                 'group relative w-full overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
                 className,
+                {
+                    'cursor-pointer': !!href,
+                },
             )}
             {...props}
         >

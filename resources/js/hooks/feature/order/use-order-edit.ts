@@ -1,25 +1,19 @@
+import { useModal } from '@/components/ui/modal';
+import order from '@/routes/order';
+import { Order, OrderStatusEnglish } from '@/types/feature/order';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useModal } from '@/components/ui/modal';
-import order from '@/routes/order';
-import type { Order, OrderStatusEnglish } from '@/types/feature/order';
 
 export function useOrderEdit(orderData: Order) {
     const modal = useModal();
     const [statusValue, setStatusValue] = useState<OrderStatusEnglish>(orderData.status.value);
     const { setData, patch, clearErrors, processing } = useForm({ status: statusValue });
 
-    const hasPickedUp = orderData.status.value === 'picked up';
-    const hasCancelled = orderData.status.value === 'cancelled';
-
-    const isSelectedPickedUp = statusValue === 'picked up';
-    const isSelectedCancelled = statusValue === 'cancelled';
-
-    const shouldShowWarning = isSelectedPickedUp || isSelectedCancelled;
-
-    const shouldDisableStatusSelect = hasPickedUp || hasCancelled;
-    const shouldDisableSaveButton = statusValue === orderData.status.value || processing;
+    const orderStatus = orderData.status.value;
+    const shouldShowWarning = [OrderStatusEnglish.PICKED_UP, OrderStatusEnglish.CANCELLED].includes(statusValue);
+    const shouldDisableStatusSelect = [OrderStatusEnglish.PICKED_UP, OrderStatusEnglish.CANCELLED].includes(orderStatus);
+    const shouldDisableSaveButton = statusValue === orderStatus || processing;
 
     const handleCloseModal = () => {
         clearErrors();
@@ -27,6 +21,7 @@ export function useOrderEdit(orderData: Order) {
     };
 
     const handleStatusChange = (value: OrderStatusEnglish) => {
+        console.log({ value });
         setData('status', value);
         setStatusValue(value);
     };
@@ -39,7 +34,8 @@ export function useOrderEdit(orderData: Order) {
                 modal.close(`edit-order-${orderData.id}`);
                 toast.success('Order berhasil diupdate', { position: 'top-center' });
             },
-            onError: () => {
+            onError: (error) => {
+                console.log({ error });
                 toast.error('Gagal mengupdate order', { position: 'top-center' });
             },
         });

@@ -7,14 +7,20 @@ import type { Order } from '@/types/feature/order';
 
 export function useOrderTableActions() {
     const modal = useModal();
-    const { orderStatusOptions } = usePage<OrderPageProps>().props;
+    const { orderStatusOptions, orderTransitionRules } = usePage<OrderPageProps>().props;
 
     const handleOpenEditModal = (order: Order) => () => {
         modal.open({
             id: `edit-order-${order.id}`,
             title: `Edit Order`,
             description: `Order ID: ${order.order_code}`,
-            content: <OrderTableEdit order={order} orderStatusOptions={orderStatusOptions} />,
+            content: (
+                <OrderTableEdit
+                    order={order}
+                    orderStatusOptions={orderStatusOptions}
+                    orderTransitionRules={orderTransitionRules}
+                />
+            ),
             withCancelButton: false,
             withConfirmButton: false,
         });

@@ -27,9 +27,12 @@ class OrderController extends Controller
         $paymentMethodOptions = PaymentMethod::options();
         $orderStatusOptions = OrderStatus::options();
 
+        $orderTransitionRules = OrderStatus::allowedTransitions();
+
         return Inertia::render('order/order', [
             'orderStatusOptions' => $orderStatusOptions,
             'paymentMethodOptions' => $paymentMethodOptions,
+            'orderTransitionRules' => $orderTransitionRules,
             'filters' => $filters,
             'orders' => $orders,
         ]);
@@ -67,18 +70,6 @@ class OrderController extends Controller
         $orderDetail = OrderService::getOrderDetail($order);
 
         return $orderDetail;
-    }
-
-    /**
-     * Get recent orders data for dashboard
-     */
-    public function getRecentOrders()
-    {
-        $filterOrder = OrderFilterDTO::fromRequestDashboard();
-
-        $ordersData = OrderService::getOrdersData($filterOrder);
-
-        return $ordersData;
     }
 
     /**

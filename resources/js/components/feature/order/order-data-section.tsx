@@ -1,5 +1,5 @@
 import type { LaravelPaginator } from '@/hooks/use-pagination';
-import type { Order } from '@/types/feature/order';
+import type { Order, OrderTransitionRules } from '@/types/feature/order';
 import { OrderDataHeader } from './order-data--header';
 import { OrderFilters } from './order-filters';
 import { OrderTable } from './order-table';
@@ -21,6 +21,7 @@ export type OrderFilterPageProps = {
 export type OrderPageProps = {
     orderStatusOptions: OrderOption[];
     paymentMethodOptions: OrderOption[];
+    orderTransitionRules: OrderTransitionRules;
     filters: OrderFilterPageProps;
     orders: LaravelPaginator<Order>;
 };

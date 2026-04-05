@@ -25,7 +25,7 @@ class OrderResource extends JsonResource
                 'updated_at',
             ]),
             'status' => [
-                'label' => $this->status->IndonesianLabel(),
+                'label' => $this->status->indonesianLabel(),
                 'value' => $this->status->value,
             ],
             'payment_method' => $this->payment?->method,
