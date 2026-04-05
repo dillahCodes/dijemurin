@@ -1,7 +1,7 @@
+import { router } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { router } from '@inertiajs/react';
 
 interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;

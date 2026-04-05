@@ -1,6 +1,6 @@
 import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Order, OrderTransitionRules } from '@/types/feature/order';
-import { OrderOption } from '../order/order-data-section';
+import type { OrderOption } from '../order/order-data-section';
 import { ChartsGrid } from './charts-grid';
 import { RecentOrdersSection } from './recent-orders-section';
 import { SummaryCardGrid } from './summary-card-grid';

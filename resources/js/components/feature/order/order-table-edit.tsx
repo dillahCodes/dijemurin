@@ -28,7 +28,10 @@ export function OrderTableEdit({ order, orderStatusOptions, orderTransitionRules
     const allowedStatuses = orderTransitionRules[order.status.value] ?? [];
 
     const isDisabled = (value: string) => {
-        if (value === order.status.value) return false;
+        if (value === order.status.value) {
+return false;
+}
+
         return !allowedStatuses.includes(value as OrderStatusEnglish);
     };
 

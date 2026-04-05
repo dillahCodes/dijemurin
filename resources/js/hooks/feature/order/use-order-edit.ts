@@ -1,9 +1,10 @@
-import { useModal } from '@/components/ui/modal';
-import order from '@/routes/order';
-import { Order, OrderStatusEnglish } from '@/types/feature/order';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useModal } from '@/components/ui/modal';
+import order from '@/routes/order';
+import type { Order} from '@/types/feature/order';
+import { OrderStatusEnglish } from '@/types/feature/order';
 
 export function useOrderEdit(orderData: Order) {
     const modal = useModal();
@@ -21,7 +22,6 @@ export function useOrderEdit(orderData: Order) {
     };
 
     const handleStatusChange = (value: OrderStatusEnglish) => {
-        console.log({ value });
         setData('status', value);
         setStatusValue(value);
     };
@@ -34,8 +34,7 @@ export function useOrderEdit(orderData: Order) {
                 modal.close(`edit-order-${orderData.id}`);
                 toast.success('Order berhasil diupdate', { position: 'top-center' });
             },
-            onError: (error) => {
-                console.log({ error });
+            onError: () => {
                 toast.error('Gagal mengupdate order', { position: 'top-center' });
             },
         });
