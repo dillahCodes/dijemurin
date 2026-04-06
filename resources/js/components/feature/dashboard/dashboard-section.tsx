@@ -1,7 +1,7 @@
 import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Order, OrderTransitionRules } from '@/types/feature/order';
 import type { OrderOption } from '../order/order-data-section';
-import { ChartsGrid } from './charts-grid';
+import { ChartsGrid, OrderStatusDataChart, RevenueDataChart } from './charts-grid';
 import { RecentOrdersSection } from './recent-orders-section';
 import { SummaryCardGrid } from './summary-card-grid';
 
@@ -9,6 +9,9 @@ export type DashboardSectionProps = {
     orders: LaravelPaginator<Order>;
     orderTransitionRules: OrderTransitionRules;
     orderStatusOptions: OrderOption[];
+
+    chartWeekRevenue: RevenueDataChart[];
+    chartMonthStatuses: OrderStatusDataChart[];
 
     todayRevenue: number;
     todayOrderCount: number;

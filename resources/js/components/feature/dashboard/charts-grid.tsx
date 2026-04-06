@@ -1,46 +1,184 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppearance } from '@/hooks/use-appearance';
+import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order';
+import { usePage } from '@inertiajs/react';
+import { Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { DashboardSectionProps } from './dashboard-section';
 
-const REVENUE_DATA = [
-    { name: 'Senin', total: 1500000 },
-    { name: 'Selasa', total: 1200000 },
-    { name: 'Rabu', total: 1800000 },
-    { name: 'Kamis', total: 1400000 },
-    { name: 'Jumat', total: 2000000 },
-    { name: 'Sabtu', total: 2800000 },
-    { name: 'Minggu', total: 3200000 },
-];
+export type RevenueDataChart = {
+    name: string;
+    total: number;
+};
 
-const ORDER_STATUS_DATA = [
-    { name: 'Pending', value: 25, color: '#3b82f6' },
-    { name: 'Selesai', value: 1495, color: '#22c55e' },
-    { name: 'Diproses', value: 12, color: '#eab308' },
-    { name: 'Batal', value: 5, color: '#ef4444' },
-];
+export type OrderStatusDataChart = {
+    label: { name: OrderStatusIndonesian; value: OrderStatusEnglish };
+    value: number;
+};
+
+type TooltipValue = number | string | readonly (number | string)[] | undefined;
+
+const BAR_CHART_CONFIG = {
+    colors: {
+        revenueBar: { light: '#6366f1', dark: '#818cf8' },
+        tick: { light: '#71717a', dark: '#a1a1aa' },
+        tooltipBg: { light: '#ffffff', dark: '#09090b' },
+        tooltipText: { light: '#09090b', dark: '#f4f4f5' },
+        border: { light: '#e4e4e7', dark: '#27272a' },
+    },
+} as const;
+
+const PIE_CHART_STATUS_CONFIG: Record<OrderStatusIndonesian, { light: string; dark: string }> = {
+    [OrderStatusIndonesian.PENDING]: { light: '#64748b', dark: '#94a3b8' }, // secondary (slate)
+    [OrderStatusIndonesian.DONE]: { light: '#10b981', dark: '#34d399' }, // emerald
+    [OrderStatusIndonesian.PROCESS]: { light: '#eab308', dark: '#facc15' }, // yellow
+    [OrderStatusIndonesian.CANCELLED]: { light: '#ef4444', dark: '#f87171' }, // destructive (red)
+    [OrderStatusIndonesian.PICKED_UP]: { light: '#3b82f6', dark: '#60a5fa' }, // blue
+};
+
+const PIE_CHART_CONFIG = {
+    colors: {
+        tooltipBg: { light: '#ffffff', dark: '#09090b' },
+        tooltipText: { light: '#09090b', dark: '#f4f4f5' },
+        border: { light: '#e4e4e7', dark: '#27272a' },
+        pieFallback: { light: '#a1a1aa', dark: '#e4e4e7' },
+        status: PIE_CHART_STATUS_CONFIG,
+    },
+} as const;
 
 /**
  * sub components
  */
 
-function RevenueChartCard() {
+interface RevenueBarChartProps {
+    data: RevenueDataChart[];
+    height: number;
+    isDark: boolean;
+}
+
+function RevenueBarChart({ data, height, isDark }: RevenueBarChartProps) {
+    const TICK_COLOR = isDark ? BAR_CHART_CONFIG.colors.tick.dark : BAR_CHART_CONFIG.colors.tick.light;
+    const TOOLTIP_BG = isDark ? BAR_CHART_CONFIG.colors.tooltipBg.dark : BAR_CHART_CONFIG.colors.tooltipBg.light;
+    const TOOLTIP_TEXT = isDark ? BAR_CHART_CONFIG.colors.tooltipText.dark : BAR_CHART_CONFIG.colors.tooltipText.light;
+    const BORDER = isDark ? BAR_CHART_CONFIG.colors.border.dark : BAR_CHART_CONFIG.colors.border.light;
+
     return (
-        <Card className="col-span-1 lg:col-span-4">
-            <CardHeader className="pb-2">
+        <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
+            <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={BORDER} opacity={0.5} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: TICK_COLOR }} dy={10} />
+                <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 12, fill: TICK_COLOR }}
+                    tickFormatter={(value) => `Rp ${value / 1000}k`}
+                />
+                <Tooltip
+                    formatter={(value: TooltipValue) => [`Rp ${Number(value).toLocaleString('id-ID')}`, 'Pendapatan']}
+                    cursor={{ fill: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}
+                    contentStyle={{
+                        borderRadius: '8px',
+                        border: `1px solid ${BORDER}`,
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: TOOLTIP_BG,
+                        color: TOOLTIP_TEXT,
+                    }}
+                />
+                <Bar
+                    dataKey="total"
+                    fill={isDark ? BAR_CHART_CONFIG.colors.revenueBar.dark : BAR_CHART_CONFIG.colors.revenueBar.light}
+                    radius={[4, 4, 0, 0]}
+                    barSize={40}
+                />
+            </BarChart>
+        </ResponsiveContainer>
+    );
+}
+
+interface OrderStatusPieChartProps {
+    data: OrderStatusDataChart[];
+    height: number;
+    isDark: boolean;
+}
+
+function OrderStatusPieChart({ data, height, isDark }: OrderStatusPieChartProps) {
+    const TOOLTIP_BG = isDark ? PIE_CHART_CONFIG.colors.tooltipBg.dark : PIE_CHART_CONFIG.colors.tooltipBg.light;
+    const TOOLTIP_TEXT = isDark ? PIE_CHART_CONFIG.colors.tooltipText.dark : PIE_CHART_CONFIG.colors.tooltipText.light;
+    const BORDER = isDark ? PIE_CHART_CONFIG.colors.border.dark : PIE_CHART_CONFIG.colors.border.light;
+
+    const chartData = data.map((entry) => {
+        const color = PIE_CHART_CONFIG.colors.status[entry.label.name];
+        const fallback = isDark ? PIE_CHART_CONFIG.colors.pieFallback.dark : PIE_CHART_CONFIG.colors.pieFallback.light;
+        const fill = color ? (isDark ? color.dark : color.light) : fallback;
+
+        return { ...entry, name: entry.label.name, fill };
+    });
+
+    return (
+        <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
+            <PieChart>
+                <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={2}
+                    dataKey="value"
+                    stroke="none"
+                />
+                <Tooltip
+                    formatter={(value: TooltipValue) => [typeof value === 'object' ? String(value) : value, 'Total']}
+                    contentStyle={{
+                        borderRadius: '8px',
+                        border: `1px solid ${BORDER}`,
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: TOOLTIP_BG,
+                        color: TOOLTIP_TEXT,
+                    }}
+                />
+                <Legend
+                    verticalAlign="bottom"
+                    height={36}
+                    iconType="circle"
+                    formatter={(value) => <span style={{ color: TOOLTIP_TEXT }}>{value}</span>}
+                />
+            </PieChart>
+        </ResponsiveContainer>
+    );
+}
+
+function RevenueChartCard() {
+    const { chartWeekRevenue } = usePage<DashboardSectionProps>().props;
+    const { resolvedAppearance } = useAppearance();
+    const isDark = resolvedAppearance === 'dark';
+
+    return (
+        <Card className="col-span-1 flex flex-col lg:col-span-4">
+            <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Pendapatan 7 Hari Terakhir</CardTitle>
                 <CardDescription>Total minggu ini mencapai Rp 13.900.000</CardDescription>
             </CardHeader>
-            <CardContent>{/* <RevenueBarChart data={REVENUE_DATA} height={280} /> */}</CardContent>
+            <CardContent className="flex-1 pb-2">
+                <RevenueBarChart data={chartWeekRevenue} height={250} isDark={isDark} />
+            </CardContent>
         </Card>
     );
 }
 
 function OrderStatusChartCard() {
+    const { chartMonthStatuses } = usePage<DashboardSectionProps>().props;
+    const { resolvedAppearance } = useAppearance();
+    const isDark = resolvedAppearance === 'dark';
+
     return (
-        <Card className="col-span-1 lg:col-span-3">
-            <CardHeader className="pb-2">
+        <Card className="col-span-1 flex flex-col lg:col-span-3">
+            <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Status Pesanan</CardTitle>
                 <CardDescription>Distribusi status pesanan bulan ini</CardDescription>
             </CardHeader>
-            <CardContent>{/* <OrderStatusPieChart data={ORDER_STATUS_DATA} height={200} /> */}</CardContent>
+            <CardContent className="flex-1 pt-0">
+                <OrderStatusPieChart data={chartMonthStatuses} height={250} isDark={isDark} />
+            </CardContent>
         </Card>
     );
 }

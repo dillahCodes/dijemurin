@@ -155,6 +155,46 @@ class OrderService
         return Order::today()->revenueStatuses()->sum('total_price');
     }
 
+    /**
+     * Get Week Revenue for chart
+     */
+    public static function getChartWeekRevenue(): array
+    {
+        $orders = Order::thisWeek()->revenueStatuses()->get(['created_at', 'total_price']);
+
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
+        // ex: items: [2026-04-06 => collection, 2026-04-07 => collection]
+        $grouped = $orders->groupBy(fn ($order) => $order->created_at->format('Y-m-d'));
+
+        return collect($days)->map(function ($day, $index) use ($grouped) {
+            // ex: 2026-04-06
+            $date = now()->startOfWeek()->addDays($index)->format('Y-m-d');
+            // ex: 100000
+            $sumRevenueThisDay = $grouped->get($date)?->sum('total_price') ?? 0;
+
+            return ['name' => $day, 'total' => $sumRevenueThisDay];
+        })->values()->toArray();
+    }
+
+    /**
+     * Get Month Statuses for chart
+     */
+    public static function getChartMonthStatuses()
+    {
+        $orders = Order::thisMonth()->get(['status']);
+        $englishStatuses = OrderStatus::toArray();
+
+        return collect($englishStatuses)->map(function ($status) use ($orders) {
+            $count = $orders->where('status', $status)->count();
+            $enum = OrderStatus::from($status);
+
+            $labelValue = ['name' => $enum->indonesianLabel(), 'value' => $enum->value];
+
+            return ['label' => $labelValue, 'value' => $count];
+        })->toArray();
+    }
+
     public static function validatePayment(array $data, int $totalPrice): void
     {
         $isCash = $data['payment_method'] === PaymentMethod::CASH->value;

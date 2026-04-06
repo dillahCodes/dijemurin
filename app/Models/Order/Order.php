@@ -97,6 +97,28 @@ class Order extends Model
     }
 
     /**
+     * Scope this month
+     */
+    public function scopeThisMonth(Builder $query): Builder
+    {
+        return $query->whereBetween('created_at', [
+            now()->startOfMonth(),
+            now()->endOfMonth(),
+        ]);
+    }
+
+    /**
+     * Scope this week
+     */
+    public function scopeThisWeek(Builder $query): Builder
+    {
+        return $query->whereBetween('created_at', [
+            now()->startOfWeek(),
+            now()->endOfWeek(),
+        ]);
+    }
+
+    /**
      * Scope Done
      */
     public function scopeDone(Builder $query): Builder

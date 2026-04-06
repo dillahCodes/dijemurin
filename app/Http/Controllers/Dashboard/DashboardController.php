@@ -24,6 +24,9 @@ class DashboardController extends Controller
         $doneOrderCount = OrderService::getDoneOrderCount();
         $todayRevenue = OrderService::getTodayRevenue();
 
+        $chartWeekRevenue = OrderService::getChartWeekRevenue();
+        $chartMonthStatuses = OrderService::getChartMonthStatuses();
+
         $orderStatusOptions = OrderStatus::options();
         $orderTransitionRules = OrderStatus::allowedTransitions();
 
@@ -31,6 +34,9 @@ class DashboardController extends Controller
             'orders' => $orders,
             'orderTransitionRules' => $orderTransitionRules,
             'orderStatusOptions' => $orderStatusOptions,
+
+            'chartWeekRevenue' => $chartWeekRevenue,
+            'chartMonthStatuses' => $chartMonthStatuses,
 
             'todayRevenue' => $todayRevenue,
             'todayOrderCount' => $todayOrderCount,
