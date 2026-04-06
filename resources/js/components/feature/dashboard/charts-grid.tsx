@@ -1,9 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppearance } from '@/hooks/use-appearance';
 import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { DashboardSectionProps } from './dashboard-section';
+import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
+import order from '@/routes/order';
 
 export type RevenueDataChart = {
     name: string;
@@ -113,6 +115,17 @@ function OrderStatusPieChart({ data, height, isDark }: OrderStatusPieChartProps)
         return { ...entry, name: entry.label.name, fill };
     });
 
+    const handleClickLegend = (value: string) => () => {
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+        router.get(order.index().url, {
+            start_date: `${startOfMonth.getFullYear()}-${startOfMonth.getMonth() + 1}-${startOfMonth.getDate()}`,
+            end_date: `${endOfMonth.getFullYear()}-${endOfMonth.getMonth() + 1}-${endOfMonth.getDate()}`,
+            status: indoToEnglishStatuses[value],
+        });
+    };
+
     return (
         <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
             <PieChart>
@@ -120,8 +133,8 @@ function OrderStatusPieChart({ data, height, isDark }: OrderStatusPieChartProps)
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius="50%"
+                    outerRadius="70%"
                     paddingAngle={2}
                     dataKey="value"
                     stroke="none"
@@ -138,9 +151,12 @@ function OrderStatusPieChart({ data, height, isDark }: OrderStatusPieChartProps)
                 />
                 <Legend
                     verticalAlign="bottom"
-                    height={36}
                     iconType="circle"
-                    formatter={(value) => <span style={{ color: TOOLTIP_TEXT }}>{value}</span>}
+                    formatter={(value) => (
+                        <span style={{ color: TOOLTIP_TEXT }} onClick={handleClickLegend(value)} className="cursor-pointer">
+                            {value}
+                        </span>
+                    )}
                 />
             </PieChart>
         </ResponsiveContainer>
@@ -153,13 +169,13 @@ function RevenueChartCard() {
     const isDark = resolvedAppearance === 'dark';
 
     return (
-        <Card className="col-span-1 flex flex-col lg:col-span-4">
+        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Pendapatan 7 Hari Terakhir</CardTitle>
                 <CardDescription>Total minggu ini mencapai Rp 13.900.000</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-2">
-                <RevenueBarChart data={chartWeekRevenue} height={250} isDark={isDark} />
+                <RevenueBarChart data={chartWeekRevenue} height={280} isDark={isDark} />
             </CardContent>
         </Card>
     );
@@ -171,13 +187,13 @@ function OrderStatusChartCard() {
     const isDark = resolvedAppearance === 'dark';
 
     return (
-        <Card className="col-span-1 flex flex-col lg:col-span-3">
+        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-3">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Status Pesanan</CardTitle>
                 <CardDescription>Distribusi status pesanan bulan ini</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pt-0">
-                <OrderStatusPieChart data={chartMonthStatuses} height={250} isDark={isDark} />
+                <OrderStatusPieChart data={chartMonthStatuses} height={280} isDark={isDark} />
             </CardContent>
         </Card>
     );
