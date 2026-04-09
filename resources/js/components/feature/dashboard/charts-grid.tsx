@@ -1,11 +1,13 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
-import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order';
 import { router, usePage } from '@inertiajs/react';
 import { Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { DashboardSectionProps } from './dashboard-section';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatPrice } from '@/helper/formatted-price';
 import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
+import { useAppearance } from '@/hooks/use-appearance';
 import order from '@/routes/order';
+import type { OrderStatusEnglish} from '@/types/feature/order';
+import { OrderStatusIndonesian } from '@/types/feature/order';
+import type { DashboardSectionProps } from './dashboard-section';
 
 export type RevenueDataChart = {
     name: string;
@@ -168,11 +170,13 @@ function RevenueChartCard() {
     const { resolvedAppearance } = useAppearance();
     const isDark = resolvedAppearance === 'dark';
 
+    const totalRevenueWeek = chartWeekRevenue.reduce((acc, item) => acc + item.total, 0);
+
     return (
         <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Pendapatan 7 Hari Terakhir</CardTitle>
-                <CardDescription>Total minggu ini mencapai Rp 13.900.000</CardDescription>
+                <CardDescription>Total minggu ini mencapai {formatPrice(totalRevenueWeek)}</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-2">
                 <RevenueBarChart data={chartWeekRevenue} height={280} isDark={isDark} />

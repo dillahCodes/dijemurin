@@ -13,7 +13,7 @@ interface RecentOrdersTableProps {
 }
 
 interface OrderStatusBadgeProps {
-    status: string;
+    status: Order['status'];
 }
 
 interface OrderTableRowProps {
@@ -93,9 +93,11 @@ function displayDate(isoDateString: string): string {
  * 2. Sub-components
  */
 function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
+    const statusLabel = status.label.toLocaleLowerCase();
+
     return (
-        <Badge variant={getStatusBadgeVariant(status)} className={cn('font-medium', getStatusBadgeClass(status))}>
-            {displayStatus(status)}
+        <Badge variant={getStatusBadgeVariant(statusLabel)} className={cn('font-medium', getStatusBadgeClass(statusLabel))}>
+            {displayStatus(status.label)}
         </Badge>
     );
 }

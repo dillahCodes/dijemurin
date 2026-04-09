@@ -145,6 +145,18 @@ class Order extends Model
         ]);
     }
 
+    /**
+     * Scope Report Statues
+     */
+    public function scopeReportStatuses($query)
+    {
+        return $query->whereIn('status', [
+            OrderStatus::DONE->value,
+            OrderStatus::PICKED_UP->value,
+            OrderStatus::CANCELLED->value,
+        ]);
+    }
+
     /*
     * Generate order code
     */

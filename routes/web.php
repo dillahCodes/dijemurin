@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceItemController;
 use Illuminate\Support\Facades\Route;
@@ -13,7 +14,7 @@ Route::inertia('/', 'welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::inertia('laporan', 'laporan/laporan')->name('laporan');
+    Route::get('laporan', [ReportController::class, 'index'])->name('laporan');
 
     Route::prefix('layanan')->name('layanan.')->group(function () {
         Route::get('/', [ServiceController::class, 'index'])->name('index');
@@ -31,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('order')->name('order.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::post('/', [OrderController::class, 'store'])->name('store');
-        
+
         Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
         Route::get('/{order}/print', [OrderController::class, 'print'])->name('print');
