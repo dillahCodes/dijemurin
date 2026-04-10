@@ -40,16 +40,8 @@ export function LaporanCard({ title, description, filename, document }: LaporanC
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardFooter>
-                <Button
-                    onClick={handleDownload}
-                    disabled={loading}
-                    className="w-full cursor-pointer gap-2 sm:w-auto"
-                >
-                    {loading ? (
-                        <Loader2Icon className="h-4 w-4 animate-spin" />
-                    ) : (
-                        <DownloadIcon className="h-4 w-4" />
-                    )}
+                <Button onClick={handleDownload} disabled={loading} className="w-full cursor-pointer gap-2 sm:w-auto">
+                    {loading ? <Loader2Icon className="h-4 w-4 animate-spin" /> : <DownloadIcon className="h-4 w-4" />}
                     {loading ? 'Menyiapkan...' : 'Download PDF'}
                 </Button>
             </CardFooter>

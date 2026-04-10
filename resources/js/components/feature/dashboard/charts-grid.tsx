@@ -5,7 +5,7 @@ import { formatPrice } from '@/helper/formatted-price';
 import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
 import { useAppearance } from '@/hooks/use-appearance';
 import order from '@/routes/order';
-import type { OrderStatusEnglish} from '@/types/feature/order';
+import type { OrderStatusEnglish } from '@/types/feature/order';
 import { OrderStatusIndonesian } from '@/types/feature/order';
 import type { DashboardSectionProps } from './dashboard-section';
 

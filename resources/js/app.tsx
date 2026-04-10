@@ -9,6 +9,8 @@ import { DrawerProvider } from './components/ui/drawer';
 import { ModalProvider } from './components/ui/modal';
 import { Toaster } from './components/ui/sonner';
 import { CartProvider } from './context/feature/cart/cart-context';
+import { ConnectionTypeProvider } from './context/feature/printer/connection-type-context';
+import { PrinterControllerProvider } from './context/feature/printer/printer-controller-context';
 import QueryProvider from './context/query-client-provider';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -22,16 +24,20 @@ createInertiaApp({
         root.render(
             <StrictMode>
                 <QueryProvider>
-                    <CartProvider>
-                        <TooltipProvider delayDuration={0}>
-                            <ModalProvider>
-                                <DrawerProvider>
-                                    <Toaster />
-                                    <App {...props} />
-                                </DrawerProvider>
-                            </ModalProvider>
-                        </TooltipProvider>
-                    </CartProvider>
+                    <ConnectionTypeProvider>
+                        <PrinterControllerProvider>
+                            <CartProvider>
+                                <TooltipProvider delayDuration={0}>
+                                    <ModalProvider>
+                                        <DrawerProvider>
+                                            <Toaster />
+                                            <App {...props} />
+                                        </DrawerProvider>
+                                    </ModalProvider>
+                                </TooltipProvider>
+                            </CartProvider>
+                        </PrinterControllerProvider>
+                    </ConnectionTypeProvider>
                 </QueryProvider>
             </StrictMode>,
         );

@@ -1,15 +1,15 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
 export const colors = {
-    primary: '#1e293b',   // slate-800
+    primary: '#1e293b', // slate-800
     secondary: '#475569', // slate-600
-    accent: '#3b82f6',    // blue-500
-    muted: '#94a3b8',     // slate-400
-    border: '#e2e8f0',    // slate-200
-    bg: '#f8fafc',        // slate-50
+    accent: '#3b82f6', // blue-500
+    muted: '#94a3b8', // slate-400
+    border: '#e2e8f0', // slate-200
+    bg: '#f8fafc', // slate-50
     white: '#ffffff',
-    success: '#16a34a',   // green-600
-    danger: '#dc2626',    // red-600
+    success: '#16a34a', // green-600
+    danger: '#dc2626', // red-600
 };
 
 export const shared = StyleSheet.create({
@@ -156,8 +156,8 @@ export function formatRupiah(value: number): string {
 
 export function formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) {
-return '-';
-}
+        return '-';
+    }
 
     return new Date(dateStr).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
 }

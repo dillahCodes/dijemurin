@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useModal } from '@/components/ui/modal';
 import order from '@/routes/order';
-import type { Order} from '@/types/feature/order';
+import type { Order } from '@/types/feature/order';
 import { OrderStatusEnglish } from '@/types/feature/order';
 
 export function useOrderEdit(orderData: Order) {

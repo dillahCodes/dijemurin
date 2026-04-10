@@ -21,7 +21,9 @@ export function TopLevelPdf({ period, data }: Props) {
                     </View>
                     <View style={shared.periodBadge}>
                         <Text style={shared.periodLabel}>Periode</Text>
-                        <Text style={shared.periodValue}>{formatDate(period.start_date)} – {formatDate(period.end_date)}</Text>
+                        <Text style={shared.periodValue}>
+                            {formatDate(period.start_date)} – {formatDate(period.end_date)}
+                        </Text>
                     </View>
                 </View>
 
@@ -84,7 +86,10 @@ export function TopLevelPdf({ period, data }: Props) {
                 {/* Footer */}
                 <View style={shared.footer} fixed>
                     <Text style={shared.footerText}>Laporan Ringkasan — Sistem Laundry</Text>
-                    <Text style={shared.footerText} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />
+                    <Text
+                        style={shared.footerText}
+                        render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+                    />
                 </View>
             </Page>
         </Document>

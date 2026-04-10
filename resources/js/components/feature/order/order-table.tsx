@@ -1,20 +1,19 @@
 import { usePage } from '@inertiajs/react';
 import { Eye, Loader2, Pencil, Printer, ShoppingBag } from 'lucide-react';
-import { Activity, useEffect, useEffectEvent, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { usePrinterController } from '@/context/feature/printer/printer-controller-context';
 import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
+import { generateOrderInvoice } from '@/helper/generate-order-invoice';
 import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
 import { useOrderTableActions } from '@/hooks/feature/order/use-order-table-actions';
-import { usePrintElement } from '@/hooks/use-print-element';
 import { cn } from '@/lib/utils';
 import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
-import { OrderPrintReceiptSection } from './detail/order-print-receipt';
 import type { OrderPageProps } from './order-data-section';
 
 export function getStatusBadgeVariant(status: OrderStatusIndonesian): BadgeVariant {
@@ -85,41 +84,28 @@ interface OrderRowPrintProps {
 }
 
 function OrderRowPrint({ order }: OrderRowPrintProps) {
-    const [isPrinting, setIsPrinting] = useState(false);
-    const { data: orderPrintData, isLoading: isLoadingOrderPrintData, refetch } = useOrderPrintData(order);
-    const { printRef, handlePrint } = usePrintElement<HTMLDivElement>();
+    const { handlePrint, isPrinting } = usePrinterController();
+    const { isLoading: isLoadingOrderPrintData, refetch } = useOrderPrintData(order);
 
     const isOrderCancelled = order.status.value === 'cancelled';
+    const disableButton = isLoadingOrderPrintData || isOrderCancelled || isPrinting;
+    const isLoadingButton = isLoadingOrderPrintData || isPrinting;
 
-    const handlePrintAction = async () => {
-        await refetch();
-        setIsPrinting(true);
-    };
+    const handllePrint = async () => {
+        const { data } = await refetch();
 
-    const handlePrintEffect = useEffectEvent(() => {
-        handlePrint(`Struk-Pesanan-${order.order_code}`);
-        setIsPrinting(false);
-    });
-
-    useEffect(() => {
-        if (isPrinting && orderPrintData?.data) {
-            handlePrintEffect();
+        if (!data?.data) {
+            return;
         }
-    }, [isPrinting, orderPrintData]);
+
+        const invoice = generateOrderInvoice(data?.data);
+        handlePrint(invoice);
+    };
 
     return (
         <Fragment>
-            <Activity mode={isPrinting ? 'visible' : 'hidden'}>
-                <OrderPrintReceiptSection order={orderPrintData?.data} ref={printRef} />
-            </Activity>
-
-            <Button
-                size="icon"
-                variant="secondary"
-                onClick={handlePrintAction}
-                disabled={isLoadingOrderPrintData || isOrderCancelled}
-            >
-                {isLoadingOrderPrintData ? <Loader2 className="animate-spin" /> : <Printer />}
+            <Button size="icon" variant="secondary" onClick={handllePrint} disabled={disableButton}>
+                {isLoadingButton ? <Loader2 className="animate-spin" /> : <Printer />}
             </Button>
         </Fragment>
     );
