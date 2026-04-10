@@ -14,7 +14,7 @@ import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Security settings',
+        title: 'Pengaturan Keamanan',
         href: edit(),
     },
 ];
@@ -25,16 +25,16 @@ export default function Security() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Security settings" />
+            <Head title="Pengaturan Keamanan" />
 
-            <h1 className="sr-only">Security settings</h1>
+            <h1 className="sr-only">Pengaturan Keamanan</h1>
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <Heading
                         variant="small"
-                        title="Update password"
-                        description="Ensure your account is using a long, random password to stay secure"
+                        title="Perbarui kata sandi"
+                        description="Pastikan akun Anda menggunakan kata sandi yang panjang dan acak agar tetap aman"
                     />
 
                     <Form
@@ -58,7 +58,7 @@ export default function Security() {
                         {({ errors, processing, recentlySuccessful }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="current_password">Current password</Label>
+                                    <Label htmlFor="current_password">Kata sandi saat ini</Label>
 
                                     <PasswordInput
                                         id="current_password"
@@ -66,14 +66,14 @@ export default function Security() {
                                         name="current_password"
                                         className="mt-1 block w-full"
                                         autoComplete="current-password"
-                                        placeholder="Current password"
+                                        placeholder="Kata sandi saat ini"
                                     />
 
                                     <InputError message={errors.current_password} />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password">New password</Label>
+                                    <Label htmlFor="password">Kata sandi baru</Label>
 
                                     <PasswordInput
                                         id="password"
@@ -81,21 +81,21 @@ export default function Security() {
                                         name="password"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="New password"
+                                        placeholder="Kata sandi baru"
                                     />
 
                                     <InputError message={errors.password} />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password_confirmation">Confirm password</Label>
+                                    <Label htmlFor="password_confirmation">Konfirmasi kata sandi</Label>
 
                                     <PasswordInput
                                         id="password_confirmation"
                                         name="password_confirmation"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
-                                        placeholder="Confirm password"
+                                        placeholder="Konfirmasi kata sandi"
                                     />
 
                                     <InputError message={errors.password_confirmation} />
@@ -103,7 +103,7 @@ export default function Security() {
 
                                 <div className="flex items-center gap-4">
                                     <Button disabled={processing} data-test="update-password-button">
-                                        Save password
+                                        Simpan kata sandi
                                     </Button>
 
                                     <Transition
@@ -113,7 +113,7 @@ export default function Security() {
                                         leave="transition ease-in-out"
                                         leaveTo="opacity-0"
                                     >
-                                        <p className="text-sm text-neutral-600">Saved</p>
+                                        <p className="text-sm text-neutral-600">Tersimpan</p>
                                     </Transition>
                                 </div>
                             </>
