@@ -121,6 +121,30 @@ class OrderService
         return new OrderDetailResource($order);
     }
 
+    /**
+     * Get Order detail by order code
+     */
+    public static function getOrderDetailByCode(?string $orderCode)
+    {
+        if (! $orderCode) {
+            throw ValidationException::withMessages([
+                'order_code' => 'Order code is required',
+            ]);
+        }
+
+        $order = Order::where('order_code', $orderCode)->whereNotIn('status', [OrderStatus::CANCELLED->value])->first();
+
+        if (! $order) {
+            throw ValidationException::withMessages([
+                'order_code' => 'Order not found',
+            ]);
+        }
+
+        $order->load(['orderItem', 'payment']);
+
+        return new OrderDetailResource($order);
+    }
+
     public static function getTodayOrderCount(): int
     {
         return Order::whereBetween('created_at', [

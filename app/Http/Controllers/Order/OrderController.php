@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Order;
 
+use App\DTOs\Order\OrderCustomerStatusDTO;
 use App\DTOs\Order\OrderFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
@@ -12,8 +13,6 @@ use App\Models\Order\Order;
 use App\Services\Order\OrderService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Mike42\Escpos\PrintConnectors\CupsPrintConnector;
-use Mike42\Escpos\Printer;
 
 class OrderController extends Controller
 {
@@ -73,42 +72,6 @@ class OrderController extends Controller
 
         return $orderDetail;
 
-        // try {
-        //     // "Eppos_Thermal" adalah nama printer Anda di sistem Linux/CUPS
-        //     $connector = new CupsPrintConnector('Eppos_Thermal');
-        //     $printer = new Printer($connector);
-
-        //     // --- Mulai Desain Struk ---
-        //     $printer->setJustification(Printer::JUSTIFY_CENTER);
-        //     $printer->text("NAMA TOKO ANDA\n");
-        //     $printer->text("Jl. Contoh Alamat No. 123\n");
-        //     $printer->text("--------------------------------\n");
-
-        //     $printer->setJustification(Printer::JUSTIFY_LEFT);
-        //     $printer->text("Pesanan: ORD-J-20260406-4PQ\n");
-        //     $printer->text("Pelanggan: Joko\n");
-        //     $printer->text("--------------------------------\n");
-
-        //     // Contoh item
-        //     $printer->text("Cuci Sepatu Kulit       Rp 260.000\n");
-        //     $printer->text("--------------------------------\n");
-        //     $printer->text("TOTAL                   Rp 260.000\n");
-        //     $printer->text("\n");
-
-        //     $printer->setJustification(Printer::JUSTIFY_CENTER);
-        //     $printer->text("Terima Kasih!\n");
-
-        //     // Perintah potong kertas (jika printer support)
-        //     $printer->cut();
-
-        //     // Tutup koneksi
-        //     $printer->close();
-
-        //     return response()->json(['message' => 'Struk berhasil dicetak']);
-
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
     }
 
     /**
@@ -121,5 +84,19 @@ class OrderController extends Controller
         OrderService::updateOrder($data, $order);
 
         return redirect()->back()->with(['success' => 'Pesanan berhasil diupdate']);
+    }
+
+    /**
+     * Show status order for customer
+     */
+    public function customerStatusOrder(Request $request)
+    {
+        $orderCodeParam = OrderCustomerStatusDTO::fromRequest($request);
+        $orderCode = $orderCodeParam->orderCode;
+        $orderDetail = OrderService::getOrderDetailByCode($orderCode);
+
+        return Inertia::render('order/order-customer-status', [
+            'orderDetail' => $orderDetail,
+        ]);
     }
 }

@@ -10,7 +10,7 @@ interface PrinterControllerContextValue {
     isPrinting: boolean;
     handleConnect: () => Promise<void>;
     handleDisconnect: () => Promise<void>;
-    handlePrint: (data: Uint8Array) => Promise<void>;
+    handlePrint: (data: Uint8Array, order_code: string) => Promise<void>;
     bluetoothDevice: BluetoothDevice | null;
     usbDevice: USBDevice | null;
 }

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceItemController;
@@ -28,15 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{service}/items/{serviceItem}', [ServiceItemController::class, 'destroy'])->name('items.destroy');
         Route::patch('/{service}/items/{serviceItem}', [ServiceItemController::class, 'update'])->name('items.update');
     });
-
-    Route::prefix('order')->name('order.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::post('/', [OrderController::class, 'store'])->name('store');
-
-        Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-        Route::get('/{order}/print', [OrderController::class, 'print'])->name('print');
-    });
 });
 
 require __DIR__.'/settings.php';
+require __DIR__.'/order.php';

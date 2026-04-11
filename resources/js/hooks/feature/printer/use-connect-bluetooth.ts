@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { EscPosStyling } from '@/helper/esc-pos-styling';
+import { generateQrCodeFromString } from '@/helper/generate-qr-code-from-string';
 import { convertImageToEscPosSharp } from '@/helper/image-to-esc-pos';
+import order from '@/routes/order';
 
 // ─── Konstanta ─────────────────────────────────────────────────────────────────
 // NOTE: download aplikasi "nRF Connect" di HP, lalu cari device bluetooth printer kamu untuk melihat service & characteristic ID nya
@@ -24,7 +26,7 @@ export interface UseConnectBluetoothReturn {
     isConnected: boolean;
     errorMessage: string | null;
     connect: () => Promise<void>;
-    print: (data: Uint8Array) => Promise<void>;
+    print: (data: Uint8Array, order_code: string) => Promise<void>;
     disconnect: () => Promise<void>;
 }
 
@@ -194,7 +196,7 @@ export function useConnectBluetooth(): UseConnectBluetoothReturn {
     }
 
     // ── Print ──────────────────────────────────────────────────────────────────
-    async function print(data: Uint8Array): Promise<void> {
+    async function print(data: Uint8Array, order_code: string): Promise<void> {
         if (!deviceRef.current?.gatt?.connected) {
             await connect();
         }
@@ -208,8 +210,11 @@ export function useConnectBluetooth(): UseConnectBluetoothReturn {
         const resetCmd = new Uint8Array([0x1b, 0x40]);
         const cutCmd = new Uint8Array([0x1d, 0x56, 0x42, 0x00]);
 
-        // const invoice = generateInvoice();
-        const imageCommand = await convertImageToEscPosSharp('/apple-touch-icon.png', 180);
+        const customerStatusPath = `${order.customer.status().url}?order_code=${order_code}`;
+        const customerStatusUrl = `${import.meta.env.VITE_APP_URL}${customerStatusPath}`;
+
+        const generateQrCodeUrl = await generateQrCodeFromString(customerStatusUrl);
+        const imageCommand = await convertImageToEscPosSharp(generateQrCodeUrl, 200);
 
         try {
             setPrintStatus('printing');

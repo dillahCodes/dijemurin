@@ -99,7 +99,7 @@ function OrderRowPrint({ order }: OrderRowPrintProps) {
         }
 
         const invoice = generateOrderInvoice(data?.data);
-        handlePrint(invoice);
+        handlePrint(invoice, data?.data?.order_code);
     };
 
     return (
