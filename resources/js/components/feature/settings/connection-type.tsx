@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { ConnectionType } from '@/context/feature/printer/connection-type-context';
@@ -16,6 +16,7 @@ export function ConnectionType() {
         <Card className="w-full max-w-md">
             <CardHeader>
                 <CardTitle>Tipe Koneksi</CardTitle>
+                <CardDescription>Pilih tipe koneksi printer</CardDescription>
             </CardHeader>
 
             <CardContent className="my-2 flex flex-col gap-4">

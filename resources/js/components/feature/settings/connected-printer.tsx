@@ -1,6 +1,6 @@
 import { Bluetooth, LoaderCircle, Plug, Printer, PrinterCheck, Unplug, Usb } from 'lucide-react';
 import { Activity } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { usePrinterController } from '@/context/feature/printer/printer-controller-context';
 import { Button } from '../../ui/button';
 
@@ -12,6 +12,7 @@ export function ConnectedPrinter() {
         <Card className="w-full max-w-md">
             <CardHeader>
                 <CardTitle>Printer Terhubung</CardTitle>
+                <CardDescription>Printer yang terhubung dengan perangkat</CardDescription>
             </CardHeader>
 
             <CardContent className="flex flex-col gap-4">

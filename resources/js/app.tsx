@@ -13,7 +13,7 @@ import { ConnectionTypeProvider } from './context/feature/printer/connection-typ
 import { PrinterControllerProvider } from './context/feature/printer/printer-controller-context';
 import QueryProvider from './context/query-client-provider';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'dijemurin.id';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

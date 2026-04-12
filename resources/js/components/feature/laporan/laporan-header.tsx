@@ -22,7 +22,7 @@ export function LaporanHeader() {
     }
 
     const handleReset = () => {
-        router.get(laporan.url(), { preserveState: false });
+        router.get(laporan.url());
     };
 
     return (
