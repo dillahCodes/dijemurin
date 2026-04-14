@@ -45,3 +45,5 @@ jobs:
         with:
           commit_message: 'chore: build frontend'
           commit_options: '--no-verify'
+          add_options: '-f'
+          file_pattern: 'public/build/*'
