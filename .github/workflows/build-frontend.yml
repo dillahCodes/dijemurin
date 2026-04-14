@@ -43,10 +43,15 @@ jobs:
       - name: Build Frontend
         run: npm run build
 
+      - name: Force Add Build Folder
+        run: |
+          git add public/build --force
+          git status
+
       - name: Commit build
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: 'chore: build frontend'
+          commit_message: 'chore: build frontend [skip ci]'
           commit_options: '--no-verify'
           add_options: '-f'
           file_pattern: 'public/build/*'
