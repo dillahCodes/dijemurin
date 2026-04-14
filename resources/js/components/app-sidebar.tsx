@@ -12,10 +12,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import type { NavItem } from '@/types';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
-import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
