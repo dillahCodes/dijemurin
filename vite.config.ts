@@ -21,4 +21,8 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    build: {
+        emptyOutDir: true,
+        outDir: 'public/build',
+    },
 });

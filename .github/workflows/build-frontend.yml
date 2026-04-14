@@ -1,0 +1,38 @@
+name: build-frontend
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Clean old Build
+        run: rm -rf public/build
+
+      - name: Build Frontend
+        run: npm run build
+
+      - name: Commit build
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: 'chore: build frontend'
+          commit_options: '--no-verify'
