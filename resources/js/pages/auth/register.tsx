@@ -78,7 +78,12 @@ export default function Register() {
                                 <InputError message={errors.password_confirmation} />
                             </div>
 
-                            <Button type="submit" className="mt-2 w-full font-semibold" tabIndex={5} data-test="register-user-button">
+                            <Button
+                                type="submit"
+                                className="mt-2 w-full font-semibold"
+                                tabIndex={5}
+                                data-test="register-user-button"
+                            >
                                 {processing && <Spinner />}
                                 Buat Akun
                             </Button>
