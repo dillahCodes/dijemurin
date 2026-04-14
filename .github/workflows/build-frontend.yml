@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - develop
+  pull_request:
+    branches:
+      - develop
+      - main
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -43,6 +47,7 @@ jobs:
       - name: Build Frontend
         run: npm run build
 
+      # NOTE: only for laravel + react and hosted in shared hosting (Cpanel)
       - name: Force Add Build Folder
         run: |
           git add public/build --force
@@ -53,5 +58,3 @@ jobs:
         with:
           commit_message: 'chore: build frontend [skip ci]'
           commit_options: '--no-verify'
-          add_options: '-f'
-          file_pattern: 'public/build/*'
