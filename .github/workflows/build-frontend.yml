@@ -5,10 +5,14 @@ on:
     branches:
       - main
       - develop
-  pull_request:
-    branches:
-      - develop
-      - main
+
+    # Prevent unnecessary builds for non-code changes (documentation and editor settings).
+    # This saves GitHub Actions minutes and optimizes the development workflow.
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - '.gitignore'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -47,7 +51,7 @@ jobs:
       - name: Build Frontend
         run: npm run build
 
-      # NOTE: only for laravel + react and hosted in shared hosting (Cpanel)
+      # NOTE: Only for Laravel + React hosted on shared hosting (cPanel)
       - name: Force Add Build Folder
         run: |
           git add public/build --force
