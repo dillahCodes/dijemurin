@@ -19,6 +19,7 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import type { BreadcrumbItem, NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard } from '@/routes';
 
 type Props = {
@@ -30,6 +31,7 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
 ];
 
@@ -38,11 +40,13 @@ const rightNavItems: NavItem[] = [
         title: 'Repository',
         href: 'https://github.com/laravel/react-starter-kit',
         icon: Folder,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Documentation',
         href: 'https://laravel.com/docs/starter-kits#react',
         icon: BookOpen,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
 ];
 

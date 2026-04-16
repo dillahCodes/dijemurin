@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\User\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -23,10 +24,20 @@ class DatabaseSeeder extends Seeder
      */
     private function seedUser(): void
     {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $users = [
+            ['name' => 'Super Admin', 'email' => 'superadmin@gmail.com', 'role' => UserRole::SUPER_ADMIN],
+            ['name' => 'Admin', 'email' => 'admin@gmail.com', 'role' => UserRole::ADMIN],
+            ['name' => 'Kasir', 'email' => 'kasir@gmail.com', 'role' => UserRole::CASHIER],
+            ['name' => 'Operator', 'email' => 'operator@gmail.com', 'role' => UserRole::OPERATOR],
+        ];
+
+        foreach ($users as $user) {
+            User::factory()->create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => bcrypt('password'),
+                'role' => $user['role']->value,
+            ]);
+        }
     }
 }

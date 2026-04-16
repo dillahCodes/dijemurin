@@ -13,6 +13,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
@@ -22,21 +23,25 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Order',
         href: order.index(),
         icon: ShoppingBag,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Layanan',
         href: layanan.index(),
         icon: WashingMachine,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Laporan',
         href: laporan(),
         icon: FileText,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
 ];
 

@@ -1,5 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
+import type { UserRole } from './feature/user/user';
 
 export type BreadcrumbItem = {
     title: string;
@@ -11,4 +12,5 @@ export type NavItem = {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    role: UserRole[];
 };
