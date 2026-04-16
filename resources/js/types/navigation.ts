@@ -1,6 +1,6 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
-import { UserRole } from './feature/user/user';
+import type { UserRole } from './feature/user/user';
 
 export type BreadcrumbItem = {
     title: string;

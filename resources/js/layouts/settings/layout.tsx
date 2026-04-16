@@ -4,14 +4,14 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { useNavItems } from '@/hooks/use-nav-items';
 import { cn, toUrl } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { edit as editAppearance } from '@/routes/appearance';
 import printer from '@/routes/printer';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
-import { UserRole } from '@/types/feature/user/user';
-import { useNavItems } from '@/hooks/use-nav-items';
 
 const sidebarNavItems: NavItem[] = [
     {

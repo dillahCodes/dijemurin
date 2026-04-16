@@ -13,10 +13,10 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
-import { UserRole } from '@/types/feature/user/user';
 
 const mainNavItems: NavItem[] = [
     {
