@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/helper/formatted-date';
-import type { User} from '@/types/feature/user/user';
+import type { User } from '@/types/feature/user/user';
 import { UserStatusIndonesian } from '@/types/feature/user/user';
 import type { PenggunaSectionProps } from './pengguna-section';
 
