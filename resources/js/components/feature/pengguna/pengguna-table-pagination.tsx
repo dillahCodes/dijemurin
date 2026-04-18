@@ -1,7 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/components/ui/pagination';
 import { usePagination } from '@/hooks/use-pagination';
-import { PenggunaSectionProps } from './pengguna-section';
+import type { PenggunaSectionProps } from './pengguna-section';
 
 export function PenggunaTablePagination() {
     const { users } = usePage<PenggunaSectionProps>().props;

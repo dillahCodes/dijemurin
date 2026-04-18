@@ -1,7 +1,7 @@
-import { PenggunaFilterPageProps } from '@/components/feature/pengguna/pengguna-section';
-import pengguna from '@/routes/pengguna';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import type { PenggunaFilterPageProps } from '@/components/feature/pengguna/pengguna-section';
+import pengguna from '@/routes/pengguna';
 
 type FilterValue = string | undefined;
 

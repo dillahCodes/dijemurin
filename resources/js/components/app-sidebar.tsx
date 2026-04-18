@@ -1,3 +1,5 @@
+import { Link, usePage } from '@inertiajs/react';
+import { FileText, LayoutGrid, ShoppingBag, Users, WashingMachine } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -11,14 +13,12 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useNavItems } from '@/hooks/use-nav-items';
+import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
 import pengguna from '@/routes/pengguna';
-import type { NavItem } from '@/types';
-import { UserRole } from '@/types/feature/user/user';
-import { Link, usePage } from '@inertiajs/react';
-import { FileText, LayoutGrid, ShoppingBag, Users, WashingMachine } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {

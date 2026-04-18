@@ -1,12 +1,14 @@
-import { Badge, BadgeVariant } from '@/components/ui/badge';
+import { usePage } from '@inertiajs/react';
+import { Pencil, UserRoundX } from 'lucide-react';
+import type { BadgeVariant } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/helper/formatted-date';
-import { User, UserStatusIndonesian } from '@/types/feature/user/user';
-import { usePage } from '@inertiajs/react';
-import { Pencil, UserRoundX } from 'lucide-react';
-import { PenggunaSectionProps } from './pengguna-section';
+import type { User} from '@/types/feature/user/user';
+import { UserStatusIndonesian } from '@/types/feature/user/user';
+import type { PenggunaSectionProps } from './pengguna-section';
 
 export function getStatusBadgeVariant(status: UserStatusIndonesian): BadgeVariant {
     switch (status) {

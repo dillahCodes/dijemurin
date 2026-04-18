@@ -1,5 +1,5 @@
-import { LaravelPaginator } from '@/hooks/use-pagination';
-import { User, UserTransitionRules } from '@/types/feature/user/user';
+import type { LaravelPaginator } from '@/hooks/use-pagination';
+import type { User, UserTransitionRules } from '@/types/feature/user/user';
 import { PenggunaFilters } from './pengguna-filters';
 import { PenggunaHeader } from './pengguna-header';
 import { PenggunaTable } from './pengguna-table';

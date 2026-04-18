@@ -1,12 +1,12 @@
+import { usePage } from '@inertiajs/react';
+import { Search, X } from 'lucide-react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { usePenggunaFilters } from '@/hooks/feature/pengguna/use-pengguna-filters';
-import { usePage } from '@inertiajs/react';
-import { Search, X } from 'lucide-react';
-import { Activity } from 'react';
-import { PenggunaSectionProps } from './pengguna-section';
-import { User } from '@/types/feature/user/user';
+import type { User } from '@/types/feature/user/user';
+import type { PenggunaSectionProps } from './pengguna-section';
 
 function PenggunaSearchForm() {
     const { filters } = usePage<PenggunaSectionProps>().props;
