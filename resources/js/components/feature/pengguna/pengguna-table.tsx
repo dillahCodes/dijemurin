@@ -25,7 +25,8 @@ export function getStatusBadgeVariant(status: UserStatusIndonesian): BadgeVarian
 
 export function getStatusBadgeClass(status: UserStatusIndonesian): string {
     const badgeStatusStyle: Record<UserStatusIndonesian, string> = {
-        [UserStatusIndonesian.ACTIVE]: 'border-emerald-500 min-w-32 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+        [UserStatusIndonesian.ACTIVE]:
+            'border-emerald-500 min-w-32 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
         [UserStatusIndonesian.INACTIVE]: 'border-gray-400 min-w-32 bg-gray-400/10 text-gray-600 dark:text-gray-400',
         [UserStatusIndonesian.SUSPENDED]: 'border-red-500 min-w-32 bg-red-500/10 text-red-600 dark:text-red-400',
     };
