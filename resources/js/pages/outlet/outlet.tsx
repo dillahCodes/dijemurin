@@ -1,10 +1,9 @@
-import { Head } from '@inertiajs/react';
 import { OutletSection } from '@/components/feature/outlet/outlet-section';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import outlet from '@/routes/outlet';
-import pengguna from '@/routes/pengguna';
 import type { BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
