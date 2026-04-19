@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { PrinterSetting } from '@/components/feature/settings/printer';
-import Heading from '@/components/heading';
+import Heading from '@/components/ui/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import printer from '@/routes/printer';
