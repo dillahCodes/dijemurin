@@ -1,6 +1,6 @@
-import { OutletDetail } from '@/types/feature/outlet/outlet';
+import type { OutletDetail } from '@/types/feature/outlet/outlet';
+import type { ApiResponse } from '@/types/response';
 import { OutletDetailHeader } from './outlet-detail-header';
-import { ApiResponse } from '@/types/response';
 import { OutletInfo } from './outlet-detail-info';
 import { OutletDetailUsers } from './outlet-detail-users';
 

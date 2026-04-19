@@ -1,13 +1,14 @@
+import { router, usePage } from '@inertiajs/react';
+import { Eye, Image, Pencil, UserRoundX } from 'lucide-react';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Outlet, OutletStatusOptionIndonesian } from '@/types/feature/outlet/outlet';
-import { router, usePage } from '@inertiajs/react';
-import { Eye, Image, Pencil, UserRoundX } from 'lucide-react';
-import { OutletSectionProps } from './outlet-section';
 import outlet from '@/routes/outlet';
+import type { Outlet } from '@/types/feature/outlet/outlet';
+import { OutletStatusOptionIndonesian } from '@/types/feature/outlet/outlet';
+import type { OutletSectionProps } from './outlet-section';
 
 export function getStatusBadgeVariant(status: OutletStatusOptionIndonesian): BadgeVariant {
     switch (status) {

@@ -1,5 +1,5 @@
-import { LaravelPaginator } from '@/hooks/use-pagination';
-import { Outlet } from '@/types/feature/outlet/outlet';
+import type { LaravelPaginator } from '@/hooks/use-pagination';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 import { OutletFilters } from './outlet-filters';
 import { OutletHeader } from './outlet-header';
 import { OutletTable } from './outlet-table';

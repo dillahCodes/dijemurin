@@ -1,4 +1,4 @@
-import { User, UserRole } from '../user/user';
+import type { User, UserRole } from '../user/user';
 
 export interface Outlet {
     id: number;

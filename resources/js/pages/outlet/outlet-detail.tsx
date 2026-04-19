@@ -1,8 +1,9 @@
-import { OutletDetailPageProps, OutletDetailSection } from '@/components/feature/outlet/detail/outlet-detail-section';
+import { Head, usePage } from '@inertiajs/react';
+import type { OutletDetailPageProps } from '@/components/feature/outlet/detail/outlet-detail-section';
+import { OutletDetailSection } from '@/components/feature/outlet/detail/outlet-detail-section';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import outlet from '@/routes/outlet';
-import { Head, usePage } from '@inertiajs/react';
 
 export default function OutletDetail() {
     const { outletDetail } = usePage<OutletDetailPageProps>().props;

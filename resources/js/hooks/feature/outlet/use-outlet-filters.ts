@@ -1,7 +1,7 @@
-import { OutletFilterPageProps } from '@/components/feature/outlet/outlet-section';
-import outlet from '@/routes/outlet';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import type { OutletFilterPageProps } from '@/components/feature/outlet/outlet-section';
+import outlet from '@/routes/outlet';
 
 type FilterValue = string | undefined;
 

@@ -5,8 +5,8 @@ import { useDrawer } from '@/components/ui/drawer';
 import { useModal } from '@/components/ui/modal';
 import { formatPrice } from '@/helper/formatted-price';
 import { useIsMobile } from '@/hooks/use-mobile';
-import type { ServiceItem } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
+import type { ServiceItem } from '@/types/feature/layanan';
 
 export type ServiceItemCardProps = ServiceItem;
 

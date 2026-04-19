@@ -1,10 +1,10 @@
+import { usePage } from '@inertiajs/react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { User } from '@/types/feature/user/user';
-import { usePage } from '@inertiajs/react';
+import type { User } from '@/types/feature/user/user';
 import { getStatusBadgeClass, getStatusBadgeVariant } from '../../pengguna/pengguna-table';
-import { OutletDetailPageProps } from './outlet-detail-section';
+import type { OutletDetailPageProps } from './outlet-detail-section';
 
 function OutletDetailUsersHead() {
     return (

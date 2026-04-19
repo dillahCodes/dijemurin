@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { LaporanPageProps } from './laporan-section';
 import { laporan } from '@/routes';
+import type { LaporanPageProps } from './laporan-section';
 
 export function LaporanHeader() {
     const { filters } = usePage<LaporanPageProps>().props;

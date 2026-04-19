@@ -1,12 +1,13 @@
+import { usePage } from '@inertiajs/react';
+import { Calculator, Image, ShieldCheck, UserCog } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/helper/formatted-date';
 import { cn } from '@/lib/utils';
-import { usePage } from '@inertiajs/react';
-import { OutletDetailPageProps } from './outlet-detail-section';
-import { getStatusBadgeClass, getStatusBadgeVariant } from '../outlet-table';
-import { Calculator, Image, ShieldCheck, UserCog, type LucideIcon } from 'lucide-react';
 import { UserRole } from '@/types/feature/user/user';
+import { getStatusBadgeClass, getStatusBadgeVariant } from '../outlet-table';
+import type { OutletDetailPageProps } from './outlet-detail-section';
 
 interface OutletInfoLogoProps {
     logo: string | null;

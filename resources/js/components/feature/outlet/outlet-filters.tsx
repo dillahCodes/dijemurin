@@ -1,12 +1,12 @@
+import { usePage } from '@inertiajs/react';
+import { Plus, Search, X } from 'lucide-react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletFilters } from '@/hooks/feature/outlet/use-outlet-filters';
-import { Outlet } from '@/types/feature/outlet/outlet';
-import { usePage } from '@inertiajs/react';
-import { Plus, Search, X } from 'lucide-react';
-import { Activity } from 'react';
-import { OutletSectionProps } from './outlet-section';
+import type { Outlet } from '@/types/feature/outlet/outlet';
+import type { OutletSectionProps } from './outlet-section';
 
 function OutletSearchForm() {
     const { filters } = usePage<OutletSectionProps>().props;
