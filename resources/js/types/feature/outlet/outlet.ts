@@ -7,7 +7,7 @@ export interface Outlet {
     phone: string;
     email: string;
     logo: string | null;
-    status: { label: OutletStatusOptionIndonesian; value: OutletStatusOption };
+    status: OutletStatus;
     role_count: {
         [UserRole.ADMIN]: number;
         [UserRole.CASHIER]: number;
@@ -19,6 +19,11 @@ export interface Outlet {
 
 export interface OutletDetail extends Omit<Outlet, 'role_count'> {
     users: User[];
+}
+
+export interface OutletStatus {
+    label: OutletStatusOptionIndonesian;
+    value: OutletStatusOption;
 }
 
 export enum OutletStatusOption {

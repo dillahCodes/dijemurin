@@ -92,6 +92,20 @@ export function OutletInfo() {
                             </div>
                         </div>
 
+                        <div className="col-span-2 flex flex-col gap-1.5 sm:col-span-1">
+                            <span className="text-sm font-medium text-muted-foreground">Alamat</span>
+                            <p className="line-clamp-2 text-lg font-semibold tracking-tight text-foreground">
+                                {outletDetailData.address}
+                            </p>
+                        </div>
+
+                        <div className="col-span-2 flex flex-col gap-1.5 sm:col-span-1">
+                            <span className="text-sm font-medium text-muted-foreground">Email</span>
+                            <p className="line-clamp-1 text-lg font-semibold tracking-tight text-foreground">
+                                {outletDetailData.email}
+                            </p>
+                        </div>
+
                         <div className="flex flex-col gap-1.5">
                             <span className="text-xs font-medium text-muted-foreground sm:text-sm">Tanggal dibuat</span>
                             <p className="text-sm font-medium text-foreground sm:text-base">

@@ -101,6 +101,10 @@ function OutletTableBody({ outletData }: OutletTableBodyProps) {
         router.get(outlet.show(index).url);
     };
 
+    const handleGoToEdit = (index: number) => () => {
+        router.get(outlet.edit(index).url);
+    };
+
     return (
         <TableBody>
             {outletData.map((outlet, index) => {
@@ -146,7 +150,7 @@ function OutletTableBody({ outletData }: OutletTableBodyProps) {
                                 <Button size="icon" variant="outline" onClick={handleGoToView(outlet.id)}>
                                     <Eye />
                                 </Button>
-                                <Button size="icon" variant="secondary">
+                                <Button size="icon" variant="secondary" onClick={handleGoToEdit(outlet.id)}>
                                     <Pencil />
                                 </Button>
                             </div>
