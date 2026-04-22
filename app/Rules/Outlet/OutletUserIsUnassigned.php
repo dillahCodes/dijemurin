@@ -12,11 +12,9 @@ class OutletUserIsUnassigned implements ValidationRule
     /**
      * Create a new rule instance.
      *
-     * @param int|null $ignoreOutletId The ID of the outlet to ignore during validation.
+     * @param  int|null  $ignoreOutletId  The ID of the outlet to ignore during validation.
      */
-    public function __construct(protected ?int $ignoreOutletId = null)
-    {
-    }
+    public function __construct(protected ?int $ignoreOutletId = null) {}
 
     /**
      * Run the validation rule.

@@ -99,14 +99,14 @@ class OutletService
 
             // NOTE: kumpulkan user id yang mau di ubah
             $incomingIds = [];
-            
-            if (!empty($data['admin'])) {
+
+            if (! empty($data['admin'])) {
                 $incomingIds[] = $data['admin'];
             }
-            if (!empty($data['cashiers'])) {
+            if (! empty($data['cashiers'])) {
                 $incomingIds = array_merge($incomingIds, $data['cashiers']);
             }
-            if (!empty($data['operators'])) {
+            if (! empty($data['operators'])) {
                 $incomingIds = array_merge($incomingIds, $data['operators']);
             }
 
