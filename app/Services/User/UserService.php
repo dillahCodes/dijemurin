@@ -2,8 +2,10 @@
 
 namespace App\Services\User;
 
+use App\DTOs\User\UserAddOutletFilterDTO;
 use App\DTOs\User\UserFilterDTO;
 use App\Enums\User\UserRole;
+use App\Enums\User\UserStatus;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 
@@ -18,6 +20,22 @@ class UserService
             ->search($filter->search)
             ->filterRole($filter->role)
             ->filterStatus($filter->status)
+            ->latest()
+            ->paginate($filter->limit)
+            ->withQueryString();
+
+        return UserResource::collection($users);
+    }
+
+    /**
+     * Get users data for add outlet
+     */
+    public static function getAssignableOutletUsers(UserAddOutletFilterDTO $filter)
+    {
+        $users = User::search($filter->search)
+            ->filterGhostRole()
+            ->filterNoOutlet()
+            ->filterStatus(UserStatus::ACTIVE)
             ->latest()
             ->paginate($filter->limit)
             ->withQueryString();
