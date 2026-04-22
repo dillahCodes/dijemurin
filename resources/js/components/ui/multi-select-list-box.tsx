@@ -38,6 +38,8 @@ interface SelectDropdownMenuProps {
     selected: MultipleOption[];
     onSelectOption: (option: MultipleOption) => void;
     containerRef: RefObject<HTMLDivElement | null>;
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
 }
 
 // 2. Sub-components
@@ -50,7 +52,14 @@ function SelectedBadge({ item, onRemove }: SelectedBadgeProps) {
     );
 }
 
-function SelectDropdownMenu({ options, selected, onSelectOption, containerRef }: SelectDropdownMenuProps) {
+function SelectDropdownMenu({
+    options,
+    selected,
+    onSelectOption,
+    containerRef,
+    isOpen,
+    setIsOpen,
+}: SelectDropdownMenuProps) {
     const [width, setWidth] = useState(0);
 
     useEffect(() => {
@@ -64,7 +73,7 @@ function SelectDropdownMenu({ options, selected, onSelectOption, containerRef }:
 
     return (
         <div className="absolute top-1/2 right-1 flex -translate-y-1/2 items-center">
-            <DropdownMenu>
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen} modal={false}>
                 <DropdownMenuTrigger asChild>
                     <InputGroupButton
                         variant="ghost"
@@ -77,6 +86,8 @@ function SelectDropdownMenu({ options, selected, onSelectOption, containerRef }:
                     align="end"
                     className="z-50 mt-2 [--radius:0.95rem]"
                     style={{ width: width > 0 ? `${width}px` : undefined }}
+                    // @ts-expect-error onOpenAutoFocus works conceptually here to prevent focus stealing
+                    onOpenAutoFocus={(e: Event) => e.preventDefault()}
                 >
                     <Activity mode={options.length ? 'visible' : 'hidden'}>
                         <DropdownMenuGroup>
@@ -122,10 +133,13 @@ export function MultiSelectListBox({
     inputProps,
     onInputChange,
 }: MultiSelectListBoxProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
     const [inputValue, setInputValue] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
+        setIsOpen(true);
         onInputChange?.(e.target.value);
     };
 
@@ -137,6 +151,7 @@ export function MultiSelectListBox({
             onChange([...selected, option]);
         }
         setInputValue('');
+        setIsOpen(false);
         onInputChange?.('');
     };
 
@@ -156,8 +171,6 @@ export function MultiSelectListBox({
     const handleRemove = (index: number) => () => {
         onChange(selected.filter((_, i) => i !== index));
     };
-
-    const containerRef = useRef<HTMLDivElement>(null);
 
     return (
         <div ref={containerRef} className="relative w-full">
@@ -180,6 +193,8 @@ export function MultiSelectListBox({
                     selected={selected}
                     onSelectOption={handleSelectOption}
                     containerRef={containerRef}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
                 />
             </InputGroup>
         </div>
