@@ -5,9 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatDate } from '@/helper/formatted-date';
-import type { User } from '@/types/feature/user/user';
-import { UserStatusIndonesian } from '@/types/feature/user/user';
+import type { User} from '@/types/feature/user/user';
+import { UserRole, UserStatusIndonesian } from '@/types/feature/user/user';
 import type { PenggunaSectionProps } from './pengguna-section';
 
 export function getStatusBadgeVariant(status: UserStatusIndonesian): BadgeVariant {
@@ -34,6 +33,17 @@ export function getStatusBadgeClass(status: UserStatusIndonesian): string {
     return badgeStatusStyle[status] ?? '';
 }
 
+export function getRoleBadgeVariant(role: UserRole): BadgeVariant {
+    switch (role) {
+        case UserRole.SUPER_ADMIN:
+            return 'default';
+        case UserRole.GHOST:
+            return 'secondary';
+        default:
+            return 'outline';
+    }
+}
+
 function PenggunaTableEmpty() {
     return (
         <Empty className="h-auto w-full bg-muted/30">
@@ -57,10 +67,9 @@ function PenggunaTableHead() {
                 <TableHead className="text-center text-xs">No</TableHead>
                 <TableHead className="text-center text-xs">Nama</TableHead>
                 <TableHead className="text-center text-xs">Email</TableHead>
+                <TableHead className="text-center text-xs">Penampatan</TableHead>
                 <TableHead className="text-center text-xs">Role</TableHead>
                 <TableHead className="text-center text-xs">Status</TableHead>
-                <TableHead className="text-center text-xs">Tanggal Dibuat</TableHead>
-                <TableHead className="text-center text-xs">Tanggal Diperbarui</TableHead>
                 <TableHead className="text-center text-xs">Aksi</TableHead>
             </TableRow>
         </TableHeader>
@@ -87,8 +96,16 @@ function PenggunaTableBody({ usersData }: PenggunaTableBodyProps) {
                         </TableCell>
                         <TableCell className="text-center font-medium">{user.name}</TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground">{user.email}</TableCell>
+                        <TableCell className="text-center text-xs text-muted-foreground">
+                            {user?.outlet?.name ?? '-'}
+                        </TableCell>
                         <TableCell className="text-center">
-                            <Badge className="w-full max-w-32 py-1 font-medium">{user.role.label}</Badge>
+                            <Badge
+                                className="w-full max-w-36 py-1 font-medium"
+                                variant={getRoleBadgeVariant(user.role.value)}
+                            >
+                                {user.role.label}
+                            </Badge>
                         </TableCell>
                         <TableCell className="text-center">
                             <Badge
@@ -98,10 +115,6 @@ function PenggunaTableBody({ usersData }: PenggunaTableBodyProps) {
                                 {user.status.label}
                             </Badge>
                         </TableCell>
-                        <TableCell className="text-center whitespace-nowrap text-muted-foreground">
-                            {formatDate(user.created_at)}
-                        </TableCell>
-                        <TableCell className="text-center font-semibold">{formatDate(user.updated_at)}</TableCell>
                         <TableCell className="flex items-center justify-center gap-2">
                             <Button size="icon" disabled={isIdSame} variant="secondary">
                                 <Pencil />

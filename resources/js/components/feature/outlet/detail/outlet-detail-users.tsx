@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { User } from '@/types/feature/user/user';
-import { getStatusBadgeClass, getStatusBadgeVariant } from '../../pengguna/pengguna-table';
+import { getRoleBadgeVariant, getStatusBadgeClass, getStatusBadgeVariant } from '../../pengguna/pengguna-table';
 import type { OutletDetailPageProps } from './outlet-detail-section';
 
 function OutletDetailUsersHead() {
@@ -36,7 +36,12 @@ function PenggunaTableBody({ usersData }: PenggunaTableBodyProps) {
                         <TableCell className="text-center font-medium">{user.name}</TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground">{user.email}</TableCell>
                         <TableCell className="text-center">
-                            <Badge className="w-full max-w-32 py-1 font-medium">{user.role.label}</Badge>
+                            <Badge
+                                className="w-full max-w-36 py-1 font-medium"
+                                variant={getRoleBadgeVariant(user.role.value)}
+                            >
+                                {user.role.label}
+                            </Badge>
                         </TableCell>
                         <TableCell className="text-center">
                             <Badge

@@ -16,7 +16,8 @@ class UserService
      */
     public static function getUsersData(UserFilterDTO $filter, UserRole $currentRole)
     {
-        $users = User::visibleToRole($currentRole)
+        $users = User::with('outlet')
+            ->visibleToRole($currentRole)
             ->search($filter->search)
             ->filterRole($filter->role)
             ->filterStatus($filter->status)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User;
 
+use App\Http\Resources\Outlet\OutletHeaderResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,8 @@ class UserResource extends JsonResource
                 'created_at',
                 'updated_at',
             ]),
+
+            'outlet' => OutletHeaderResource::make($this->whenLoaded('outlet')),
 
             'role' => [
                 'label' => $this->role->indonesianLabel(),

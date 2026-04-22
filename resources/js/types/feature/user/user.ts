@@ -7,6 +7,7 @@ export interface User {
     updated_at: string;
     role: { label: UserRoleIndonesian; value: UserRole };
     status: { label: UserStatusIndonesian; value: UserStatus };
+    outlet?: { id: number; name: string };
 }
 
 export enum UserStatus {
