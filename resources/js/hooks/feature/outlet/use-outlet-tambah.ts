@@ -1,11 +1,13 @@
-import { OutletTambahSectionProps } from '@/components/feature/outlet/tambah/outlet-tambah-section';
-import type { MultipleOption } from '@/components/ui/multi-select-list-box';
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import outlet from '@/routes/outlet';
-import { AddOutletSchema, addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 import { router, useForm, usePage } from '@inertiajs/react';
 import type React from 'react';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import type { OutletTambahSectionProps } from '@/components/feature/outlet/tambah/outlet-tambah-section';
+import type { MultipleOption } from '@/components/ui/multi-select-list-box';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import outlet from '@/routes/outlet';
+import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
+import { addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 
 const initialState: AddOutletSchema = {
     name: '',
@@ -69,12 +71,20 @@ export function useOutletTambah() {
         if (!validate.success) {
             const err = validate.error.flatten();
             setError(err.fieldErrors as Record<string, string[]>);
+
             return;
         }
 
         post(outlet.store().url, {
-            onSuccess: () => reset(),
-            onError: (errors) => console.log({ errors }),
+            onSuccess: () => {
+                toast.success('Outlet berhasil ditambahkan');
+                reset();
+            },
+
+            onError: () => {
+                toast.error('Outlet gagal ditambahkan');
+            },
+
             preserveScroll: true,
         });
     };

@@ -1,5 +1,5 @@
-import { MultipleOption } from '@/components/ui/multi-select-list-box';
-import { User, UserRole } from '@/types/feature/user/user';
+import type { MultipleOption } from '@/components/ui/multi-select-list-box';
+import type { User, UserRole } from '@/types/feature/user/user';
 
 export const UserHelper = {
     findUserRole(user: User[], role: UserRole) {

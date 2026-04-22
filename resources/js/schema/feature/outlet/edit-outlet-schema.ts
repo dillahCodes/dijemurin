@@ -1,5 +1,5 @@
-import { OutletStatusOption } from '@/types/feature/outlet/outlet';
 import { z } from 'zod';
+import { OutletStatusOption } from '@/types/feature/outlet/outlet';
 
 export const editOutletSchema = z.object({
     name: z.string().min(1, { message: 'Nama outlet wajib diisi.' }),

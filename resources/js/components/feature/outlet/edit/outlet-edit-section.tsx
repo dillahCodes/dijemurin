@@ -1,7 +1,7 @@
-import { LaravelPaginator } from '@/hooks/use-pagination';
-import { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
-import { User } from '@/types/feature/user/user';
-import { ApiResponse } from '@/types/response';
+import type { LaravelPaginator } from '@/hooks/use-pagination';
+import type { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
+import type { User } from '@/types/feature/user/user';
+import type { ApiResponse } from '@/types/response';
 import { OutletEditForm } from './outlet-edit-form';
 import { OutletEditHeader } from './outlet-edit-header';
 

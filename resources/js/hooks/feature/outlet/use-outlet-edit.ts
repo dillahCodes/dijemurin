@@ -1,15 +1,16 @@
-import { OutletEditSectionProps } from '@/components/feature/outlet/edit/outlet-edit-section';
-import { useModal } from '@/components/ui/modal';
-import { MultipleOption } from '@/components/ui/multi-select-list-box';
-import { UserHelper } from '@/helper/users-helper';
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import outlet from '@/routes/outlet';
-import { editOutletSchema, EditOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
-import { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
-import { UserRole } from '@/types/feature/user/user';
 import { router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import type { OutletEditSectionProps } from '@/components/feature/outlet/edit/outlet-edit-section';
+import { useModal } from '@/components/ui/modal';
+import type { MultipleOption } from '@/components/ui/multi-select-list-box';
+import { UserHelper } from '@/helper/users-helper';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import outlet from '@/routes/outlet';
+import type { EditOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
+import { editOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
+import type { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
+import { UserRole } from '@/types/feature/user/user';
 
 function generateInitialState(outletDetail: OutletDetail): EditOutletSchema {
     return {
@@ -88,6 +89,7 @@ export function useOutletEdit() {
         if (!validate.success) {
             const err = validate.error.flatten();
             setError(err.fieldErrors as Record<string, string[]>);
+
             return;
         }
 
@@ -104,10 +106,9 @@ export function useOutletEdit() {
                         toast.success('Outlet berhasil diupdate');
                         reset();
                     },
-                    
-                    onError: (errors) => {
+
+                    onError: () => {
                         toast.error('Outlet gagal diupdate');
-                        console.log({ errors });
                     },
                     preserveScroll: true,
                 });

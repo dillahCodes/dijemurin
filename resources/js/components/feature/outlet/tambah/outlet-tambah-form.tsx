@@ -1,10 +1,10 @@
+import { InfoIcon } from 'lucide-react';
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { MultiSelectListBox } from '@/components/ui/multi-select-list-box';
 import { useOutletTambah } from '@/hooks/feature/outlet/use-outlet-tambah';
-import { InfoIcon } from 'lucide-react';
 
 export function OutletTambahForm() {
     const {

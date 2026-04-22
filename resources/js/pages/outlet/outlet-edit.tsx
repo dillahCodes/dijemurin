@@ -1,9 +1,8 @@
+import { Head } from '@inertiajs/react';
 import { OutletEditSection } from '@/components/feature/outlet/edit/outlet-edit-section';
-import { OutletTambahSection } from '@/components/feature/outlet/tambah/outlet-tambah-section';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import outlet from '@/routes/outlet';
-import { Head } from '@inertiajs/react';
 
 export default function OutletEdit() {
     return (

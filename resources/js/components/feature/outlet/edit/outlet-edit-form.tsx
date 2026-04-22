@@ -1,12 +1,12 @@
+import { InfoIcon } from 'lucide-react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { MultiSelectListBox } from '@/components/ui/multi-select-list-box';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletEdit } from '@/hooks/feature/outlet/use-outlet-edit';
-import { OutletStatus } from '@/types/feature/outlet/outlet';
-import { InfoIcon } from 'lucide-react';
-import { Activity } from 'react';
+import type { OutletStatus } from '@/types/feature/outlet/outlet';
 
 export function OutletEditForm() {
     const {
