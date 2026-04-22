@@ -64,12 +64,17 @@ class UserSeeder extends Seeder
         $remainingUsersCount = $totalTargetUsers - $currentUsersCount;
 
         if ($remainingUsersCount > 0) {
-            $roles = [UserRole::CASHIER, UserRole::OPERATOR];
+            $roles = [UserRole::CASHIER, UserRole::OPERATOR, UserRole::GHOST];
 
             for ($i = 0; $i < $remainingUsersCount; $i++) {
-                $outlet = $outlets->random();
                 $role = $roles[array_rand($roles)];
-                $roleName = $role === UserRole::CASHIER ? 'Kasir' : 'Operator';
+                $roleName = match ($role) {
+                    UserRole::CASHIER => 'Kasir',
+                    UserRole::OPERATOR => 'Operator',
+                    UserRole::GHOST => 'Ghost',
+                };
+
+                $outletId = $role === UserRole::GHOST ? null : $outlets->random()?->id;
 
                 User::factory()->create([
                     'name' => "{$roleName} {$userId}",
@@ -77,7 +82,7 @@ class UserSeeder extends Seeder
                     'password' => bcrypt('password'),
                     'role' => $role,
                     'status' => $statuses[array_rand($statuses)],
-                    'outlet_id' => $outlet?->id,
+                    'outlet_id' => $outletId,
                 ]);
                 $userId++;
             }

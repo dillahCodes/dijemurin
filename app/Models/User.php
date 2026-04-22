@@ -59,6 +59,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope a query to filter user with ghost role
+     */
+    public function scopeFilterGhostRole(Builder $query): Builder
+    {
+        return $query->where('role', UserRole::GHOST);
+    }
+
+    /**
+     * Scope a query to filter user with no outlet
+     */
+    public function scopeFilterNoOutlet(Builder $query): Builder
+    {
+        return $query->whereNull('outlet_id');
+    }
+
+    /**
      * Scope a query to filter user by role.
      */
     public function scopeFilterRole(Builder $query, ?UserRole $role): Builder

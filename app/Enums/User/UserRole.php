@@ -8,6 +8,7 @@ enum UserRole: string
     case ADMIN = 'admin';
     case CASHIER = 'cashier';
     case OPERATOR = 'operator';
+    case GHOST = 'ghost';
 
     public static function toArray(): array
     {
@@ -21,6 +22,7 @@ enum UserRole: string
             self::ADMIN => 'Admin',
             self::CASHIER => 'kasir',
             self::OPERATOR => 'Operator',
+            self::GHOST => 'Belum Memiliki Role',
         };
     }
 
@@ -49,6 +51,7 @@ enum UserRole: string
                 self::ADMIN->value,
                 self::CASHIER->value,
                 self::OPERATOR->value,
+                self::GHOST->value,
             ],
 
             self::ADMIN->value => [self::CASHIER->value, self::OPERATOR->value],

@@ -26,6 +26,7 @@ export enum UserRole {
     ADMIN = 'admin',
     CASHIER = 'cashier',
     OPERATOR = 'operator',
+    GHOST = 'ghost',
 }
 
 export enum UserRoleIndonesian {
@@ -33,6 +34,7 @@ export enum UserRoleIndonesian {
     ADMIN = 'Admin',
     CASHIER = 'Kasir',
     OPERATOR = 'Operator',
+    GHOST = 'Belum Memiliki Role',
 }
 
 export type UserTransitionRules = Record<UserRole, UserRole[]>;
