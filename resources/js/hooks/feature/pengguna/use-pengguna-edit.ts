@@ -1,10 +1,11 @@
-import { PenggunaEditSectionProps } from '@/components/feature/pengguna/edit/pengguna-edit-section';
-import pengguna from '@/routes/pengguna';
-import { userEditSchema, UserEditSchema } from '@/schema/feature/user/edit-user-schema';
-import { User, UserStatus } from '@/types/feature/user/user';
 import { router, useForm, usePage } from '@inertiajs/react';
 import type React from 'react';
 import { toast } from 'sonner';
+import type { PenggunaEditSectionProps } from '@/components/feature/pengguna/edit/pengguna-edit-section';
+import pengguna from '@/routes/pengguna';
+import type { UserEditSchema } from '@/schema/feature/user/edit-user-schema';
+import { userEditSchema } from '@/schema/feature/user/edit-user-schema';
+import type { User, UserStatus } from '@/types/feature/user/user';
 
 function generateInitialState(userDetail: User): UserEditSchema {
     return {

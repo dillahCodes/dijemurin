@@ -1,8 +1,9 @@
-import pengguna from '@/routes/pengguna';
-import { userAddSchema, UserAddSchema } from '@/schema/feature/user/add-user-schema';
 import { router, useForm } from '@inertiajs/react';
 import type React from 'react';
 import { toast } from 'sonner';
+import pengguna from '@/routes/pengguna';
+import { userAddSchema } from '@/schema/feature/user/add-user-schema';
+import type { UserAddSchema } from '@/schema/feature/user/add-user-schema';
 
 const initialState: UserAddSchema = {
     name: '',

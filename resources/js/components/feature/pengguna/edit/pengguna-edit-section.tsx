@@ -1,7 +1,7 @@
-import { ApiResponse } from '@/types/response';
+import type { User } from '@/types/feature/user/user';
+import type { ApiResponse } from '@/types/response';
 import { PenggunaEditForm } from './pengguna-edit-form';
 import { PenggunaEditHeader } from './pengguna-edit-header';
-import { User } from '@/types/feature/user/user';
 
 export type PenggunaEditSectionProps = {
     userStatusOptions: User['status'][];

@@ -1,10 +1,10 @@
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { usePenggunaEdit } from '@/hooks/feature/pengguna/use-pengguna-edit';
-import { User } from '@/types/feature/user/user';
-import { Activity } from 'react';
+import type { User } from '@/types/feature/user/user';
 
 export function PenggunaEditForm() {
     const {

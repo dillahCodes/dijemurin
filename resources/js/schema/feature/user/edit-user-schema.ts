@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@/types/feature/user/user';
+import { UserStatus } from '@/types/feature/user/user';
 import { z } from 'zod';
 
 export const userEditSchema = z.object({

@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/helper/formatted-date';
 import { cn } from '@/lib/utils';
-import { User } from '@/types/feature/user/user';
+import type { User } from '@/types/feature/user/user';
 import type { ApiResponse } from '@/types/response';
 import { getStatusBadgeClass, getStatusBadgeVariant } from '../pengguna-table';
 

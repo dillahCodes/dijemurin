@@ -1,5 +1,5 @@
-import { User } from '@/types/feature/user/user';
-import { ApiResponse } from '@/types/response';
+import type { User } from '@/types/feature/user/user';
+import type { ApiResponse } from '@/types/response';
 import { PenggunaDetailHeader } from './pengguna-detail-header';
 import { PenggunaDetailInfo } from './pengguna-detail-info';
 

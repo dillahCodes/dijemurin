@@ -2,8 +2,8 @@ import { Head, usePage } from '@inertiajs/react';
 
 import { ServiceItemsSection } from '@/components/feature/layanan/service-items-section';
 import AppLayout from '@/layouts/app-layout';
-import type { ServiceItemPageProps } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
+import type { ServiceItemPageProps } from '@/types/feature/layanan';
 
 export default function LayananItemsIndex() {
     const { service } = usePage<ServiceItemPageProps>().props;
