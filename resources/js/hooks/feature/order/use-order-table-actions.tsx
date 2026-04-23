@@ -1,9 +1,9 @@
-import { router, usePage } from '@inertiajs/react';
 import type { OrderPageProps } from '@/components/feature/order/order-data-section';
 import { OrderTableEdit } from '@/components/feature/order/order-table-edit';
 import { useModal } from '@/components/ui/modal';
-import type { Order } from '@/types/feature/order';
 import { show as orderDetailRoute } from '@/routes/order';
+import type { Order } from '@/types/feature/order';
+import { router, usePage } from '@inertiajs/react';
 
 export function useOrderTableActions() {
     const modal = useModal();
