@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\User;
 
-use App\Models\User;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
