@@ -32,7 +32,7 @@ class OutletService
     /**
      * Get outlet detail data
      */
-    public static function getOutletDetailData(?string $outletId)
+    public static function getOutletDetailData(?int $outletId)
     {
         if (! $outletId) {
             throw ValidationException::withMessages([
