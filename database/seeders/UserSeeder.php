@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\Outlet\Outlet;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -18,44 +19,73 @@ class UserSeeder extends Seeder
     }
 
     /**
-     * Seed 100 users with varied roles and statuses.
+     * Seed users with varied roles, statuses, and outlets.
      */
     private function seedUser(): void
     {
         $statuses = UserStatus::cases();
 
-        // 1 Super Admin
+        // 1 Super Admin (No outlet needed)
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@gmail.com',
             'password' => bcrypt('password'),
             'role' => UserRole::SUPER_ADMIN,
             'status' => UserStatus::ACTIVE,
+            'outlet_id' => null,
         ]);
 
-        // 5 Admin
-        for ($i = 1; $i <= 5; $i++) {
+        // Specific mapping for outlet assignments
+        $outlets = Outlet::all();
+
+        // If no outlets exist, just create a default list of users
+        if ($outlets->isEmpty()) {
+            $outlets = collect([null]);
+        }
+
+        $userId = 1; // used for generating unique names/emails
+
+        // Exactly 1 Admin per outlet (or 1 stand-alone admin if outlet is null)
+        foreach ($outlets as $outlet) {
             User::factory()->create([
-                'name' => "Admin {$i}",
-                'email' => "admin{$i}@gmail.com",
+                'name' => "Admin {$userId}",
+                'email' => "admin{$userId}@gmail.com",
                 'password' => bcrypt('password'),
                 'role' => UserRole::ADMIN,
                 'status' => $statuses[array_rand($statuses)],
+                'outlet_id' => $outlet?->id,
             ]);
+            $userId++;
         }
 
-        // 94 Kasir & Operator
-        for ($i = 1; $i <= 94; $i++) {
-            $role = $i % 2 === 0 ? UserRole::CASHIER : UserRole::OPERATOR;
-            $roleName = $role === UserRole::CASHIER ? 'Kasir' : 'Operator';
+        // Generate the remaining users to reach exactly 150 total users
+        $totalTargetUsers = 150;
+        $currentUsersCount = 1 + $outlets->count(); // Super Admin + Admins
+        $remainingUsersCount = $totalTargetUsers - $currentUsersCount;
 
-            User::factory()->create([
-                'name' => "{$roleName} {$i}",
-                'email' => strtolower("{$roleName}{$i}@gmail.com"),
-                'password' => bcrypt('password'),
-                'role' => $role,
-                'status' => $statuses[array_rand($statuses)],
-            ]);
+        if ($remainingUsersCount > 0) {
+            $roles = [UserRole::CASHIER, UserRole::OPERATOR, UserRole::GHOST];
+
+            for ($i = 0; $i < $remainingUsersCount; $i++) {
+                $role = $roles[array_rand($roles)];
+                $roleName = match ($role) {
+                    UserRole::CASHIER => 'Kasir',
+                    UserRole::OPERATOR => 'Operator',
+                    UserRole::GHOST => 'Ghost',
+                };
+
+                $outletId = $role === UserRole::GHOST ? null : $outlets->random()?->id;
+
+                User::factory()->create([
+                    'name' => "{$roleName} {$userId}",
+                    'email' => strtolower($roleName)."{$userId}@gmail.com",
+                    'password' => bcrypt('password'),
+                    'role' => $role,
+                    'status' => $statuses[array_rand($statuses)],
+                    'outlet_id' => $outletId,
+                ]);
+                $userId++;
+            }
         }
     }
 }

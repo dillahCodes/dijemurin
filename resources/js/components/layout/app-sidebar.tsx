@@ -1,8 +1,8 @@
 import { Link, usePage } from '@inertiajs/react';
-import { FileText, LayoutGrid, ShoppingBag, Users, WashingMachine } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import { FileText, LayoutGrid, ShoppingBag, Store, Users, WashingMachine } from 'lucide-react';
+import AppLogo from '@/components/layout/app-logo';
+import { NavMain } from '@/components/layout/nav-main';
+import { NavUser } from '@/components/layout/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -18,6 +18,7 @@ import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
+import outlet from '@/routes/outlet';
 import pengguna from '@/routes/pengguna';
 
 const mainNavItems: NavItem[] = [
@@ -26,12 +27,6 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
         role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
-    },
-    {
-        title: 'Pengguna',
-        href: pengguna.index(),
-        icon: Users,
-        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     {
         title: 'Order',
@@ -43,7 +38,19 @@ const mainNavItems: NavItem[] = [
         title: 'Layanan',
         href: layanan.index(),
         icon: WashingMachine,
-        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER],
+    },
+    {
+        title: 'Pengguna',
+        href: pengguna.index(),
+        icon: Users,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    {
+        title: 'Outlet',
+        href: outlet.index(),
+        icon: Store,
+        role: [UserRole.SUPER_ADMIN],
     },
     {
         title: 'Laporan',

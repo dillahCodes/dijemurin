@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import { Search, X } from 'lucide-react';
+import { Plus, Search, X } from 'lucide-react';
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -90,6 +90,15 @@ function UserStatusFilter() {
     );
 }
 
+function PenggunaAdd() {
+    return (
+        <Button className="w-full shrink-0 cursor-pointer md:w-fit">
+            <Plus size={16} />
+            Tambah Pengguna
+        </Button>
+    );
+}
+
 export function PenggunaFilters() {
     return (
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
@@ -97,6 +106,7 @@ export function PenggunaFilters() {
             <div className="flex flex-wrap gap-3 md:flex-nowrap">
                 <UserRoleFilter />
                 <UserStatusFilter />
+                <PenggunaAdd />
             </div>
         </div>
     );

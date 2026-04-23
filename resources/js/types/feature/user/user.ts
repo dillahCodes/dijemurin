@@ -7,6 +7,7 @@ export interface User {
     updated_at: string;
     role: { label: UserRoleIndonesian; value: UserRole };
     status: { label: UserStatusIndonesian; value: UserStatus };
+    outlet?: { id: number; name: string };
 }
 
 export enum UserStatus {
@@ -26,6 +27,7 @@ export enum UserRole {
     ADMIN = 'admin',
     CASHIER = 'cashier',
     OPERATOR = 'operator',
+    GHOST = 'ghost',
 }
 
 export enum UserRoleIndonesian {
@@ -33,6 +35,7 @@ export enum UserRoleIndonesian {
     ADMIN = 'Admin',
     CASHIER = 'Kasir',
     OPERATOR = 'Operator',
+    GHOST = 'Belum Memiliki Role',
 }
 
 export type UserTransitionRules = Record<UserRole, UserRole[]>;

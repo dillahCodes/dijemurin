@@ -5,15 +5,17 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\Outlet\Outlet;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'status'])]
+#[Fillable(['name', 'email', 'password', 'role', 'status', 'outlet_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -36,6 +38,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the outlet that the user belongs to.
+     */
+    public function outlet(): BelongsTo
+    {
+        return $this->belongsTo(Outlet::class);
+    }
+
+    /**
      * Scope a query to search user by name or email.
      */
     public function scopeSearch(Builder $query, ?string $search): Builder
@@ -46,6 +56,22 @@ class User extends Authenticatable
                     ->orWhere('email', 'like', "%$search%");
             });
         });
+    }
+
+    /**
+     * Scope a query to filter user with ghost role
+     */
+    public function scopeFilterGhostRole(Builder $query): Builder
+    {
+        return $query->where('role', UserRole::GHOST);
+    }
+
+    /**
+     * Scope a query to filter user with no outlet
+     */
+    public function scopeFilterNoOutlet(Builder $query): Builder
+    {
+        return $query->whereNull('outlet_id');
     }
 
     /**

@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import AppearanceTabs from '@/components/appearance-tabs';
-import Heading from '@/components/heading';
+import AppearanceTabs from '@/components/feature/settings/appearance-tabs';
+import Heading from '@/components/ui/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import type { BreadcrumbItem } from '@/types';
