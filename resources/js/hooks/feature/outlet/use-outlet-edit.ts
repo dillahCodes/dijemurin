@@ -6,11 +6,11 @@ import { useModal } from '@/components/ui/modal';
 import type { MultipleOption } from '@/components/ui/multi-select-list-box';
 import { UserHelper } from '@/helper/users-helper';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import outlet from '@/routes/outlet';
 import type { EditOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
 import { editOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
 import type { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
 import { UserRole } from '@/types/feature/user/user';
+import outlet from '@/routes/outlet';
 
 function generateInitialState(outletDetail: OutletDetail): EditOutletSchema {
     return {

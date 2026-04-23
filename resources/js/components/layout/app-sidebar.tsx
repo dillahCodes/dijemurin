@@ -13,13 +13,13 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useNavItems } from '@/hooks/use-nav-items';
+import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
 import outlet from '@/routes/outlet';
 import pengguna from '@/routes/pengguna';
-import type { NavItem } from '@/types';
-import { UserRole } from '@/types/feature/user/user';
 
 const mainNavItems: NavItem[] = [
     {
