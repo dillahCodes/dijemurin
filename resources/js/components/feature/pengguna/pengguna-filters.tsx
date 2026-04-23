@@ -1,11 +1,12 @@
-import { usePage } from '@inertiajs/react';
-import { Plus, Search, X } from 'lucide-react';
-import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { usePenggunaFilters } from '@/hooks/feature/pengguna/use-pengguna-filters';
+import pengguna from '@/routes/pengguna';
 import type { User } from '@/types/feature/user/user';
+import { router, usePage } from '@inertiajs/react';
+import { Plus, Search, X } from 'lucide-react';
+import { Activity } from 'react';
 import type { PenggunaSectionProps } from './pengguna-section';
 
 function PenggunaSearchForm() {
@@ -91,8 +92,12 @@ function UserStatusFilter() {
 }
 
 function PenggunaAdd() {
+    const handleGoToAddForm = () => {
+        router.get(pengguna.create().url);
+    };
+
     return (
-        <Button className="w-full shrink-0 cursor-pointer md:w-fit">
+        <Button onClick={handleGoToAddForm} className="w-full shrink-0 cursor-pointer md:w-fit">
             <Plus size={16} />
             Tambah Pengguna
         </Button>
