@@ -8,6 +8,7 @@ use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use App\Notifications\SetPasswordNotification;
 use DB;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -62,7 +63,7 @@ class UserService
     }
 
     /**
-     * Create a new user with random password and send reset link email
+     * Create a new user with random password and send set-password link email
      */
     public static function createUser(array $data): User
     {
@@ -70,7 +71,8 @@ class UserService
 
         $user = User::create($data);
 
-        Password::broker()->sendResetLink(['email' => $user->email]);
+        $token = Password::createToken($user);
+        $user->notify(new SetPasswordNotification($token));
 
         return $user;
     }
@@ -81,12 +83,7 @@ class UserService
     public static function updateUser(User $user, array $data)
     {
        return DB::transaction(function () use ($user, $data) {
-           $hasEmailChanged = $user->email !== $data['email'];
            $user->update($data);
-
-           if ($hasEmailChanged) {
-               Password::broker()->sendResetLink(['email' => $user->email]);
-           }
        });
     }
 }
