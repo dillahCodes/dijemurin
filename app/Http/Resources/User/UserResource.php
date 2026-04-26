@@ -20,10 +20,11 @@ class UserResource extends JsonResource
                 'id',
                 'name',
                 'email',
-                'email_verified_at',
                 'created_at',
                 'updated_at',
             ]),
+
+            'email_verified_at' => $this->email_verified_at ?? null,
 
             'outlet' => OutletHeaderResource::make($this->whenLoaded('outlet')),
 
