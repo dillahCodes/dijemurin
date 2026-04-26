@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\Fortify\AuthenticateUser;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Enums\User\UserStatus;
@@ -35,32 +36,8 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
-        $this->configureStatusAuthentication();
-    }
 
-    /**
-     * Configure authentication status logic
-     */
-    private function configureStatusAuthentication(): void
-    {
-        Fortify::authenticateUsing(function (Request $request) {
-            $user = User::where('email', $request->email)->first();
-
-            if (! $user || ! Hash::check($request->password, $user->password)) {
-                return null;
-            }
-
-            if (! $user->status->canLogin()) {
-                throw ValidationException::withMessages([
-                    'email' => match ($user->status) {
-                        UserStatus::INACTIVE => 'Akun Anda tidak aktif. Silakan hubungi administrator',
-                        UserStatus::SUSPENDED => 'Akun Anda telah ditangguhkan. Silakan hubungi administrator.',
-                    },
-                ]);
-            }
-
-            return $user;
-        });
+        Fortify::authenticateUsing(new AuthenticateUser());
     }
 
     /**
