@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletFilters } from '@/hooks/feature/outlet/use-outlet-filters';
-import outlet from '@/routes/outlet';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { OutletSectionProps } from './outlet-section';
+import outlet from '@/routes/outlet';
 
 function OutletSearchForm() {
     const { filters } = usePage<OutletSectionProps>().props;
