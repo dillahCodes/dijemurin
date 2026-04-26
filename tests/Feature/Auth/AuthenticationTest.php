@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
@@ -11,7 +12,9 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'role' => UserRole::SUPER_ADMIN,
+    ]);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
