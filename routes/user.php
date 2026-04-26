@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\SetPasswordController;
 use App\Http\Controllers\User\UserManagementController;
 
 Route::middleware(['auth', 'verified', 'role:super_admin,admin'])->group(function () {
@@ -11,4 +12,8 @@ Route::middleware(['auth', 'verified', 'role:super_admin,admin'])->group(functio
         Route::get('/{user}/edit', [UserManagementController::class, 'edit'])->name('edit');
         Route::patch('/{user}/edit', [UserManagementController::class, 'update'])->name('update');
     });
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('set-password/{token}', [SetPasswordController::class, 'show'])->name('set-password');
 });
