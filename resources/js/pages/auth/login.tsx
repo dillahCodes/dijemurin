@@ -8,17 +8,17 @@ import PasswordInput from '@/components/ui/password-input';
 import { Spinner } from '@/components/ui/spinner';
 import TextLink from '@/components/ui/text-link';
 import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
 type Props = {
     status?: string;
     canResetPassword: boolean;
-    canRegister: boolean;
+    // canRegister: boolean;
 };
 
-export default function Login({ status, canResetPassword, canRegister }: Props) {
+// export default function Login({ status, canResetPassword, canRegister }: Props) {
+export default function Login({ status, canResetPassword }: Props) {
     return (
         <AuthLayout
             title="Masuk ke akun Anda"
@@ -83,15 +83,14 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                 Masuk
                             </Button>
                         </div>
-
-                        {canRegister && (
+                        {/* {canRegister && (
                             <div className="text-center text-sm text-muted-foreground">
                                 Belum punya akun?{' '}
                                 <TextLink href={register()} tabIndex={5} className="font-semibold text-primary">
                                     Daftar sekarang
                                 </TextLink>
                             </div>
-                        )}
+                        )} */}
                     </>
                 )}
             </Form>
