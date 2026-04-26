@@ -64,12 +64,7 @@ export default function SetPassword({ token, email }: Props) {
                             <InputError message={errors.password_confirmation} className="mt-2" />
                         </div>
 
-                        <Button
-                            type="submit"
-                            className="mt-4 w-full"
-                            disabled={processing}
-                            data-test="set-password-button"
-                        >
+                        <Button type="submit" className="mt-4 w-full" disabled={processing} data-test="set-password-button">
                             {processing && <Spinner />}
                             Buat Password
                         </Button>

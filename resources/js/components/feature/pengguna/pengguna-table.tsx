@@ -1,3 +1,5 @@
+import { router, usePage } from '@inertiajs/react';
+import { Eye, Pencil, UserRoundX } from 'lucide-react';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -6,8 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import pengguna from '@/routes/pengguna';
 import type { User } from '@/types/feature/user/user';
 import { UserRole, UserStatusIndonesian } from '@/types/feature/user/user';
-import { router, usePage } from '@inertiajs/react';
-import { Eye, Pencil, UserRoundX } from 'lucide-react';
 import type { PenggunaSectionProps } from './pengguna-section';
 
 export function getStatusBadgeVariant(status: UserStatusIndonesian): BadgeVariant {

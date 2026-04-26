@@ -1,5 +1,5 @@
-import { UserStatus } from '@/types/feature/user/user';
 import { z } from 'zod';
+import { UserStatus } from '@/types/feature/user/user';
 
 export const userEditSchema = z.object({
     name: z.string().min(1, { message: 'Nama wajib diisi.' }),
