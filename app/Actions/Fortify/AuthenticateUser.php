@@ -14,8 +14,7 @@ class AuthenticateUser
     /**
      * Authenticate the user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \App\Models\User|null
+     * @return User|null
      */
     public function __invoke(Request $request)
     {
@@ -45,9 +44,9 @@ class AuthenticateUser
 
         // validate user outlet
         $hasSuperAdmin = $user->role === UserRole::SUPER_ADMIN;
-        if (!$hasSuperAdmin && is_null($user->outlet_id)) {
+        if (! $hasSuperAdmin && is_null($user->outlet_id)) {
             throw ValidationException::withMessages([
-               'email' => 'Akun Anda belum ditugaskan ke outlet manapun. Silahkan hubungi administrator',
+                'email' => 'Akun Anda belum ditugaskan ke outlet manapun. Silahkan hubungi administrator',
             ]);
         }
 

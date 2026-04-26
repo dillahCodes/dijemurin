@@ -24,8 +24,8 @@ class SetPasswordNotification extends ResetPassword
      */
     public function toMail($notifiable): MailMessage
     {
-        $url    = $this->resetUrl($notifiable);
-        $expire = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60);
+        $url = $this->resetUrl($notifiable);
+        $expire = config('auth.passwords.'.config('auth.defaults.passwords').'.expire', 60);
 
         return (new MailMessage)
             ->subject(Lang::get('Set your password'))

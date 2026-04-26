@@ -6,7 +6,6 @@ use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Models\User;
 use App\Notifications\SetPasswordNotification;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -25,7 +24,7 @@ class SuperAdminSeeder extends Seeder
     {
         $superAdmin = User::firstOrCreate(
             [
-                'email' => config('app.super_admin_email')
+                'email' => config('app.super_admin_email'),
             ],
             [
                 'name' => 'Super Admin',

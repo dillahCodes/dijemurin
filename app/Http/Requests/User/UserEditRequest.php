@@ -27,7 +27,7 @@ class UserEditRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $this->user->id],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$this->user->id],
             'status' => ['required', new Enum(UserStatus::class)],
         ];
     }

@@ -82,8 +82,8 @@ class UserService
      */
     public static function updateUser(User $user, array $data)
     {
-       return DB::transaction(function () use ($user, $data) {
-           $user->update($data);
-       });
+        return DB::transaction(function () use ($user, $data) {
+            $user->update($data);
+        });
     }
 }

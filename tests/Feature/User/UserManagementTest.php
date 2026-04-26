@@ -23,9 +23,9 @@ class UserManagementTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin)->post(route('pengguna.store'), [
-            'name'   => 'New User Foo',
-            'email'  => 'newuser@example.com',
-            'role'   => UserRole::OPERATOR->value,
+            'name' => 'New User Foo',
+            'email' => 'newuser@example.com',
+            'role' => UserRole::OPERATOR->value,
             'status' => UserStatus::ACTIVE->value,
         ]);
 
@@ -34,7 +34,7 @@ class UserManagementTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'email' => 'newuser@example.com',
-            'name'  => 'New User Foo',
+            'name' => 'New User Foo',
         ]);
 
         $createdUser = User::where('email', 'newuser@example.com')->first();
