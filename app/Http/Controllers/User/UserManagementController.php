@@ -55,7 +55,7 @@ class UserManagementController extends Controller
         $data = $request->validated();
         UserService::createUser($data);
 
-        return redirect()->route('pengguna.index')->with([['success' => 'Pengguna berhasil ditambahkan dan Email reset password telah dikirim']]);
+        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan dan email set password telah dikirim');
     }
 
     /**
