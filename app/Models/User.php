@@ -103,4 +103,12 @@ class User extends Authenticatable
 
         return $query->whereIn('role', $allowedRoles);
     }
+
+    /**
+     * Check if the user has any of the given roles.
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles);
+    }
 }

@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Super Admin Email
+    |--------------------------------------------------------------------------
+    |
+    | This value is the email address of the super administrator of the
+    | application. This email is used to identify the user with
+    | unrestricted access to all features and settings.
+    |
+    */
+
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', ''),
 ];
