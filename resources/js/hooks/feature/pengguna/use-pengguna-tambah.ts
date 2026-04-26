@@ -27,7 +27,7 @@ export function usePenggunaTambah() {
 
         post(pengguna.store().url, {
             onSuccess: () => {
-                toast.success('Pengguna berhasil ditambahkan, \nEmail Reset password berhasil dikirim', {
+                toast.success('Pengguna berhasil ditambahkan, \nEmail Set Password berhasil dikirim', {
                     position: 'top-center',
                 });
                 reset();
