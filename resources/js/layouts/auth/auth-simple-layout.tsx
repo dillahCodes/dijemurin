@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import AppLogoIcon from '@/components/layout/app-logo-icon';
-import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
+import { home } from '@/routes';
 
 function AuthHeader({ title, description }: { title: string; description: string }) {
     return (
