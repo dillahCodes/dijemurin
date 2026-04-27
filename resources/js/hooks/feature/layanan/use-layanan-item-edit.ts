@@ -42,8 +42,7 @@ export function useLayananItemEdit() {
                 modal.close('modal-edit-service-item');
                 toast.success('Price list berhasil diupdate', { position: 'top-center' });
             },
-            onError: (error) => {
-                console.log(error);
+            onError: () => {
                 toast.error('Gagal mengupdate price list', { position: 'top-center' });
             },
         });
