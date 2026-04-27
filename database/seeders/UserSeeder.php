@@ -25,16 +25,6 @@ class UserSeeder extends Seeder
     {
         $statuses = UserStatus::cases();
 
-        // 1 Super Admin (No outlet needed)
-        // User::factory()->create([
-        //     'name' => 'Super Admin',
-        //     'email' => 'superadmin@gmail.com',
-        //     'password' => bcrypt('password'),
-        //     'role' => UserRole::SUPER_ADMIN,
-        //     'status' => UserStatus::ACTIVE,
-        //     'outlet_id' => null,
-        // ]);
-
         // Specific mapping for outlet assignments
         $outlets = Outlet::all();
 
