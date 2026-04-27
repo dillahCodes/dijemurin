@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Service;
 
+use App\Rules\Service\UniqueServiceNamePerOutletRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,8 +24,9 @@ class ServiceStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:services,name',
-            'description' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', new UniqueServiceNamePerOutletRule($this->outlet_id)],
+            'description' => ['required', 'string', 'max:255'],
+            'outlet_id' => ['required', 'exists:outlets,id'],
         ];
     }
 
@@ -36,6 +38,8 @@ class ServiceStoreRequest extends FormRequest
             'name.max' => 'Nama layanan maksimal 255 karakter',
             'description.required' => 'Deskripsi layanan wajib diisi',
             'description.max' => 'Deskripsi layanan maksimal 255 karakter',
+            'outlet_id.required' => 'Outlet wajib diisi',
+            'outlet_id.exists' => 'Outlet tidak valid',
         ];
     }
 }

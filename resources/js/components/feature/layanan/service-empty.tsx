@@ -2,7 +2,7 @@ import { SearchX } from 'lucide-react';
 import { Activity } from 'react';
 
 interface ServiceEmptyProps {
-    search: string;
+    search?: string;
 }
 
 export function ServiceEmpty({ search }: ServiceEmptyProps) {

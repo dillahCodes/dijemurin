@@ -1,8 +1,8 @@
 import { Head, usePage } from '@inertiajs/react';
 
-import { ServiceItemsSection } from '@/components/feature/layanan/service-items-section';
+import type { ServiceItemPageProps } from '@/components/feature/layanan/items/service-items-section';
+import { ServiceItemsSection } from '@/components/feature/layanan/items/service-items-section';
 import AppLayout from '@/layouts/app-layout';
-import type { ServiceItemPageProps } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
 
 export default function LayananItemsIndex() {
@@ -12,7 +12,7 @@ export default function LayananItemsIndex() {
         <AppLayout
             breadcrumbs={[
                 { title: 'Layanan', href: layanan.index() },
-                { title: `Price List ${service.name}`, href: layanan.show(service.id) },
+                { title: `Price List ${service.name}`, href: layanan.items.index({ id: service.id }) },
             ]}
         >
             <Head title={`Price List ${service.name}`} />

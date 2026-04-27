@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Service;
 
+use App\Rules\Service\UniqueServiceNamePerOutletRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ServiceUpdateRequest extends FormRequest
 {
@@ -24,19 +24,8 @@ class ServiceUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('services', 'name')->ignore($this->service), //  Route::patch('/{service}'.. visit web.php
-            ],
-            'description' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-            ],
+            'name' => ['required', 'string', 'max:255', new UniqueServiceNamePerOutletRule($this->service->outlet_id, $this->service->id)],
+            'description' => ['required', 'string', 'max:255'],
         ];
     }
 

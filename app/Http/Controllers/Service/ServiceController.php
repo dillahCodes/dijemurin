@@ -2,66 +2,125 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\DTOs\Outlet\OutletComboboxFilterDTO;
+use App\DTOs\Outlet\OutletFilterDTO;
 use App\DTOs\Service\ServiceFilterDTO;
-use App\DTOs\Service\ServiceItemFilterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceStoreRequest;
 use App\Http\Requests\Service\ServiceUpdateRequest;
 use App\Models\Service\Service;
+use App\Services\Outlet\OutletService;
 use App\Services\Service\ServiceService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ServiceController extends Controller
 {
+    /**
+     * Display a listing of the services.
+     */
     public function index(Request $request): Response
     {
         $filterService = ServiceFilterDTO::fromRequest($request);
-        $services = ServiceService::getServicesData($filterService);
+        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+
         $filters = $filterService->toArray();
+        $comboboxFilters = $filterCombobox->toArray();
+        $mergedFilters = array_merge($filters, $comboboxFilters);
+
+        $services = ServiceService::getIndexServiceData($filterService, $filterCombobox);
+        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+        $outletSelected = OutletService::getOutletSelected($filterCombobox);
 
         return Inertia::render('layanan/layanan', [
             'services' => $services,
-            'filters' => $filters,
+            'filters' => $mergedFilters,
+            'outlets' => $outlets,
+            'outletSelected' => $outletSelected,
         ]);
     }
 
-    public function show(Service $service, Request $request): Response
+    /**
+     * Show the form for creating a new service.
+     */
+    public function create(Request $request): Response
     {
-        $filterServiceItem = ServiceItemFilterDTO::fromRequest($request);
-        $items = ServiceService::getServiceItems($service, $filterServiceItem);
-        $filters = $filterServiceItem->toArray();
+        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
 
-        return Inertia::render('layanan/layanan-items', [
-            'service' => $service,
-            'items' => $items,
-            'filters' => $filters,
+        return Inertia::render('layanan/layanan-tambah', [
+            'outlets' => $outlets,
         ]);
     }
 
-    public function destroy(Service $service)
-    {
-        $service->delete();
-
-        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil dihapus']);
-    }
-
+    /**
+     * Store a newly created service in storage.
+     *
+     * @return RedirectResponse
+     */
     public function store(ServiceStoreRequest $request)
     {
         $validate = $request->validated();
 
         Service::create($validate);
 
-        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil ditambahkan']);
+        return redirect()
+            ->route('layanan.index')
+            ->with(['success' => 'Layanan berhasil ditambahkan']);
     }
 
+    /**
+     * Display the specified service detail page.
+     */
+    public function show(Service $service, Request $request): Response
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified service.
+     */
+    public function edit(Service $service, Request $request): Response
+    {
+        $filterOutlet = OutletFilterDTO::fromRequest($request);
+        $outlets = OutletService::getOutletsData($filterOutlet);
+        $serviceData = ServiceService::getServiceById($service->id);
+
+        return Inertia::render('layanan/layanan-edit', [
+            'service' => $serviceData,
+            'outlets' => $outlets,
+        ]);
+    }
+
+    /**
+     * Update the specified service in storage.
+     *
+     * @return RedirectResponse
+     */
     public function update(ServiceUpdateRequest $request, Service $service)
     {
         $validate = $request->validated();
 
         $service->update($validate);
 
-        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil diupdate']);
+        return redirect()
+            ->route('layanan.index')
+            ->with(['success' => 'Layanan berhasil diupdate']);
+    }
+
+    /**
+     * Remove the specified service from storage.
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(Service $service)
+    {
+        $service->delete();
+
+        return redirect()
+            ->route('layanan.index')
+            ->with(['success' => 'Layanan berhasil dihapus']);
     }
 }

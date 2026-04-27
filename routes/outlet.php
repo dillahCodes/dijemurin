@@ -9,6 +9,6 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])->group(function () {
         Route::post('/tambah', [OutletController::class, 'store'])->name('store');
         Route::get('/{outlet}', [OutletController::class, 'show'])->name('show');
         Route::get('/{outlet}/edit', [OutletController::class, 'edit'])->name('edit');
-        Route::patch('/{outlet}/edit', [OutletController::class, 'update'])->name('update');
+        Route::patch('/{outlet}', [OutletController::class, 'update'])->name('update');
     });
 });

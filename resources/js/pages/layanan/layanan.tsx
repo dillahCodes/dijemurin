@@ -3,7 +3,7 @@ import { ServiceSection } from '@/components/feature/layanan/service-section';
 import AppLayout from '@/layouts/app-layout';
 import layanan from '@/routes/layanan';
 
-export default function ServicesIndex() {
+export default function layananIndex() {
     return (
         <AppLayout breadcrumbs={[{ title: 'Layanan', href: layanan.index() }]}>
             <Head title="Layanan" />

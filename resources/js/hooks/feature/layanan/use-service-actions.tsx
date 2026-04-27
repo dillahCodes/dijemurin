@@ -1,76 +1,63 @@
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
-import { ServiceEdit } from '@/components/feature/layanan/service-edit';
 import { useDrawer } from '@/components/ui/drawer';
 import { useModal } from '@/components/ui/modal';
 import { useIsMobile } from '@/hooks/use-mobile';
+import type { Service } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
 
-export interface ServiceCardProps {
-    id: number;
-    title: string;
-    description: string;
-}
-
-const apiServiceDelete = (id: number, options: any) => {
-    router.delete(layanan.destroy({ id }).url, options);
-};
-
-export function useServiceActions({ id, title, description }: ServiceCardProps) {
+export function useServiceActions({ id, name }: Service) {
     const isMobile = useIsMobile();
     const modal = useModal();
     const drawer = useDrawer();
 
-    const handleNavigate = () => router.visit(`/layanan/${id}`);
-
     const handleEdit = (e: React.MouseEvent) => {
         e.stopPropagation();
-
-        modal.open({
-            id: 'modal-edit-service',
-            title: 'Edit Layanan',
-            description: 'Isi form untuk mengedit layanan.',
-            withCancelButton: false,
-            withConfirmButton: false,
-            content: <ServiceEdit serviceId={id} description={description} title={title} />,
-        });
+        router.get(layanan.edit({ id }).url);
     };
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
+        openDeleteModal();
+    };
+
+    const openDeleteModal = () => {
         modal.open({
             id: 'modal-confirm-delete-service',
-            title: `Hapus Layanan`,
-            content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus layanan {title}?</div>,
-            onConfirm: () =>
-                new Promise((resolve) => {
-                    apiServiceDelete(id, {
-                        preserveScroll: true,
-                        onSuccess: () => {
-                            toast.success('Layanan berhasil dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-drawer');
-                            }
-                        },
-                        onError: () => {
-                            toast.error('Layanan gagal dihapus', {
-                                position: 'top-center',
-                            });
-
-                            if (isMobile) {
-                                drawer.close('service-drawer');
-                            }
-                        },
-                        onFinish: () => resolve(undefined),
-                    });
-                }),
+            title: 'Hapus Layanan',
+            content: <div className="line-clamp-2">Apakah anda yakin ingin menghapus layanan {name}?</div>,
+            onConfirm: handleConfirmDelete,
             cancelContent: 'Batal',
             confirmContent: 'Hapus',
         });
     };
 
-    return { handleNavigate, handleEdit, handleDelete };
+    const handleConfirmDelete = () => {
+        return new Promise<void>((resolve) => {
+            router.delete(layanan.destroy({ id }).url, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success('Layanan berhasil dihapus', {
+                        position: 'top-center',
+                    });
+
+                    if (isMobile) {
+                        drawer.close('service-drawer');
+                    }
+                },
+                onError: () => {
+                    toast.error('Layanan gagal dihapus', {
+                        position: 'top-center',
+                    });
+
+                    if (isMobile) {
+                        drawer.close('service-drawer');
+                    }
+                },
+                onFinish: () => resolve(),
+            });
+        });
+    };
+
+    return { handleEdit, handleDelete };
 }

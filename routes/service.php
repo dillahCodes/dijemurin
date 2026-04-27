@@ -3,17 +3,31 @@
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceItemController;
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('layanan')->name('layanan.')->group(function () {
-        Route::get('/', [ServiceController::class, 'index'])->name('index');
-        Route::post('/', [ServiceController::class, 'store'])->name('store');
+Route::middleware(['auth', 'verified'])->prefix('layanan')->name('layanan.')->group(function () {
 
-        Route::get('/{service}', [ServiceController::class, 'show'])->name('show');
-        Route::delete('/{service}', [ServiceController::class, 'destroy'])->name('destroy');
-        Route::patch('/{service}', [ServiceController::class, 'update'])->name('update');
+    // Service Management Routes
+    Route::controller(ServiceController::class)->group(function () {
+        Route::get('/', 'index')->name('index')->middleware('role:super_admin,admin,cashier');
 
-        Route::post('/{service}/items', [ServiceItemController::class, 'store'])->name('items.store');
-        Route::delete('/{service}/items/{serviceItem}', [ServiceItemController::class, 'destroy'])->name('items.destroy');
-        Route::patch('/{service}/items/{serviceItem}', [ServiceItemController::class, 'update'])->name('items.update');
+        Route::middleware('role:super_admin,admin')->group(function () {
+            Route::get('/tambah', 'create')->name('create');
+            Route::post('/tambah', 'store')->name('store');
+            Route::get('/{service}/edit', 'edit')->name('edit');
+            Route::patch('/{service}', 'update')->name('update');
+            Route::delete('/{service}', 'destroy')->name('destroy');
+        });
+    });
+
+    // Service Item Management Routes
+    Route::prefix('{service}/items')->name('items.')->controller(ServiceItemController::class)->group(function () {
+        Route::get('/', 'index')->name('index')->middleware('role:super_admin,admin,cashier');
+
+        Route::middleware('role:super_admin,admin')->group(function () {
+            Route::get('/tambah', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{serviceItem}/edit', 'edit')->name('edit');
+            Route::patch('/{serviceItem}', 'update')->name('update');
+            Route::delete('/{serviceItem}', 'destroy')->name('destroy');
+        });
     });
 });
