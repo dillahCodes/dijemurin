@@ -12,7 +12,7 @@ class ServiceFilterDTO
 
     public function __construct(
         public readonly ?string $search,
-        public readonly int $limit,
+        public readonly ?int $limit,
     ) {}
 
     /**

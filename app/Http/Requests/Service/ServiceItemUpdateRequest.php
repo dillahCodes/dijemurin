@@ -24,8 +24,7 @@ class ServiceItemUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //  Route::delete('/{service}/items/{serviceItem}'... visit web.php
-            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('service_items', 'name')->ignore($this->serviceItem)],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'required', 'string', 'max:255'],
             'time' => ['sometimes', 'required', 'string', 'max:255'],
             'price' => ['sometimes', 'required', 'numeric', 'min:1'],
@@ -38,7 +37,6 @@ class ServiceItemUpdateRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama layanan wajib diisi',
-            'name.unique' => 'Nama layanan sudah ada',
             'name.max' => 'Nama layanan maksimal 255 karakter',
             'description.required' => 'Deskripsi layanan wajib diisi',
             'description.max' => 'Deskripsi layanan maksimal 255 karakter',

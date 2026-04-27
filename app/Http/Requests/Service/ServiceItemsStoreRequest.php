@@ -23,12 +23,12 @@ class ServiceItemsStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:service_items,name',
-            'description' => 'required|string|max:255',
-            'time' => 'required|string|max:255',
-            'price' => 'required|numeric|min:1',
-            'unit' => 'required|string|max:255',
-            'service_id' => 'required|integer|exists:services,id',
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255'],
+            'time' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:1'],
+            'unit' => ['required', 'string', 'max:255'],
+            'service_id' => ['required', 'integer', 'exists:services,id'],
         ];
     }
 
@@ -36,7 +36,6 @@ class ServiceItemsStoreRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama layanan wajib diisi',
-            'name.unique' => 'Nama layanan sudah ada',
             'description.required' => 'Deskripsi wajib diisi',
             'time.required' => 'Waktu pengerjaan wajib diisi',
             'price.required' => 'Harga wajib diisi',
