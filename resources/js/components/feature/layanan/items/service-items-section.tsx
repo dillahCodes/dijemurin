@@ -1,12 +1,18 @@
 import { usePage } from '@inertiajs/react';
 import { Activity } from 'react';
 
-import type { ServiceItemPageProps } from '@/types/feature/layanan';
+import type { Service, ServiceItem } from '@/types/feature/layanan';
 
 import { ServiceItemCard } from './service-items-card';
 import { ServiceItemsEmpty } from './service-items-empty';
 import { ServiceItemsHeader } from './service-items-header';
 import { ServiceItemsSearch } from './service-items-search';
+
+export type ServiceItemPageProps = {
+    service: Service;
+    items: ServiceItem[];
+    filters: { search: string };
+};
 
 export function ServiceItemsSection() {
     const { service, items, filters } = usePage<ServiceItemPageProps>().props;

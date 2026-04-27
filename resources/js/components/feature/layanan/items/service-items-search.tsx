@@ -1,18 +1,18 @@
 import { Plus, X } from 'lucide-react';
 import { Activity } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useServiceItemsSearch } from '@/hooks/feature/layanan/use-service-items-search';
 import type { ServiceItemsSearchProps } from '@/hooks/feature/layanan/use-service-items-search';
 
 export function ServiceItemsSearch(props: ServiceItemsSearchProps) {
-    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleAddServiceItem } =
+    const { search, shouldDisableSearch, handleSubmit, handleChange, handleClear, handleGoToAddServiceItem } =
         useServiceItemsSearch(props);
+
     const { serviceName } = props;
 
     return (
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="b flex flex-col items-center justify-between gap-4 sm:flex-row">
             <form onSubmit={handleSubmit} className="flex w-full max-w-2xl items-center gap-3">
                 <Input
                     type="text"
@@ -34,7 +34,7 @@ export function ServiceItemsSearch(props: ServiceItemsSearchProps) {
                 </div>
             </form>
 
-            <Button onClick={handleAddServiceItem} variant="outline" className="w-full shrink-0 cursor-pointer sm:w-fit">
+            <Button onClick={handleGoToAddServiceItem} className="w-full shrink-0 cursor-pointer sm:w-fit">
                 <Plus size={16} />
                 Tambah Price List
             </Button>

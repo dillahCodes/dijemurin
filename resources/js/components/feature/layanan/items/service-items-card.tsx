@@ -4,11 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { useCartAddItem } from '@/hooks/feature/cart/use-cart-add-item';
 import { useServiceItemActions } from '@/hooks/feature/layanan/use-service-item-actions';
-import type { ServiceItemCardProps } from '@/hooks/feature/layanan/use-service-item-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import type { ServiceItem } from '@/types/feature/layanan';
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -126,13 +125,12 @@ function ServiceItemFooter({ formattedPrice, unit, time }: ServiceItemFooterProp
 }
 
 /** 3. Main Component */
-export function ServiceItemCard(props: ServiceItemCardProps) {
-    const { handleOpenModalAddItem } = useCartAddItem({ item: props });
+export function ServiceItemCard(props: ServiceItem) {
     const { handleEdit, handleDelete, formattedPrice } = useServiceItemActions(props);
+    // const { handleOpenModalAddItem } = useCartAddItem({ item: props });
 
     return (
         <Card
-            onClick={handleOpenModalAddItem}
             className={cn(
                 'group relative w-full cursor-pointer overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}

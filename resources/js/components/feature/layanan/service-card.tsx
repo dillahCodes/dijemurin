@@ -1,14 +1,21 @@
-import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
+import { router } from '@inertiajs/react';
+import { EllipsisVertical, Pencil, Store, Trash2 } from 'lucide-react';
 import { Activity } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useServiceActions } from '@/hooks/feature/layanan/use-service-actions';
-import type { ServiceCardProps } from '@/hooks/feature/layanan/use-service-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import layanan from '@/routes/layanan';
+import { Service } from '@/types/feature/layanan';
+
+export interface ServiceCardProps {
+    id: number;
+    title: string;
+    description: string;
+}
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -49,14 +56,13 @@ function DrawerContent({ menu }: DrawerMenu) {
 }
 
 interface ServiceHeaderContentProps {
-    title: string;
-    description: string;
+    service: Service;
     onEdit: (e: React.MouseEvent) => void;
     onDelete: (e: React.MouseEvent) => void;
 }
 
 /** 2. Sub-components (UI Units) */
-function ServiceHeaderContent({ title, description, onEdit, onDelete }: ServiceHeaderContentProps) {
+function ServiceHeaderContent({ service, onEdit, onDelete }: ServiceHeaderContentProps) {
     const isMobile = useIsMobile();
     const drawer = useDrawer();
 
@@ -72,12 +78,20 @@ function ServiceHeaderContent({ title, description, onEdit, onDelete }: ServiceH
     };
 
     return (
-        <div className="flex w-full items-center justify-between">
-            <CardHeader className="p-0!">
-                <CardTitle className="line-clamp-1 text-sm sm:text-base md:text-lg">{title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-xs text-muted-foreground sm:text-sm md:text-base">
-                    {description}
-                </CardDescription>
+        <div className="flex w-full items-start justify-between gap-4">
+            <CardHeader className="p-0! flex flex-col gap-2 w-[85%] sm:w-[90%]">
+                <Activity mode={!!service.outlet?.name ? 'visible' : 'hidden'}>
+                    <div className="flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary sm:text-xs">
+                        <Store size={12} className="shrink-0" />
+                        <span className="line-clamp-1">{service.outlet?.name}</span>
+                    </div>
+                </Activity>
+                <div className="flex flex-col gap-0.5">
+                    <CardTitle className="line-clamp-1 text-sm sm:text-base md:text-lg">{service.name}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-xs text-muted-foreground sm:text-sm md:text-sm">
+                        {service.description}
+                    </CardDescription>
+                </div>
             </CardHeader>
 
             {/* dekstop dropdown menu, mobile bottom sheet */}
@@ -109,8 +123,12 @@ function ServiceHeaderContent({ title, description, onEdit, onDelete }: ServiceH
 }
 
 /** 3. Main Component */
-export function ServiceCard(props: ServiceCardProps) {
-    const { handleNavigate, handleEdit, handleDelete } = useServiceActions(props);
+export function ServiceCard(props: Service) {
+    const { handleEdit, handleDelete } = useServiceActions(props);
+
+    const handleNavigate = () => {
+        router.get(layanan.items.index({ id: props.id }).url);
+    };
 
     return (
         <Card
@@ -121,7 +139,7 @@ export function ServiceCard(props: ServiceCardProps) {
         >
             <div className="absolute -top-8 -right-8 z-0 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
             <div className="absolute bottom-0 left-0 z-0 h-1 w-0 flex-none bg-primary transition-all duration-500 ease-out group-hover:w-full" />
-            <ServiceHeaderContent {...props} onEdit={handleEdit} onDelete={handleDelete} />
+            <ServiceHeaderContent service={props} onEdit={handleEdit} onDelete={handleDelete} />
         </Card>
     );
 }
