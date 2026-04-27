@@ -80,7 +80,7 @@ function ServiceSearchActions({ search, outletIdSelected, shouldDisableSearch, o
     return (
         <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
             <Activity mode={search || outletIdSelected ? 'visible' : 'hidden'}>
-                <Button variant="ghost" type="button" onClick={onClear} className="px-3 cursor-pointer">
+                <Button variant="ghost" type="button" onClick={onClear} className="cursor-pointer px-3">
                     <X size={16} />
                 </Button>
             </Activity>
@@ -111,10 +111,7 @@ export function ServiceSearch() {
 
     return (
         <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <form
-                onSubmit={handlers.handleSubmit}
-                className="flex w-full flex-col gap-3 sm:flex-row sm:items-center"
-            >
+            <form onSubmit={handlers.handleSubmit} className="flex w-full flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="w-full sm:w-[250px] lg:w-[280px]">
                     <Input
                         type="text"
@@ -125,7 +122,7 @@ export function ServiceSearch() {
                         className="w-full"
                     />
                 </div>
-                
+
                 <ServiceOutletFilter
                     onFetchOutlet={handlers.handleFetchComboboxOutlet}
                     onSetOutlet={handlers.handleSelectOutlet}
@@ -133,7 +130,7 @@ export function ServiceSearch() {
                     localOutletIdSelected={data.searchParam?.outletIdSelected}
                     localOutletSearch={data.searchParam?.outletSearch}
                 />
-                
+
                 <ServiceSearchActions
                     search={data.searchParam?.search}
                     outletIdSelected={data.searchParam?.outletIdSelected}

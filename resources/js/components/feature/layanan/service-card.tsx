@@ -79,7 +79,7 @@ function ServiceHeaderContent({ service, onEdit, onDelete }: ServiceHeaderConten
 
     return (
         <div className="flex w-full items-start justify-between gap-4">
-            <CardHeader className="p-0! flex flex-col gap-2 w-[85%] sm:w-[90%]">
+            <CardHeader className="flex w-[85%] flex-col gap-2 p-0! sm:w-[90%]">
                 <Activity mode={!!service.outlet?.name ? 'visible' : 'hidden'}>
                     <div className="flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary sm:text-xs">
                         <Store size={12} className="shrink-0" />
