@@ -9,7 +9,7 @@ import { useServiceActions } from '@/hooks/feature/layanan/use-service-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import layanan from '@/routes/layanan';
-import { Service } from '@/types/feature/layanan';
+import type { Service } from '@/types/feature/layanan';
 
 export interface ServiceCardProps {
     id: number;
@@ -80,7 +80,7 @@ function ServiceHeaderContent({ service, onEdit, onDelete }: ServiceHeaderConten
     return (
         <div className="flex w-full items-start justify-between gap-4">
             <CardHeader className="flex w-[85%] flex-col gap-2 p-0! sm:w-[90%]">
-                <Activity mode={!!service.outlet?.name ? 'visible' : 'hidden'}>
+                <Activity mode={service.outlet?.name ? 'visible' : 'hidden'}>
                     <div className="flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary sm:text-xs">
                         <Store size={12} className="shrink-0" />
                         <span className="line-clamp-1">{service.outlet?.name}</span>

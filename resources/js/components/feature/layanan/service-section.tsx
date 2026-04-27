@@ -1,16 +1,16 @@
+import { usePage } from '@inertiajs/react';
+import { Activity } from 'react';
+import { RoleHelper } from '@/helper/role-helper';
 import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Service } from '@/types/feature/layanan';
 import type { Outlet } from '@/types/feature/outlet/outlet';
+import { UserRole } from '@/types/feature/user/user';
 import type { ApiResponse } from '@/types/response';
-import { usePage } from '@inertiajs/react';
-import { Activity } from 'react';
 import { ServiceCard } from './service-card';
 import { ServiceEmpty } from './service-empty';
 import { ServiceHeader } from './service-header';
-import { ServiceSearch } from './service-search';
 import { ServicePagination } from './service-pagination';
-import { RoleHelper } from '@/helper/role-helper';
-import { UserRole } from '@/types/feature/user/user';
+import { ServiceSearch } from './service-search';
 
 export type ServicePageProps = {
     services: LaravelPaginator<Service>;

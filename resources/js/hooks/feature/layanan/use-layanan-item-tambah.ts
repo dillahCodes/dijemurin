@@ -42,7 +42,7 @@ export function useLayananItemTambah() {
                 modal.close('modal-add-price-list');
                 toast.success('Price list berhasil ditambahkan', { position: 'top-center' });
             },
-            onError: (error) => {
+            onError: () => {
                 toast.error('Gagal menambahkan price list', { position: 'top-center' });
             },
         });

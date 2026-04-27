@@ -1,3 +1,5 @@
+import { usePage } from '@inertiajs/react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Combobox,
@@ -13,8 +15,6 @@ import { RoleHelper } from '@/helper/role-helper';
 import { useLayananEdit } from '@/hooks/feature/layanan/use-layanan-edit';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import { UserRole } from '@/types/feature/user/user';
-import { usePage } from '@inertiajs/react';
-import { Activity } from 'react';
 import type { LayananEditSectionProps } from './layanan-edit-section';
 
 export function LayananEditForm() {
@@ -87,7 +87,7 @@ export function LayananEditForm() {
                             >
                                 <ComboboxInput placeholder="Pilih Outlet" showClear />
                                 <ComboboxContent>
-                                    <Activity mode={!!outletsData.length ? 'visible' : 'hidden'}>
+                                    <Activity mode={outletsData.length ? 'visible' : 'hidden'}>
                                         <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
                                     </Activity>
                                     <ComboboxList>

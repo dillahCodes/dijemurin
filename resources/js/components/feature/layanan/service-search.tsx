@@ -60,7 +60,7 @@ function ServiceOutletFilter({
             >
                 <ComboboxInput placeholder="Cari Outlet..." />
                 <ComboboxContent>
-                    <Activity mode={!!outlets?.data?.length ? 'visible' : 'hidden'}>
+                    <Activity mode={outlets?.data?.length ? 'visible' : 'hidden'}>
                         <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
                     </Activity>
                     <ComboboxList>

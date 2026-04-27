@@ -11,11 +11,11 @@ import {
 } from '@/components/ui/combobox';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { RoleHelper } from '@/helper/role-helper';
 import { useLayananTambah } from '@/hooks/feature/layanan/use-layanan-tambah';
 import type { Outlet } from '@/types/feature/outlet/outlet';
-import type { LayananTambahSectionProps } from './layanan-tambah-section';
-import { RoleHelper } from '@/helper/role-helper';
 import { UserRole } from '@/types/feature/user/user';
+import type { LayananTambahSectionProps } from './layanan-tambah-section';
 
 export function LayananTambahForm() {
     const { outlets, auth } = usePage<LayananTambahSectionProps>().props;
@@ -81,7 +81,7 @@ export function LayananTambahForm() {
                             <Combobox name="outlet_id" items={outletsData} onInputValueChange={handlers.handleFetchOutlet}>
                                 <ComboboxInput placeholder="Pilih Outlet" showClear />
                                 <ComboboxContent>
-                                    <Activity mode={!!outletsData.length ? 'visible' : 'hidden'}>
+                                    <Activity mode={outletsData.length ? 'visible' : 'hidden'}>
                                         <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
                                     </Activity>
 

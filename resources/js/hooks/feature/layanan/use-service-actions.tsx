@@ -1,11 +1,10 @@
 import { router } from '@inertiajs/react';
 import { toast } from 'sonner';
-import type { ServiceCardProps } from '@/components/feature/layanan/service-card';
 import { useDrawer } from '@/components/ui/drawer';
 import { useModal } from '@/components/ui/modal';
 import { useIsMobile } from '@/hooks/use-mobile';
 import layanan from '@/routes/layanan';
-import { Service } from '@/types/feature/layanan';
+import type { Service } from '@/types/feature/layanan';
 
 export function useServiceActions({ id, name }: Service) {
     const isMobile = useIsMobile();
