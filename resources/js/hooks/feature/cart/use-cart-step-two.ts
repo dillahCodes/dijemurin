@@ -3,8 +3,8 @@ import { toast } from 'sonner';
 import { useModal } from '@/components/ui/modal';
 import type { CartItemType } from '@/context/feature/cart/cart-context';
 import { useCart } from '@/context/feature/cart/cart-context';
-import { checkoutSchema } from '@/schema/feature/cart/checkout-schema';
 import order from '@/routes/order';
+import { checkoutSchema } from '@/schema/feature/cart/checkout-schema';
 
 function changeItemsData(items: CartItemType[]) {
     return items.map((item) => ({ id: item.data.id, qty: item.qty }));
