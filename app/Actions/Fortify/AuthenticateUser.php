@@ -2,8 +2,10 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\Outlet\OutletStatus;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\Outlet\Outlet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -47,6 +49,15 @@ class AuthenticateUser
         if (! $hasSuperAdmin && is_null($user->outlet_id)) {
             throw ValidationException::withMessages([
                 'email' => 'Akun Anda belum ditugaskan ke outlet manapun. Silahkan hubungi administrator',
+            ]);
+        }
+
+        $outlet = Outlet::find($user->outlet_id);
+
+        // validate outlet status
+        if ($outlet && $outlet->status !== OutletStatus::ACTIVE) {
+            throw ValidationException::withMessages([
+                'email' => 'Outlet tidak aktif. Silahkan hubungi administrator.',
             ]);
         }
 
