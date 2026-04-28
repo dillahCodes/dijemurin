@@ -105,6 +105,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope a query to filter user by outlet
+     */
+    public function scopeFilterOutlet(Builder $query, ?int $outletId): Builder
+    {
+        return $query->when($outletId, function (Builder $query) use ($outletId) {
+            $query->where('outlet_id', $outletId);
+        });
+    }
+
+    /**
      * Check if the user has any of the given roles.
      */
     public function hasAnyRole(array $roles): bool

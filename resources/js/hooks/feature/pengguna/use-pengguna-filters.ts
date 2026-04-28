@@ -1,68 +1,75 @@
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import type { PenggunaFilterPageProps } from '@/components/feature/pengguna/pengguna-section';
+import type { PenggunaFilterPageProps, PenggunaSectionProps } from '@/components/feature/pengguna/pengguna-section';
+import { createUndefinedObject } from '@/helper/create-undefined-object';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 import pengguna from '@/routes/pengguna';
 
-type FilterValue = string | undefined;
+export function usePenggunaFilters() {
+    const { filters } = usePage<PenggunaSectionProps>().props;
+    const [searchParam, setSearchParam] = useState<PenggunaFilterPageProps>(filters);
+    const [resetKey, setResetKey] = useState(0);
 
-const isEmpty = (value: FilterValue) => value === '' || value === undefined;
+    const handleFetchComboboxOutlet = useDebouncedCallback((value: string) => {
+        if (value.length < 3) {
+            return;
+        }
 
-const cleanQuery = (params: Record<string, FilterValue>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const filteredEmtyparams = Object.entries(params).filter(([_key, value]) => !isEmpty(value));
+        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['outlets'] };
+        router.get(pengguna.index().url, { outletSearch: value }, fetchConfig);
+    }, 300);
 
-    return Object.fromEntries(filteredEmtyparams);
-};
-
-export function usePenggunaFilters(initialValues: PenggunaFilterPageProps) {
-    const [filterState, setFilterState] = useState(initialValues);
-
-    const options = { preserveState: true, replace: true };
-
-    const setQuery = (params: Record<string, FilterValue>) => {
-        const merged = { ...initialValues, ...params };
-        const cleaned = cleanQuery(merged);
-        router.get(pengguna.index().url, cleaned, options);
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        setQuery({ search: filterState.search || undefined });
+        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
+        router.get(pengguna.index().url, searchParam, fetchConfig);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterState((prev) => ({ ...prev, search: e.target.value }));
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchParam((prev) => ({ ...prev, search: e.target.value }));
+    };
+
+    const handleSelectOutlet = (outlet: Outlet) => {
+        setSearchParam((prev) => ({ ...prev, outletIdSelected: outlet.id, outletSearch: outlet.name }));
+    };
+
+    const handleFilterRoleStatus = (role: string, status: string) => {
+        const roleValue = role === 'all' ? undefined : role;
+        const statusValue = status === 'all' ? undefined : status;
+
+        setSearchParam((prev) => ({ ...prev, role: roleValue ?? '', status: statusValue ?? '' }));
+
+        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
+        router.get(pengguna.index().url, { ...searchParam, role: roleValue, status: statusValue }, fetchConfig);
     };
 
     const handleClearSearch = () => {
-        setFilterState((prev) => ({ ...prev, search: '' }));
-        setQuery({ search: undefined });
+        const searchParamsKeys = ['search', 'role', 'status', 'outletIdSelected', 'outletSearch'];
+        const searchParams = createUndefinedObject(searchParamsKeys);
+
+        setSearchParam(searchParams);
+        setResetKey((prev) => prev + 1);
+
+        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
+        router.get(pengguna.index().url, searchParams, fetchConfig);
     };
 
-    const handleFilterRole = (role: string) => {
-        const value = role === 'all' ? undefined : role;
-
-        setFilterState((prev) => ({ ...prev, role: value ?? '' }));
-        setQuery({ role: value });
+    const conditions = {
+        shouldDisableSearch: !searchParam.search && !searchParam.outletIdSelected,
     };
-
-    const handleFilterStatus = (status: string) => {
-        const value = status === 'all' ? undefined : status;
-
-        setFilterState((prev) => ({ ...prev, status: value ?? '' }));
-        setQuery({ status: value });
-    };
-
-    const searchLength = filterState.search?.length ?? 0;
-    const initialSearchLength = initialValues?.search?.length ?? 0;
-    const shouldDisableSearch = !searchLength && !initialSearchLength;
 
     return {
-        filterState,
-        conditions: { shouldDisableSearch },
-        searchHandle: { handleSubmit, handleChange },
-        filterHandle: { handleFilterRole, handleFilterStatus },
-        clearHandle: { handleClearSearch },
+        data: {
+            filterState: searchParam,
+            resetKey,
+            conditions,
+        },
+        handlers: {
+            searchHandle: { handleSubmit, handleChange: handleSearchChange },
+            filterHandle: { handleFilterRoleStatus },
+            comboboxHandle: { handleFetchComboboxOutlet, handleSelectOutlet },
+            clearHandle: { handleClearSearch },
+        },
     };
 }
