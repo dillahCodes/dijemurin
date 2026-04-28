@@ -2,10 +2,12 @@
 
 namespace App\Services\User;
 
+use App\DTOs\Outlet\OutletComboboxFilterDTO;
 use App\DTOs\User\UserAddOutletFilterDTO;
 use App\DTOs\User\UserFilterDTO;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Helpers\RoleHelper;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Notifications\SetPasswordNotification;
@@ -17,20 +19,36 @@ use Illuminate\Validation\ValidationException;
 class UserService
 {
     /**
-     * Get users data with filters
+     * Get users index data with filters
      */
-    public static function getUsersData(UserFilterDTO $filter, UserRole $currentRole)
+    public static function getUsersDataIndex(UserFilterDTO $filter, ?OutletComboboxFilterDTO $outletFilter)
     {
-        $users = User::with('outlet')
-            ->visibleToRole($currentRole)
+        $currentUser = auth()->user();
+
+        $query = User::with('outlet')
+            ->visibleToRole($currentUser->role)
             ->search($filter->search)
             ->filterRole($filter->role)
             ->filterStatus($filter->status)
-            ->latest()
-            ->paginate($filter->limit)
-            ->withQueryString();
+            ->latest();
 
-        return UserResource::collection($users);
+        $isSuperAdmin = RoleHelper::isRole(UserRole::SUPER_ADMIN);
+
+        // NOTE: non super admin → force outlet filter
+        if (! $isSuperAdmin) {
+            if ($currentUser->outlet_id) {
+                $query->filterOutlet($currentUser->outlet_id);
+            }
+
+            return UserResource::collection($query->paginate($filter->limit)->withQueryString());
+        }
+
+        // NOTE: super admin flow
+        if ($outletFilter?->outletIdSelected) {
+            $query->filterOutlet($outletFilter->outletIdSelected);
+        }
+
+        return UserResource::collection($query->paginate($filter->limit)->withQueryString());
     }
 
     /**

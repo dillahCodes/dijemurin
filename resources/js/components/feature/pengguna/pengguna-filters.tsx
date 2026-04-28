@@ -1,44 +1,62 @@
-import { router, usePage } from '@inertiajs/react';
-import { Plus, Search, X } from 'lucide-react';
-import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
+import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+} from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RoleHelper } from '@/helper/role-helper';
 import { usePenggunaFilters } from '@/hooks/feature/pengguna/use-pengguna-filters';
-import type { User } from '@/types/feature/user/user';
-import type { PenggunaSectionProps } from './pengguna-section';
 import pengguna from '@/routes/pengguna';
+import type { Outlet } from '@/types/feature/outlet/outlet';
+import { User, UserRole } from '@/types/feature/user/user';
+import { router, usePage } from '@inertiajs/react';
+import { Filter, Plus, Search, X } from 'lucide-react';
+import { Activity, useState } from 'react';
+import type { PenggunaSectionProps } from './pengguna-section';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useModal } from '@/components/ui/modal';
 
-function PenggunaSearchForm() {
-    const { filters } = usePage<PenggunaSectionProps>().props;
-    const { filterState, conditions, clearHandle, searchHandle } = usePenggunaFilters(filters);
+type PenggunaFilterProps = ReturnType<typeof usePenggunaFilters>;
 
+function PenggunaSearchForm({ data, handlers }: PenggunaFilterProps) {
     return (
-        <form className="flex w-full items-center justify-between gap-3 lg:max-w-2xl" onSubmit={searchHandle.handleSubmit}>
-            <Input
-                type="text"
-                placeholder="Cari nama atau email..."
-                name="search"
-                className="flex-1"
-                value={filterState.search}
-                onChange={searchHandle.handleChange}
-            />
+        <form
+            className="flex w-full items-center justify-between gap-3 lg:max-w-2xl"
+            onSubmit={handlers.searchHandle.handleSubmit}
+        >
+            <div className="w-full sm:w-[250px] lg:w-[280px]">
+                <Input
+                    type="text"
+                    placeholder="Cari nama atau email..."
+                    name="search"
+                    className="w-full"
+                    value={data.filterState.search || ''}
+                    onChange={handlers.searchHandle.handleChange}
+                />
+            </div>
+
+            <PenggunaOutletFilter data={data} handlers={handlers} />
 
             <div className="flex items-center gap-2">
-                <Activity mode={filterState.search ? 'visible' : 'hidden'}>
+                <Activity mode={data.filterState.search || data.filterState.outletIdSelected ? 'visible' : 'hidden'}>
                     <Button
                         variant="ghost"
                         type="button"
                         size="icon"
                         className="cursor-pointer"
-                        onClick={clearHandle.handleClearSearch}
-                        disabled={conditions.shouldDisableSearch}
+                        onClick={handlers.clearHandle.handleClearSearch}
+                        disabled={data.conditions.shouldDisableSearch}
                     >
                         <X size={16} />
                     </Button>
                 </Activity>
 
-                <Button type="submit" className="cursor-pointer" disabled={conditions.shouldDisableSearch}>
+                <Button type="submit" className="cursor-pointer" disabled={data.conditions.shouldDisableSearch}>
                     <Search size={16} />
                     Cari
                 </Button>
@@ -47,47 +65,112 @@ function PenggunaSearchForm() {
     );
 }
 
-function UserRoleFilter() {
-    const { userRoleOptions, filters } = usePage<PenggunaSectionProps>().props;
-    const { filterState, filterHandle } = usePenggunaFilters(filters);
+function PenggunaOutletFilter({ data, handlers }: PenggunaFilterProps) {
+    const { auth, outlets } = usePage<PenggunaSectionProps>().props;
+    const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
+
+    if (!hasSuperAdmin) {
+        return null;
+    }
 
     return (
-        <Select value={filterState.role} onValueChange={filterHandle.handleFilterRole}>
-            <SelectTrigger className="w-full min-w-28 cursor-pointer">
-                <SelectValue placeholder="Role" />
-            </SelectTrigger>
-
-            <SelectContent>
-                <SelectItem value="all">Semua role</SelectItem>
-                {userRoleOptions.map((opt: User['role']) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <div className="w-full sm:w-[250px] lg:w-[280px]">
+            <Combobox
+                key={`combo-${data.resetKey}-${data.filterState.outletIdSelected || 'empty-outlet'}`}
+                defaultInputValue={data.filterState.outletIdSelected ? data.filterState.outletSearch || '' : ''}
+                name="outlet_id"
+                items={outlets?.data}
+                onInputValueChange={handlers.comboboxHandle.handleFetchComboboxOutlet}
+            >
+                <ComboboxInput placeholder="Cari Outlet..." />
+                <ComboboxContent>
+                    <Activity mode={outlets?.data?.length ? 'visible' : 'hidden'}>
+                        <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
+                    </Activity>
+                    <ComboboxList>
+                        {outlets?.data?.map((item: Outlet) => (
+                            <ComboboxItem
+                                key={item.id}
+                                value={item.name}
+                                onClick={() => handlers.comboboxHandle.handleSelectOutlet(item)}
+                            >
+                                {item.name}
+                            </ComboboxItem>
+                        ))}
+                    </ComboboxList>
+                </ComboboxContent>
+            </Combobox>
+        </div>
     );
 }
 
-function UserStatusFilter() {
-    const { userStatusOptions, filters } = usePage<PenggunaSectionProps>().props;
-    const { filterState, filterHandle } = usePenggunaFilters(filters);
+interface PenggunaFilterModalContentProps {
+    initialState: { role: string; status: string };
+    options: { roleOptions: User['role'][]; statusOptions: User['status'][] };
+    onFilter: (role: string, status: string) => void;
+}
+
+function PenggunaFilterModalContent({ initialState, options, onFilter }: PenggunaFilterModalContentProps) {
+    const modal = useModal();
+    const [formData, setFormData] = useState(initialState);
+    const { roleOptions: userRoleOptions, statusOptions: userStatusOptions } = options;
+
+    const handleRoleChange = (val: string) => setFormData((prev) => ({ ...prev, role: val }));
+    const handleStatusChange = (val: string) => setFormData((prev) => ({ ...prev, status: val }));
+
+    const handleSubmit = (e: React.SubmitEvent) => {
+        e.preventDefault();
+        onFilter(formData.role, formData.status);
+        modal.close('filter-user');
+    };
 
     return (
-        <Select value={filterState.status} onValueChange={filterHandle.handleFilterStatus}>
-            <SelectTrigger className="w-full min-w-28 cursor-pointer">
-                <SelectValue placeholder="Status" />
-            </SelectTrigger>
+        <form className="mt-8 w-full" onSubmit={handleSubmit}>
+            <FieldSet>
+                <FieldGroup>
+                    <Field>
+                        <FieldLabel>Role</FieldLabel>
+                        <Select value={formData.role} onValueChange={handleRoleChange}>
+                            <SelectTrigger className="w-full min-w-28 cursor-pointer">
+                                <SelectValue placeholder="Role" />
+                            </SelectTrigger>
+                            <SelectContent className="z-1000">
+                                <SelectItem value="all">Semua role</SelectItem>
+                                {userRoleOptions.map((opt: User['role']) => (
+                                    <SelectItem key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </Field>
 
-            <SelectContent>
-                <SelectItem value="all">Semua status</SelectItem>
-                {userStatusOptions.map((opt: User['status']) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+                    <Field>
+                        <FieldLabel>Status</FieldLabel>
+                        <Select value={formData.status} onValueChange={handleStatusChange}>
+                            <SelectTrigger className="w-full min-w-28 cursor-pointer">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent className="z-1000">
+                                <SelectItem value="all">Semua status</SelectItem>
+                                {userStatusOptions.map((opt: User['status']) => (
+                                    <SelectItem key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </Field>
+
+                    <div className="ml-auto flex gap-4">
+                        <Button type="button" variant="outline" onClick={() => modal.close('filter-user')}>
+                            Batal
+                        </Button>
+                        <Button type="submit">Simpan</Button>
+                    </div>
+                </FieldGroup>
+            </FieldSet>
+        </form>
     );
 }
 
@@ -97,20 +180,49 @@ function PenggunaAdd() {
     };
 
     return (
-        <Button onClick={handleGoToAddForm} className="w-full shrink-0 cursor-pointer md:w-fit">
+        <Button onClick={handleGoToAddForm} className="flex-1 cursor-pointer">
             <Plus size={16} />
             Tambah Pengguna
         </Button>
     );
 }
 
+function PenggunaRoleStatusFilter({ data, handlers }: PenggunaFilterProps) {
+    const modal = useModal();
+    const { userRoleOptions, userStatusOptions } = usePage<PenggunaSectionProps>().props;
+    const { role = 'all', status = 'all' } = data.filterState;
+
+    const handleOpenModal = () => {
+        modal.open({
+            id: 'filter-user',
+            title: 'Filter Pengguna',
+            withCancelButton: false,
+            withConfirmButton: false,
+            content: (
+                <PenggunaFilterModalContent
+                    initialState={{ role, status }}
+                    options={{ roleOptions: userRoleOptions, statusOptions: userStatusOptions }}
+                    onFilter={(role, status) => handlers.filterHandle.handleFilterRoleStatus(role, status)}
+                />
+            ),
+        });
+    };
+
+    return (
+        <Button className="cursor-pointer" variant="outline" onClick={handleOpenModal} type="button">
+            <Filter size={16} />
+        </Button>
+    );
+}
+
 export function PenggunaFilters() {
+    const filterHook = usePenggunaFilters();
+
     return (
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
-            <PenggunaSearchForm />
-            <div className="flex flex-wrap gap-3 md:flex-nowrap">
-                <UserRoleFilter />
-                <UserStatusFilter />
+            <PenggunaSearchForm {...filterHook} />
+            <div className="flex w-full gap-3 lg:max-w-72">
+                <PenggunaRoleStatusFilter {...filterHook} />
                 <PenggunaAdd />
             </div>
         </div>
