@@ -2,8 +2,8 @@ import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import type { ServicePageProps } from '@/components/feature/layanan/service-section';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import layanan from '@/routes/layanan';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 
 export function useServiceSearch() {
     const { filters } = usePage<ServicePageProps>().props;

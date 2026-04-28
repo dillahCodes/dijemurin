@@ -27,7 +27,7 @@ class UserManagementController extends Controller
         $currentRole = $request->user()->role;
 
         $users = UserService::getUsersDataIndex($filterUser, $filterCombobox);
-        
+
         $filters = $filterUser->toArray();
         $comboboxFilters = $filterCombobox->toArray();
         $mergedFilters = array_merge($filters, $comboboxFilters);
@@ -35,7 +35,7 @@ class UserManagementController extends Controller
         $userTransitionRules = UserRole::allowedTransitions();
         $userRoleOptions = UserRole::options($currentRole);
         $userStatusOptions = UserStatus::options();
-        
+
         $outlets = OutletService::getOutletsComboboxData($filterCombobox);
         $outletSelected = OutletService::getOutletSelected($filterCombobox);
 

@@ -1,10 +1,10 @@
+import { router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import type { PenggunaFilterPageProps, PenggunaSectionProps } from '@/components/feature/pengguna/pengguna-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import pengguna from '@/routes/pengguna';
-import { Outlet } from '@/types/feature/outlet/outlet';
-import { router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 
 export function usePenggunaFilters() {
     const { filters } = usePage<PenggunaSectionProps>().props;
