@@ -5,9 +5,9 @@ import { toast } from 'sonner';
 import type { OutletTambahSectionProps } from '@/components/feature/outlet/tambah/outlet-tambah-section';
 import type { MultipleOption } from '@/components/ui/multi-select-list-box';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import outlet from '@/routes/outlet';
 import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 import { addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
+import outlet from '@/routes/outlet';
 
 const initialState: AddOutletSchema = {
     name: '',

@@ -1,9 +1,9 @@
 import { router, useForm } from '@inertiajs/react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import layanan from '@/routes/layanan';
 import type { AddServiceSchema } from '@/schema/feature/layanan/add-service-schema';
 import { addServiceSchema } from '@/schema/feature/layanan/add-service-schema';
+import layanan from '@/routes/layanan';
 
 export function useLayananTambah(defaultOutletId?: number | null) {
     const { setData, post, processing, errors, clearErrors, data, setError } = useForm<AddServiceSchema>({

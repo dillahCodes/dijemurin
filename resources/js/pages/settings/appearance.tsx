@@ -3,8 +3,8 @@ import AppearanceTabs from '@/components/feature/settings/appearance-tabs';
 import Heading from '@/components/ui/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit as editAppearance } from '@/routes/appearance';
 import type { BreadcrumbItem } from '@/types';
+import { edit as editAppearance } from '@/routes/appearance';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
