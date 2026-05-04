@@ -169,8 +169,8 @@
       "_createLucideIcon-CLlCHYFX.js"
     ]
   },
-  "_order-table-ypzSNs2N.js": {
-    "file": "assets/order-table-ypzSNs2N.js",
+  "_order-table-C4HY4P5u.js": {
+    "file": "assets/order-table-C4HY4P5u.js",
     "name": "order-table",
     "imports": [
       "_wayfinder-0qProybF.js",
@@ -180,7 +180,7 @@
       "_createLucideIcon-CLlCHYFX.js",
       "_dist-5Cpp1e6H.js",
       "_QueryClientProvider-NlzIAj0Z.js",
-      "_printer-controller-context-CSVI7o7o.js",
+      "_printer-controller-context-BRG_IC6k.js",
       "_check-DYWrMYrM.js",
       "_eye-ChyX8UE6.js",
       "_loader-circle-CV092swo.js",
@@ -212,8 +212,8 @@
       "_createLucideIcon-CLlCHYFX.js"
     ]
   },
-  "_printer-controller-context-CSVI7o7o.js": {
-    "file": "assets/printer-controller-context-CSVI7o7o.js",
+  "_printer-controller-context-BRG_IC6k.js": {
+    "file": "assets/printer-controller-context-BRG_IC6k.js",
     "name": "printer-controller-context",
     "imports": [
       "_wayfinder-0qProybF.js",
@@ -286,7 +286,7 @@
     "isEntry": true
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-B0Bxrr1d.js",
+    "file": "assets/app-BCqWCWxi.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -296,7 +296,7 @@
       "_createLucideIcon-CLlCHYFX.js",
       "_cart-context-ChceYjRK.js",
       "_QueryClientProvider-NlzIAj0Z.js",
-      "_printer-controller-context-CSVI7o7o.js",
+      "_printer-controller-context-BRG_IC6k.js",
       "_circle-check-CgvK4j2-.js",
       "_loader-circle-CV092swo.js",
       "_use-appearance-FsG2brDL.js"
@@ -433,14 +433,14 @@
     ]
   },
   "resources/js/pages/dashboard.tsx": {
-    "file": "assets/dashboard-og0ry60A.js",
+    "file": "assets/dashboard-D_DHGHZw.js",
     "name": "dashboard",
     "src": "resources/js/pages/dashboard.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_wayfinder-0qProybF.js",
       "_order-CS79qnGb.js",
-      "_order-table-ypzSNs2N.js",
+      "_order-table-C4HY4P5u.js",
       "_field-Bnbewe9g.js",
       "_createLucideIcon-CLlCHYFX.js",
       "_app-layout-DRCWrhIR.js",
@@ -499,26 +499,26 @@
     ]
   },
   "resources/js/pages/order/order-customer-status.tsx": {
-    "file": "assets/order-customer-status-DO3kDHDE.js",
+    "file": "assets/order-customer-status-_75l5_Ve.js",
     "name": "order-customer-status",
     "src": "resources/js/pages/order/order-customer-status.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_wayfinder-0qProybF.js",
-      "_order-table-ypzSNs2N.js",
+      "_order-table-C4HY4P5u.js",
       "_field-Bnbewe9g.js",
       "_createLucideIcon-CLlCHYFX.js"
     ]
   },
   "resources/js/pages/order/order-detail.tsx": {
-    "file": "assets/order-detail-DwxQ5qrd.js",
+    "file": "assets/order-detail-4tFR836f.js",
     "name": "order-detail",
     "src": "resources/js/pages/order/order-detail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_wayfinder-0qProybF.js",
       "_order-CS79qnGb.js",
-      "_order-table-ypzSNs2N.js",
+      "_order-table-C4HY4P5u.js",
       "_field-Bnbewe9g.js",
       "_createLucideIcon-CLlCHYFX.js",
       "_app-layout-DRCWrhIR.js",
@@ -526,14 +526,14 @@
     ]
   },
   "resources/js/pages/order/order.tsx": {
-    "file": "assets/order-hJjVDGtx.js",
+    "file": "assets/order-Cos2d3wC.js",
     "name": "order",
     "src": "resources/js/pages/order/order.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_wayfinder-0qProybF.js",
       "_order-CS79qnGb.js",
-      "_order-table-ypzSNs2N.js",
+      "_order-table-C4HY4P5u.js",
       "_field-Bnbewe9g.js",
       "_createLucideIcon-CLlCHYFX.js",
       "_app-layout-DRCWrhIR.js",
@@ -555,7 +555,7 @@
     ]
   },
   "resources/js/pages/settings/printer.tsx": {
-    "file": "assets/printer-BnSxFn3-.js",
+    "file": "assets/printer-CNSalHcS.js",
     "name": "printer",
     "src": "resources/js/pages/settings/printer.tsx",
     "isDynamicEntry": true,
@@ -567,7 +567,7 @@
       "_app-layout-DRCWrhIR.js",
       "_dist-CCOJh0jo.js",
       "_dist-5Cpp1e6H.js",
-      "_printer-controller-context-CSVI7o7o.js",
+      "_printer-controller-context-BRG_IC6k.js",
       "_loader-circle-CV092swo.js",
       "_printer-COgQB8ey.js",
       "_label-DBGI5JXg.js",
