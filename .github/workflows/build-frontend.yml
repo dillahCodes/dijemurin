@@ -49,9 +49,9 @@ jobs:
         run: rm -rf public/build
 
       - name: Build Frontend
-        run: npm run build
         env:
           VITE_APP_URL: https://dillahcodes.my.id
+        run: npm run build
 
       # NOTE: Only for Laravel + React hosted on shared hosting (cPanel)
       - name: Force Add Build Folder
