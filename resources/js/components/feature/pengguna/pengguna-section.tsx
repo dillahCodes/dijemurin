@@ -5,6 +5,7 @@ import { PenggunaFilters } from './pengguna-filters';
 import { PenggunaHeader } from './pengguna-header';
 import { PenggunaTable } from './pengguna-table';
 import { PenggunaTablePagination } from './pengguna-table-pagination';
+import { ApiResponse } from '@/types/response';
 
 export type PenggunaFilterPageProps = {
     search?: string;
@@ -21,7 +22,7 @@ export type PenggunaSectionProps = {
     filters: PenggunaFilterPageProps;
     users: LaravelPaginator<User>;
     outlets: LaravelPaginator<Outlet>;
-    outletSelected: Outlet | null;
+    outletSelected: ApiResponse<Outlet>;
 };
 
 export function PenggunaSection() {

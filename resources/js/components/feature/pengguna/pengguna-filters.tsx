@@ -1,6 +1,6 @@
 import { router, usePage } from '@inertiajs/react';
 import { Filter, Plus, Search, X } from 'lucide-react';
-import { Activity, useState } from 'react';
+import { Activity, useState, createContext, useContext } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Combobox,
@@ -24,12 +24,23 @@ import pengguna from '@/routes/pengguna';
 
 type PenggunaFilterProps = ReturnType<typeof usePenggunaFilters>;
 
-function PenggunaSearchForm({ data, handlers }: PenggunaFilterProps) {
+const PenggunaFilterContext = createContext<PenggunaFilterProps | null>(null);
+
+function usePenggunaFilterContext() {
+    const context = useContext(PenggunaFilterContext);
+    if (!context) {
+        throw new Error('usePenggunaFilterContext must be used within a PenggunaFilterContext.Provider');
+    }
+    return context;
+}
+
+function PenggunaSearchForm() {
+    const { data, handlers } = usePenggunaFilterContext();
+
     return (
-        <form
-            className="flex w-full items-center justify-between gap-3 lg:max-w-2xl"
-            onSubmit={handlers.searchHandle.handleSubmit}
-        >
+        <form className="flex w-full items-center gap-3 lg:max-w-2xl" onSubmit={handlers.searchHandle.handleSubmit}>
+            <PenggunaRoleStatusFilter />
+
             <div className="w-full sm:w-[250px] lg:w-[280px]">
                 <Input
                     type="text"
@@ -41,7 +52,7 @@ function PenggunaSearchForm({ data, handlers }: PenggunaFilterProps) {
                 />
             </div>
 
-            <PenggunaOutletFilter data={data} handlers={handlers} />
+            <PenggunaOutletFilter />
 
             <div className="flex items-center gap-2">
                 <Activity mode={data.filterState.search || data.filterState.outletIdSelected ? 'visible' : 'hidden'}>
@@ -66,8 +77,9 @@ function PenggunaSearchForm({ data, handlers }: PenggunaFilterProps) {
     );
 }
 
-function PenggunaOutletFilter({ data, handlers }: PenggunaFilterProps) {
-    const { auth, outlets } = usePage<PenggunaSectionProps>().props;
+function PenggunaOutletFilter() {
+    const { handlers } = usePenggunaFilterContext();
+    const { auth, outlets, outletSelected } = usePage<PenggunaSectionProps>().props;
     const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
 
     if (!hasSuperAdmin) {
@@ -77,17 +89,17 @@ function PenggunaOutletFilter({ data, handlers }: PenggunaFilterProps) {
     return (
         <div className="w-full sm:w-[250px] lg:w-[280px]">
             <Combobox
-                key={`combo-${data.resetKey}-${data.filterState.outletIdSelected || 'empty-outlet'}`}
-                defaultInputValue={data.filterState.outletIdSelected ? data.filterState.outletSearch || '' : ''}
+                key={outletSelected?.data?.id}
+                defaultValue={outletSelected?.data?.name}
                 name="outlet_id"
                 items={outlets?.data}
-                onInputValueChange={handlers.comboboxHandle.handleFetchComboboxOutlet}
             >
-                <ComboboxInput placeholder="Cari Outlet..." />
+                <ComboboxInput
+                    placeholder="Cari Outlet..."
+                    onChange={(e) => handlers.comboboxHandle.handleFetchComboboxOutlet(e.target.value)}
+                />
                 <ComboboxContent>
-                    <Activity mode={outlets?.data?.length ? 'visible' : 'hidden'}>
-                        <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
-                    </Activity>
+                    <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
                     <ComboboxList>
                         {outlets?.data?.map((item: Outlet) => (
                             <ComboboxItem
@@ -188,7 +200,8 @@ function PenggunaAdd() {
     );
 }
 
-function PenggunaRoleStatusFilter({ data, handlers }: PenggunaFilterProps) {
+function PenggunaRoleStatusFilter() {
+    const { data, handlers } = usePenggunaFilterContext();
     const modal = useModal();
     const { userRoleOptions, userStatusOptions } = usePage<PenggunaSectionProps>().props;
     const { role = 'all', status = 'all' } = data.filterState;
@@ -220,12 +233,14 @@ export function PenggunaFilters() {
     const filterHook = usePenggunaFilters();
 
     return (
-        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
-            <PenggunaSearchForm {...filterHook} />
-            <div className="flex w-full gap-3 lg:max-w-72">
-                <PenggunaRoleStatusFilter {...filterHook} />
-                <PenggunaAdd />
+        <PenggunaFilterContext.Provider value={filterHook}>
+            <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
+                <PenggunaSearchForm />
+
+                <div className="flex w-full gap-3 lg:max-w-72">
+                    <PenggunaAdd />
+                </div>
             </div>
-        </div>
+        </PenggunaFilterContext.Provider>
     );
 }

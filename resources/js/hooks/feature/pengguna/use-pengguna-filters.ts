@@ -16,9 +16,15 @@ export function usePenggunaFilters() {
             return;
         }
 
+        setSearchParam((prev) => ({ ...prev, outletIdSelected: undefined }));
+
         const fetchConfig = { preserveState: true, preserveScroll: true, only: ['outlets'] };
         router.get(pengguna.index().url, { outletSearch: value }, fetchConfig);
     }, 300);
+
+    const handleSelectOutlet = (outlet: Outlet) => {
+        setSearchParam((prev) => ({ ...prev, outletIdSelected: outlet.id, outletSearch: undefined }));
+    };
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -28,10 +34,6 @@ export function usePenggunaFilters() {
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchParam((prev) => ({ ...prev, search: e.target.value }));
-    };
-
-    const handleSelectOutlet = (outlet: Outlet) => {
-        setSearchParam((prev) => ({ ...prev, outletIdSelected: outlet.id, outletSearch: outlet.name }));
     };
 
     const handleFilterRoleStatus = (role: string, status: string) => {
