@@ -27,6 +27,7 @@ class UserService
 
         $query = User::with('outlet')
             ->visibleToRole($currentUser->role)
+            ->filterNotSuperAdmin()
             ->search($filter->search)
             ->filterRole($filter->role)
             ->filterStatus($filter->status)
@@ -85,14 +86,33 @@ class UserService
      */
     public static function createUser(array $data): User
     {
-        $data['password'] = Str::random(16);
+        return DB::transaction(function () use ($data) {
+            $role = $data['role'] ?? null;
+            $outletId = $data['outlet_id'] ?? null;
+            $data['password'] = Str::random(16);
 
-        $user = User::create($data);
+            $hasSuperAdmin = RoleHelper::isRole(UserRole::SUPER_ADMIN);
+            $hasAdminSelected = RoleHelper::isRoleValueSame($role, UserRole::ADMIN->value);
 
-        $token = Password::createToken($user);
-        $user->notify(new SetPasswordNotification($token));
+            // NOTE: if admin has no outlet_id, set it to admin's outlet_id
+            if (! $hasSuperAdmin) {
+                $data['outlet_id'] = auth()->user()->outlet_id;
+            }
 
-        return $user;
+            // NOTE: if new user is ADMIN and has outlet, change old ADMIN in that outlet to GHOST and remove outlet_id
+            if ($hasAdminSelected && $outletId) {
+                User::where('outlet_id', $outletId)
+                    ->where('role', UserRole::ADMIN->value)
+                    ->update(['role' => UserRole::GHOST->value, 'outlet_id' => null]);
+            }
+
+            $user = User::create($data);
+
+            $token = Password::createToken($user);
+            $user->notify(new SetPasswordNotification($token));
+
+            return $user;
+        });
     }
 
     /**
@@ -101,6 +121,26 @@ class UserService
     public static function updateUser(User $user, array $data)
     {
         return DB::transaction(function () use ($user, $data) {
+            $role = $data['role'] ?? $user->role->value;
+            $outletId = $data['outlet_id'] ?? $user->outlet_id;
+
+            $hasSuperAdmin = RoleHelper::isRole(UserRole::SUPER_ADMIN);
+            $hasAdminSelected = RoleHelper::isRoleValueSame($role, UserRole::ADMIN->value);
+
+            // NOTE: if admin has no outlet_id, set it to admin's outlet_id
+            if (! $hasSuperAdmin) {
+                $data['outlet_id'] = auth()->user()->outlet_id;
+                $outletId = $data['outlet_id'];
+            }
+
+            // NOTE: if updated user is ADMIN and has outlet, change old ADMIN in that outlet to GHOST and remove outlet_id
+            if ($hasAdminSelected && $outletId) {
+                User::where('outlet_id', $outletId)
+                    ->where('role', UserRole::ADMIN->value)
+                    ->where('id', '!=', $user->id)
+                    ->update(['role' => UserRole::GHOST->value, 'outlet_id' => null]);
+            }
+
             $user->update($data);
         });
     }

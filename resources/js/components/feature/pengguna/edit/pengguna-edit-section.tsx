@@ -1,10 +1,14 @@
+import type { LaravelPaginator } from '@/hooks/use-pagination';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { User } from '@/types/feature/user/user';
 import type { ApiResponse } from '@/types/response';
 import { PenggunaEditForm } from './pengguna-edit-form';
 import { PenggunaEditHeader } from './pengguna-edit-header';
 
-export type PenggunaEditSectionProps = {
+export type PenggunaEditPageProps = {
     userStatusOptions: User['status'][];
+    userRoleOptions: User['role'][];
+    outlets: LaravelPaginator<Outlet>;
     user: ApiResponse<User>;
 };
 

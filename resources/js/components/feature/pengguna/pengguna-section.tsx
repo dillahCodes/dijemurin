@@ -1,6 +1,7 @@
 import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { User, UserTransitionRules } from '@/types/feature/user/user';
+import type { ApiResponse } from '@/types/response';
 import { PenggunaFilters } from './pengguna-filters';
 import { PenggunaHeader } from './pengguna-header';
 import { PenggunaTable } from './pengguna-table';
@@ -21,7 +22,7 @@ export type PenggunaSectionProps = {
     filters: PenggunaFilterPageProps;
     users: LaravelPaginator<User>;
     outlets: LaravelPaginator<Outlet>;
-    outletSelected: Outlet | null;
+    outletSelected: ApiResponse<Outlet>;
 };
 
 export function PenggunaSection() {

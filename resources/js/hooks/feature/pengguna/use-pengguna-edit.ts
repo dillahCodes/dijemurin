@@ -1,9 +1,9 @@
 import { router, useForm, usePage } from '@inertiajs/react';
 import type React from 'react';
 import { toast } from 'sonner';
-import type { PenggunaEditSectionProps } from '@/components/feature/pengguna/edit/pengguna-edit-section';
-import type { UserEditSchema } from '@/schema/feature/user/edit-user-schema';
+import type { PenggunaEditPageProps } from '@/components/feature/pengguna/edit/pengguna-edit-section';
 import { userEditSchema } from '@/schema/feature/user/edit-user-schema';
+import type { UserEditSchema } from '@/schema/feature/user/edit-user-schema';
 import type { User, UserStatus } from '@/types/feature/user/user';
 import pengguna from '@/routes/pengguna';
 
@@ -12,11 +12,13 @@ function generateInitialState(userDetail: User): UserEditSchema {
         name: userDetail.name,
         email: userDetail.email,
         status: userDetail.status.value,
+        role: userDetail.role.value,
+        outlet_id: userDetail.outlet?.id ?? null,
     };
 }
 
 export function usePenggunaEdit() {
-    const { userStatusOptions, user } = usePage<PenggunaEditSectionProps>().props;
+    const { user } = usePage<PenggunaEditPageProps>().props;
 
     const initialState = generateInitialState(user.data);
     const { data, setData, errors, clearErrors, setError, patch, reset, processing } = useForm<UserEditSchema>(initialState);
@@ -56,6 +58,11 @@ export function usePenggunaEdit() {
         clearErrors('status');
     };
 
+    const handleRoleChange = (value: string) => {
+        setData('role', value as User['role']['value']);
+        clearErrors('role');
+    };
+
     const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -70,18 +77,19 @@ export function usePenggunaEdit() {
     };
 
     return {
-        data,
-        setData,
-        userStatusOptions,
-
-        errors,
-        clearErrors,
-
-        handleSubmit,
-        handleStatusChange,
-        handleFieldChange,
-        handleCancel,
-
-        processing,
+        form: {
+            data,
+            setData,
+            errors,
+            clearErrors,
+            processing,
+        },
+        handlers: {
+            handleSubmit,
+            handleStatusChange,
+            handleRoleChange,
+            handleFieldChange,
+            handleCancel,
+        },
     };
 }

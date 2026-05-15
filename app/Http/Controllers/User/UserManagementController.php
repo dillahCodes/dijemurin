@@ -53,9 +53,18 @@ class UserManagementController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return Inertia::render('pengguna/pengguna-tambah');
+        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+
+        $currentRole = $request->user()->role;
+        $userRoleOptions = UserRole::options($currentRole);
+
+        return Inertia::render('pengguna/pengguna-tambah', [
+            'outlets' => $outlets,
+            'userRoleOptions' => $userRoleOptions,
+        ]);
     }
 
     /**
@@ -84,13 +93,23 @@ class UserManagementController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
         $userStatusOptions = UserStatus::options();
         $userData = UserService::getUserById($user->id);
 
+        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+
+        $currentRole = $request->user()->role;
+        $userRoleOptions = UserRole::options($currentRole);
+
+        session(['pengguna.redirect_back' => url()->previous()]);
+
         return Inertia::render('pengguna/pengguna-edit', [
             'user' => $userData,
+            'outlets' => $outlets,
+            'userRoleOptions' => $userRoleOptions,
             'userStatusOptions' => $userStatusOptions,
         ]);
     }
@@ -103,7 +122,9 @@ class UserManagementController extends Controller
         $data = $request->validated();
         UserService::updateUser($user, $data);
 
-        return redirect()->route('pengguna.index')->with([['success' => 'Pengguna berhasil diupdate']]);
+        $redirectUrl = session()->pull('pengguna.redirect_back', route('pengguna.index'));
+
+        return redirect($redirectUrl)->with([['success' => 'Pengguna berhasil diupdate']]);
     }
 
     /**
