@@ -3,8 +3,8 @@ import type React from 'react';
 import { toast } from 'sonner';
 import { userAddSchema } from '@/schema/feature/user/add-user-schema';
 import type { UserAddSchema } from '@/schema/feature/user/add-user-schema';
-import pengguna from '@/routes/pengguna';
 import { UserRole } from '@/types/feature/user/user';
+import pengguna from '@/routes/pengguna';
 
 const initialState: UserAddSchema = {
     name: '',
