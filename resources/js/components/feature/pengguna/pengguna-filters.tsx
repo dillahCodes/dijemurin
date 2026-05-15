@@ -206,6 +206,10 @@ function PenggunaRoleStatusFilter() {
     const { userRoleOptions, userStatusOptions } = usePage<PenggunaSectionProps>().props;
     const { role = 'all', status = 'all' } = data.filterState;
 
+    const isActiveRole = role && role !== 'all';
+    const isActiveStatus = status && status !== 'all';
+    const activeFilterCount = (isActiveRole ? 1 : 0) + (isActiveStatus ? 1 : 0);
+
     const handleOpenModal = () => {
         modal.open({
             id: 'filter-user',
@@ -223,8 +227,13 @@ function PenggunaRoleStatusFilter() {
     };
 
     return (
-        <Button className="cursor-pointer" variant="outline" onClick={handleOpenModal} type="button">
+        <Button className="relative cursor-pointer" variant="outline" onClick={handleOpenModal} type="button">
             <Filter size={16} />
+            <Activity mode={activeFilterCount > 0 ? 'visible' : 'hidden'}>
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                    {activeFilterCount}
+                </span>
+            </Activity>
         </Button>
     );
 }
