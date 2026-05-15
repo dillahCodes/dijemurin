@@ -15,4 +15,9 @@ class RoleHelper
 
         return $user && $user->role === $role;
     }
+
+    public static function isRoleValueSame($roleValue, $targetRoleValue): bool
+    {
+        return $roleValue === $targetRoleValue;
+    }
 }

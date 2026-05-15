@@ -115,6 +115,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope a query to filter user without super admin role
+     */
+    public function scopeFilterNotSuperAdmin(Builder $query): Builder
+    {
+        return $query->where('role', '!=', UserRole::SUPER_ADMIN);
+    }
+
+    /**
      * Check if the user has any of the given roles.
      */
     public function hasAnyRole(array $roles): bool

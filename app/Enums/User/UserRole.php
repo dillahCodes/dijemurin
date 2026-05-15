@@ -31,6 +31,7 @@ enum UserRole: string
         $allowed = self::allowedTransitions()[$currentRole->value] ?? [];
 
         return collect(self::cases())
+            ->filter(fn ($case) => $case !== self::SUPER_ADMIN)
             ->filter(fn ($case) => in_array($case->value, $allowed, true))
             ->map(fn ($case) => [
                 'label' => $case->indonesianLabel(),
@@ -46,15 +47,8 @@ enum UserRole: string
     public static function allowedTransitions(): array
     {
         return [
-            self::SUPER_ADMIN->value => [
-                self::SUPER_ADMIN->value,
-                self::ADMIN->value,
-                self::CASHIER->value,
-                self::OPERATOR->value,
-                self::GHOST->value,
-            ],
-
-            self::ADMIN->value => [self::CASHIER->value, self::OPERATOR->value],
+            self::SUPER_ADMIN->value => [self::ADMIN->value, self::CASHIER->value, self::OPERATOR->value, self::GHOST->value],
+            self::ADMIN->value => [self::CASHIER->value, self::OPERATOR->value, self::GHOST->value],
         ];
     }
 
