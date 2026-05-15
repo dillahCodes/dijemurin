@@ -1,8 +1,6 @@
+import { usePage } from '@inertiajs/react';
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
     Combobox,
     ComboboxContent,
@@ -11,13 +9,16 @@ import {
     ComboboxItem,
     ComboboxList,
 } from '@/components/ui/combobox';
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RoleHelper } from '@/helper/role-helper';
 import { usePenggunaEdit } from '@/hooks/feature/pengguna/use-pengguna-edit';
 import { useSearchOutlet } from '@/hooks/feature/search/use-search-outlet';
 import pengguna from '@/routes/pengguna';
 import type { Outlet } from '@/types/feature/outlet/outlet';
-import { User, UserRole } from '@/types/feature/user/user';
-import { usePage } from '@inertiajs/react';
+import type { User } from '@/types/feature/user/user';
+import { UserRole } from '@/types/feature/user/user';
 import type { PenggunaEditPageProps } from './pengguna-edit-section';
 
 export function PenggunaEditForm() {

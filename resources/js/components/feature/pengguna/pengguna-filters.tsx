@@ -28,9 +28,11 @@ const PenggunaFilterContext = createContext<PenggunaFilterProps | null>(null);
 
 function usePenggunaFilterContext() {
     const context = useContext(PenggunaFilterContext);
+
     if (!context) {
         throw new Error('usePenggunaFilterContext must be used within a PenggunaFilterContext.Provider');
     }
+
     return context;
 }
 
@@ -230,7 +232,7 @@ function PenggunaRoleStatusFilter() {
         <Button className="relative cursor-pointer" variant="outline" onClick={handleOpenModal} type="button">
             <Filter size={16} />
             <Activity mode={activeFilterCount > 0 ? 'visible' : 'hidden'}>
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                     {activeFilterCount}
                 </span>
             </Activity>

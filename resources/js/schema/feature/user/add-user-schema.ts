@@ -1,5 +1,5 @@
-import { UserRole } from '@/types/feature/user/user';
 import { z } from 'zod';
+import { UserRole } from '@/types/feature/user/user';
 
 export const userAddSchema = z.object({
     name: z.string().min(1, { message: 'Nama wajib diisi.' }),

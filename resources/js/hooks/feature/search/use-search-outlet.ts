@@ -1,6 +1,6 @@
+import { router } from '@inertiajs/react';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import type { Outlet } from '@/types/feature/outlet/outlet';
-import { router } from '@inertiajs/react';
 
 interface UseSearchOutletParams {
     url: string;
@@ -12,6 +12,7 @@ export function useSearchOutlet({ url }: UseSearchOutletParams) {
 
         if (value.length < 3) {
             router.get(url, { outletSearch: undefined, outletIdSelected: undefined }, fetchConfig);
+
             return;
         }
 

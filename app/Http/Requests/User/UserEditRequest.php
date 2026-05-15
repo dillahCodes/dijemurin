@@ -4,8 +4,8 @@ namespace App\Http\Requests\User;
 
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
-use App\Rules\User\OnlySuperAdminRule;
 use App\Rules\User\AllowedRoleTransitionRule;
+use App\Rules\User\OnlySuperAdminRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -31,8 +31,8 @@ class UserEditRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$this->user->id],
             'status' => ['required', new Enum(UserStatus::class)],
-            'role' => ['nullable','string', new Enum(UserRole::class), new AllowedRoleTransitionRule()],
-            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OnlySuperAdminRule()],
+            'role' => ['nullable', 'string', new Enum(UserRole::class), new AllowedRoleTransitionRule],
+            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OnlySuperAdminRule],
         ];
     }
 

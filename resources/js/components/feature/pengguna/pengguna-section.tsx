@@ -1,11 +1,11 @@
 import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { User, UserTransitionRules } from '@/types/feature/user/user';
+import type { ApiResponse } from '@/types/response';
 import { PenggunaFilters } from './pengguna-filters';
 import { PenggunaHeader } from './pengguna-header';
 import { PenggunaTable } from './pengguna-table';
 import { PenggunaTablePagination } from './pengguna-table-pagination';
-import { ApiResponse } from '@/types/response';
 
 export type PenggunaFilterPageProps = {
     search?: string;

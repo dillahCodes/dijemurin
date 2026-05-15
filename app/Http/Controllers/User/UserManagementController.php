@@ -123,6 +123,7 @@ class UserManagementController extends Controller
         UserService::updateUser($user, $data);
 
         $redirectUrl = session()->pull('pengguna.redirect_back', route('pengguna.index'));
+
         return redirect($redirectUrl)->with([['success' => 'Pengguna berhasil diupdate']]);
     }
 

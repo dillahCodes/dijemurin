@@ -95,7 +95,7 @@ class UserService
             $hasAdminSelected = RoleHelper::isRoleValueSame($role, UserRole::ADMIN->value);
 
             // NOTE: if admin has no outlet_id, set it to admin's outlet_id
-            if (!$hasSuperAdmin) {
+            if (! $hasSuperAdmin) {
                 $data['outlet_id'] = auth()->user()->outlet_id;
             }
 
@@ -128,7 +128,7 @@ class UserService
             $hasAdminSelected = RoleHelper::isRoleValueSame($role, UserRole::ADMIN->value);
 
             // NOTE: if admin has no outlet_id, set it to admin's outlet_id
-            if (!$hasSuperAdmin) {
+            if (! $hasSuperAdmin) {
                 $data['outlet_id'] = auth()->user()->outlet_id;
                 $outletId = $data['outlet_id'];
             }
