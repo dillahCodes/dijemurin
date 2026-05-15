@@ -4,10 +4,13 @@ import { toast } from 'sonner';
 import { userAddSchema } from '@/schema/feature/user/add-user-schema';
 import type { UserAddSchema } from '@/schema/feature/user/add-user-schema';
 import pengguna from '@/routes/pengguna';
+import { UserRole } from '@/types/feature/user/user';
 
 const initialState: UserAddSchema = {
     name: '',
     email: '',
+    outlet_id: null,
+    role: UserRole.GHOST,
 };
 
 export function usePenggunaTambah() {
