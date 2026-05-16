@@ -10,12 +10,12 @@ import { getStatusBadgeClass, getStatusBadgeVariant } from '../outlet-table';
 import type { OutletDetailPageProps } from './outlet-detail-section';
 
 interface OutletInfoLogoProps {
-    logo: string | null;
+    picture: string | null;
     name: string;
 }
 
-function OutletInfoLogo({ logo, name }: OutletInfoLogoProps) {
-    if (!logo) {
+function OutletInfoLogo({ picture, name }: OutletInfoLogoProps) {
+    if (!picture) {
         return (
             <div className="flex size-32 shrink-0 items-center justify-center rounded-xl border border-border/50 bg-muted/50 sm:size-36">
                 <Image className="size-10 text-muted-foreground/60" />
@@ -25,7 +25,7 @@ function OutletInfoLogo({ logo, name }: OutletInfoLogoProps) {
 
     return (
         <img
-            src={logo}
+            src={picture}
             alt={`Logo ${name}`}
             className="size-32 shrink-0 rounded-xl object-cover shadow-sm ring-1 ring-border/10 sm:size-36"
             loading="lazy"
@@ -71,7 +71,7 @@ export function OutletInfo() {
                 {/* INFO SECTION */}
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
                     <div className="flex justify-center sm:justify-start">
-                        <OutletInfoLogo logo={outletDetailData.logo} name={outletDetailData.name} />
+                        <OutletInfoLogo picture={outletDetailData.picture} name={outletDetailData.name} />
                     </div>
 
                     <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-6 lg:max-w-2xl">

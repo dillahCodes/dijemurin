@@ -1,11 +1,5 @@
-import type { LaravelPaginator } from '@/hooks/use-pagination';
-import type { User } from '@/types/feature/user/user';
 import { OutletTambahForm } from './outlet-tambah-form';
 import { OutletTambahHeader } from './outlet-tambah-header';
-
-export type OutletTambahSectionProps = {
-    users: LaravelPaginator<User>;
-};
 
 export function OutletTambahSection() {
     return (

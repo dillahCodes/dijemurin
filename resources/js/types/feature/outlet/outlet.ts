@@ -6,18 +6,13 @@ export interface Outlet {
     address: string;
     phone: string;
     email: string;
-    logo: string | null;
+    picture: string | null;
     status: OutletStatus;
-    role_count: {
-        [UserRole.ADMIN]: number;
-        [UserRole.CASHIER]: number;
-        [UserRole.OPERATOR]: number;
-    };
     created_at: string;
     updated_at: string;
 }
 
-export interface OutletDetail extends Omit<Outlet, 'role_count'> {
+export interface OutletDetail extends Outlet {
     users: User[];
 }
 

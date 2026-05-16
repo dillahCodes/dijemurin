@@ -1,12 +1,9 @@
-import type { LaravelPaginator } from '@/hooks/use-pagination';
 import type { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
-import type { User } from '@/types/feature/user/user';
 import type { ApiResponse } from '@/types/response';
 import { OutletEditForm } from './outlet-edit-form';
 import { OutletEditHeader } from './outlet-edit-header';
 
 export type OutletEditSectionProps = {
-    usersSearch: LaravelPaginator<User>;
     outletDetail: ApiResponse<OutletDetail>;
     outletStatusOptions: OutletStatus[];
 };

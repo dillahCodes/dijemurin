@@ -57,35 +57,32 @@ function OutletTableHead() {
                 <TableHead className="w-[200px] text-center text-xs">Alamat</TableHead>
                 <TableHead className="w-[150px] text-center text-xs">Email</TableHead>
                 <TableHead className="w-[150px] text-center text-xs">No. Telepon</TableHead>
-                <TableHead className="text-center text-xs">Status</TableHead>
-                <TableHead className="text-center text-xs">Jumlah Admin</TableHead>
-                <TableHead className="text-center text-xs">Jumlah Kasir</TableHead>
-                <TableHead className="text-center text-xs">Jumlah Operator</TableHead>
-                <TableHead className="text-center text-xs">Aksi</TableHead>
+                <TableHead className="w-[120px] text-center text-xs">Status</TableHead>
+                <TableHead className="w-[120px] text-center text-xs">Aksi</TableHead>
             </TableRow>
         </TableHeader>
     );
 }
 
 interface OutletLogoProps {
-    logo: string | null;
+    picture: string | null;
     name: string;
 }
 
-function OutletLogo({ logo, name }: OutletLogoProps) {
-    if (!logo) {
+function OutletLogo({ picture, name }: OutletLogoProps) {
+    if (!picture) {
         return (
-            <div className="flex aspect-square h-16 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800">
-                <Image className="size-8 text-muted-foreground" />
+            <div className="mx-auto flex aspect-square size-10 items-center justify-center rounded-md bg-muted">
+                <Image className="size-5 text-muted-foreground" />
             </div>
         );
     }
 
     return (
         <img
-            src={logo}
+            src={picture}
             alt={`Logo ${name}`}
-            className="mx-auto size-8 rounded-md object-cover"
+            className="mx-auto size-10 rounded-md object-cover shadow-sm"
             loading="lazy"
             decoding="async"
         />
@@ -114,7 +111,7 @@ function OutletTableBody({ outletData }: OutletTableBodyProps) {
                             {index + 1}
                         </TableCell>
                         <TableCell className="text-center font-medium">
-                            <OutletLogo logo={outlet.logo} name={outlet.name} />
+                            <OutletLogo picture={outlet.picture} name={outlet.name} />
                         </TableCell>
                         <TableCell className="text-center font-medium">
                             <p className="line-clamp-2">{outlet.name}</p>
@@ -123,10 +120,10 @@ function OutletTableBody({ outletData }: OutletTableBodyProps) {
                             <p className="line-clamp-2">{outlet.address}</p>
                         </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground">
-                            <p className="line-clamp-2">{outlet.email}</p>
+                            <p className="line-clamp-2">{outlet.email || '-'}</p>
                         </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground">
-                            <p className="line-clamp-2">{outlet.phone}</p>
+                            <p className="line-clamp-2">{outlet.phone || '-'}</p>
                         </TableCell>
                         <TableCell className="text-center">
                             <Badge
@@ -136,22 +133,13 @@ function OutletTableBody({ outletData }: OutletTableBodyProps) {
                                 {outlet.status.label}
                             </Badge>
                         </TableCell>
-                        <TableCell className="text-center text-xs font-medium">
-                            <p className="line-clamp-2">{outlet.role_count.admin}</p>
-                        </TableCell>
-                        <TableCell className="text-center text-xs font-medium">
-                            <p className="line-clamp-2">{outlet.role_count.cashier}</p>
-                        </TableCell>
-                        <TableCell className="text-center text-xs font-medium">
-                            <p className="line-clamp-2">{outlet.role_count.operator}</p>
-                        </TableCell>
                         <TableCell>
                             <div className="flex items-center justify-center gap-2">
                                 <Button size="icon" variant="outline" onClick={handleGoToView(outlet.id)}>
-                                    <Eye />
+                                    <Eye size={16} />
                                 </Button>
                                 <Button size="icon" variant="secondary" onClick={handleGoToEdit(outlet.id)}>
-                                    <Pencil />
+                                    <Pencil size={16} />
                                 </Button>
                             </div>
                         </TableCell>
