@@ -10,7 +10,7 @@ use App\Helpers\RoleHelper;
 use App\Http\Resources\Outlet\OutletDetailResource;
 use App\Http\Resources\Outlet\OutletResource;
 use App\Models\Outlet\Outlet;
-use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -106,29 +106,23 @@ class OutletService
                 'phone' => $data['phone'] ?? null,
             ]);
 
-            if (! empty($data['admin'])) {
-                User::where('id', $data['admin'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::ADMIN,
-                ]);
-            }
-
-            if (! empty($data['cashiers'])) {
-                User::whereIn('id', $data['cashiers'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::CASHIER,
-                ]);
-            }
-
-            if (! empty($data['operators'])) {
-                User::whereIn('id', $data['operators'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::OPERATOR,
-                ]);
+            if (isset($data['picture']) && $data['picture'] instanceof UploadedFile) {
+                $path = self::storeOutletPicture($data['picture'], $outlet->id);
+                $outlet->update(['picture' => $path]);
             }
 
             return $outlet;
         });
+    }
+
+    /**
+     * Store outlet picture using outlet ID as the file name.
+     */
+    public static function storeOutletPicture(UploadedFile $picture, int $outletId)
+    {
+        $filename = "{$outletId}.{$picture->extension()}";
+
+        return $picture->storeAs('outlets', $filename, 'public');
     }
 
     /**
@@ -145,47 +139,9 @@ class OutletService
                 'status' => $data['status'] ?? OutletStatus::ACTIVE,
             ]);
 
-            // NOTE: kumpulkan user id yang mau di ubah
-            $incomingIds = [];
-
-            if (! empty($data['admin'])) {
-                $incomingIds[] = $data['admin'];
-            }
-            if (! empty($data['cashiers'])) {
-                $incomingIds = array_merge($incomingIds, $data['cashiers']);
-            }
-            if (! empty($data['operators'])) {
-                $incomingIds = array_merge($incomingIds, $data['operators']);
-            }
-
-            // NOTE: Reset user lama yang posisinya digantikan
-            User::where('outlet_id', $outlet->id)
-                ->whereNotIn('id', $incomingIds)
-                ->update([
-                    'outlet_id' => null,
-                    'role' => UserRole::GHOST,
-                ]);
-
-            // NOTE: Update user yang baru (jika ada)
-            if (! empty($data['admin'])) {
-                User::where('id', $data['admin'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::ADMIN,
-                ]);
-            }
-
-            if (! empty($data['cashiers'])) {
-                User::whereIn('id', $data['cashiers'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::CASHIER,
-                ]);
-            }
-
-            if (! empty($data['operators'])) {
-                User::whereIn('id', $data['operators'])->update([
-                    'outlet_id' => $outlet->id,
-                    'role' => UserRole::OPERATOR,
-                ]);
+            if (isset($data['picture']) && $data['picture'] instanceof UploadedFile) {
+                $path = self::storeOutletPicture($data['picture'], $outlet->id);
+                $outlet->update(['picture' => $path]);
             }
 
             return $outlet;

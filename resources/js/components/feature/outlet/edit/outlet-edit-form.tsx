@@ -1,9 +1,8 @@
-import { InfoIcon } from 'lucide-react';
-import { Activity } from 'react';
+import { ImagePlus, X } from 'lucide-react';
+import { Activity, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { MultiSelectListBox } from '@/components/ui/multi-select-list-box';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletEdit } from '@/hooks/feature/outlet/use-outlet-edit';
 import type { OutletStatus } from '@/types/feature/outlet/outlet';
@@ -14,23 +13,74 @@ export function OutletEditForm() {
         setData,
         errors,
         clearErrors,
-        adminSelected,
-        handleAdminChange,
-        cashiersSelected,
-        handleCashiersChange,
-        handleFetchUser,
-        operatorsSelected,
-        handleOperatorsChange,
+        picturePreview,
+        handlePictureChange,
+        handleRemovePicture,
         outletStatusOptions,
         handleStatusChange,
-        options,
         handleSubmit,
     } = useOutletEdit();
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     return (
         <form className="w-full" onSubmit={handleSubmit}>
             <FieldSet>
                 <FieldGroup>
+                    <Field data-invalid={!!errors.picture}>
+                        <FieldLabel htmlFor="picture">Gambar / Logo Outlet</FieldLabel>
+                        <div className="flex items-start gap-4">
+                            <div className="relative flex aspect-square size-24 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30">
+                                <Activity mode={picturePreview ? 'visible' : 'hidden'}>
+                                    <img src={picturePreview || ''} alt="Preview" className="h-full w-full object-cover" />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+                                        <Button
+                                            type="button"
+                                            size="icon"
+                                            variant="destructive"
+                                            className="size-7 rounded-full"
+                                            onClick={() => {
+                                                handleRemovePicture();
+
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = '';
+                                                }
+                                            }}
+                                        >
+                                            <X size={14} />
+                                        </Button>
+                                    </div>
+                                </Activity>
+
+                                <Activity mode={picturePreview ? 'hidden' : 'visible'}>
+                                    <div className="flex h-full w-full flex-col items-center justify-center text-muted-foreground">
+                                        <ImagePlus className="mb-1 size-6 opacity-50" />
+                                        <span className="text-[10px] font-medium tracking-wider uppercase opacity-50">
+                                            Upload
+                                        </span>
+                                    </div>
+                                </Activity>
+                            </div>
+
+                            <div className="flex flex-col gap-2 pt-1">
+                                <Input
+                                    ref={fileInputRef}
+                                    id="picture"
+                                    type="file"
+                                    accept="image/png, image/jpeg, image/jpg"
+                                    className="max-w-[250px] cursor-pointer"
+                                    onChange={handlePictureChange}
+                                />
+                                <span className="text-xs text-muted-foreground">
+                                    Format: JPG, JPEG, PNG. Maks ukuran: 2MB.
+                                </span>
+                            </div>
+                        </div>
+                        <Activity mode={errors.picture ? 'visible' : 'hidden'}>
+                            <FieldDescription className="text-destructive">{errors.picture}</FieldDescription>
+                        </Activity>
+                    </Field>
+
                     <Field data-invalid={!!errors.name}>
                         <FieldLabel htmlFor="name">
                             Nama <span className="text-destructive">*</span>
@@ -129,96 +179,6 @@ export function OutletEditForm() {
 
                         <Activity mode={errors.status ? 'visible' : 'hidden'}>
                             <FieldDescription className="text-destructive">{errors.status}</FieldDescription>
-                        </Activity>
-                    </Field>
-
-                    <Field data-invalid={!!errors.admin}>
-                        <FieldLabel htmlFor="admin">
-                            Admin <span className="text-destructive">*</span>
-                        </FieldLabel>
-
-                        <MultiSelectListBox
-                            options={options}
-                            selected={adminSelected}
-                            onChange={handleAdminChange}
-                            inputProps={{
-                                id: 'admin',
-                                name: 'admin',
-                                placeholder: 'Cari pengguna untuk posisi admin...',
-                            }}
-                            onInputChange={handleFetchUser}
-                        />
-
-                        <Activity mode={errors.admin ? 'visible' : 'hidden'}>
-                            <FieldDescription className="text-destructive">{errors.admin}</FieldDescription>
-                        </Activity>
-
-                        <Activity mode={errors.admin ? 'hidden' : 'visible'}>
-                            <FieldDescription className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <InfoIcon className="size-3" />
-                                <span>
-                                    Hanya bisa memilih <strong>pengguna tanpa role</strong> dan{' '}
-                                    <strong>belum ditempatkan di outlet</strong>
-                                </span>
-                            </FieldDescription>
-                        </Activity>
-                    </Field>
-
-                    <Field data-invalid={!!errors.cashiers}>
-                        <FieldLabel htmlFor="cashiers">Kasir</FieldLabel>
-
-                        <MultiSelectListBox
-                            options={options}
-                            selected={cashiersSelected}
-                            onChange={handleCashiersChange}
-                            inputProps={{
-                                id: 'cashiers',
-                                name: 'cashiers',
-                                placeholder: 'Cari pengguna untuk posisi kasir...',
-                            }}
-                            onInputChange={handleFetchUser}
-                        />
-
-                        <Activity mode={errors.cashiers ? 'visible' : 'hidden'}>
-                            <FieldDescription className="text-destructive">{errors.cashiers}</FieldDescription>
-                        </Activity>
-
-                        <Activity mode={errors.cashiers ? 'hidden' : 'visible'}>
-                            <FieldDescription className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <InfoIcon className="size-3" />
-                                <span>
-                                    Hanya bisa memilih <strong>pengguna tanpa role</strong> dan{' '}
-                                    <strong>belum ditempatkan di outlet</strong>
-                                </span>
-                            </FieldDescription>
-                        </Activity>
-                    </Field>
-
-                    <Field data-invalid={!!errors.operators}>
-                        <FieldLabel htmlFor="operators">Operator</FieldLabel>
-                        <MultiSelectListBox
-                            options={options}
-                            selected={operatorsSelected}
-                            onChange={handleOperatorsChange}
-                            inputProps={{
-                                id: 'operators',
-                                name: 'operators',
-                                placeholder: 'Cari pengguna untuk posisi operator...',
-                            }}
-                            onInputChange={handleFetchUser}
-                        />
-                        <Activity mode={errors.operators ? 'visible' : 'hidden'}>
-                            <FieldDescription className="text-destructive">{errors.operators}</FieldDescription>
-                        </Activity>
-
-                        <Activity mode={errors.operators ? 'hidden' : 'visible'}>
-                            <FieldDescription className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <InfoIcon className="size-3" />
-                                <span>
-                                    Hanya bisa memilih <strong>pengguna tanpa role</strong> dan{' '}
-                                    <strong>belum ditempatkan di outlet</strong>
-                                </span>
-                            </FieldDescription>
                         </Activity>
                     </Field>
 

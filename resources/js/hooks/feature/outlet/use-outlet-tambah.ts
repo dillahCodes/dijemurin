@@ -1,12 +1,9 @@
-import { router, useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { OutletTambahSectionProps } from '@/components/feature/outlet/tambah/outlet-tambah-section';
-import type { MultipleOption } from '@/components/ui/multi-select-list-box';
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 import { addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
+import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 import outlet from '@/routes/outlet';
 
 const initialState: AddOutletSchema = {
@@ -14,54 +11,34 @@ const initialState: AddOutletSchema = {
     address: '',
     email: '',
     phone: '',
-    admin: 0,
-    cashiers: [],
-    operators: [],
+    picture: null,
 };
 
 export function useOutletTambah() {
     const { data, setData, errors, clearErrors, setError, post, reset } = useForm<AddOutletSchema>(initialState);
+    const [picturePreview, setPicturePreview] = useState<string | null>(null);
 
-    const { users } = usePage<OutletTambahSectionProps>().props;
-    const options = users.data.map((user) => ({ value: user.id.toString(), label: user.name }));
+    const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
 
-    const [adminSelected, setAdminSelected] = useState<MultipleOption[]>([]);
-    const [cashiersSelected, setCashiersSelected] = useState<MultipleOption[]>([]);
-    const [operatorsSelected, setOperatorsSelected] = useState<MultipleOption[]>([]);
+        if (file) {
+            setData('picture', file);
+            clearErrors('picture');
 
-    const handleAdminChange = (selected: MultipleOption[]) => {
-        const latestSelection = selected.length ? [selected[selected.length - 1]] : [];
-        setAdminSelected(latestSelection);
-
-        const value = latestSelection[0]?.value || '';
-        setData('admin', parseInt(value));
-        clearErrors('admin');
-    };
-
-    const handleCashiersChange = (selected: MultipleOption[]) => {
-        setCashiersSelected(selected);
-
-        const cashierIds = selected.map((item) => parseInt(item.value));
-        setData('cashiers', cashierIds);
-        clearErrors('cashiers');
-    };
-
-    const handleOperatorsChange = (selected: MultipleOption[]) => {
-        setOperatorsSelected(selected);
-
-        const operatorIds = selected.map((item) => parseInt(item.value));
-        setData('operators', operatorIds);
-        clearErrors('operators');
-    };
-
-    const handleFetchUser = useDebouncedCallback((value: string) => {
-        if (value.length < 3) {
-            return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPicturePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            handleRemovePicture();
         }
+    };
 
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users'] };
-        router.get(outlet.create().url, { search: value }, fetchConfig);
-    }, 300);
+    const handleRemovePicture = () => {
+        setData('picture', null);
+        setPicturePreview(null);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -94,18 +71,9 @@ export function useOutletTambah() {
         setData,
         errors,
         clearErrors,
-        options,
-
-        adminSelected,
-        handleAdminChange,
-
-        cashiersSelected,
-        handleCashiersChange,
-
-        operatorsSelected,
-        handleOperatorsChange,
-
-        handleFetchUser,
+        picturePreview,
+        handlePictureChange,
+        handleRemovePicture,
         handleSubmit,
     };
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'address', 'phone', 'email', 'logo', 'status'])]
+#[Fillable(['name', 'address', 'phone', 'email', 'picture', 'status'])]
 class Outlet extends Model
 {
     use HasFactory;
