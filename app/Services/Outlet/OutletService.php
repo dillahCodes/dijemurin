@@ -121,6 +121,7 @@ class OutletService
     public static function storeOutletPicture(UploadedFile $picture, int $outletId)
     {
         $filename = "{$outletId}.{$picture->extension()}";
+
         return $picture->storeAs('outlets', $filename, 'public');
     }
 

@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Outlet;
 
 use App\Enums\Outlet\OutletStatus;
-
 use App\Enums\User\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;

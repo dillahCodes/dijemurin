@@ -1,10 +1,10 @@
-import outlet from '@/routes/outlet';
-import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
-import { addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 import { useForm } from '@inertiajs/react';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import outlet from '@/routes/outlet';
+import { addOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
+import type { AddOutletSchema } from '@/schema/feature/outlet/add-outlet-schema';
 
 const initialState: AddOutletSchema = {
     name: '',
@@ -20,6 +20,7 @@ export function useOutletTambah() {
 
     const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+
         if (file) {
             setData('picture', file);
             clearErrors('picture');

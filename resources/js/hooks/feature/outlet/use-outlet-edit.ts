@@ -1,12 +1,12 @@
+import { useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import type { OutletEditSectionProps } from '@/components/feature/outlet/edit/outlet-edit-section';
 import { useModal } from '@/components/ui/modal';
 import outlet from '@/routes/outlet';
 import type { EditOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
 import { editOutletSchema } from '@/schema/feature/outlet/edit-outlet-schema';
 import type { OutletDetail, OutletStatus } from '@/types/feature/outlet/outlet';
-import { useForm, usePage } from '@inertiajs/react';
-import { useState } from 'react';
-import { toast } from 'sonner';
 
 function generateInitialState(outletDetail: OutletDetail): EditOutletSchema {
     return {
@@ -29,6 +29,7 @@ export function useOutletEdit() {
 
     const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+
         if (file) {
             setData('picture', file);
             clearErrors('picture');

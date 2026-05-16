@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { useOutletTambah } from '@/hooks/feature/outlet/use-outlet-tambah';
 
 export function OutletTambahForm() {
-    const { data, setData, errors, clearErrors, picturePreview, handlePictureChange, handleRemovePicture, handleSubmit } = useOutletTambah();
+    const { data, setData, errors, clearErrors, picturePreview, handlePictureChange, handleRemovePicture, handleSubmit } =
+        useOutletTambah();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,7 +29,10 @@ export function OutletTambahForm() {
                                             className="size-7 rounded-full"
                                             onClick={() => {
                                                 handleRemovePicture();
-                                                if (fileInputRef.current) fileInputRef.current.value = '';
+
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = '';
+                                                }
                                             }}
                                         >
                                             <X size={14} />

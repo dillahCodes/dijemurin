@@ -5,16 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletFilters } from '@/hooks/feature/outlet/use-outlet-filters';
+import outlet from '@/routes/outlet';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { OutletSectionProps } from './outlet-section';
-import outlet from '@/routes/outlet';
 
 function OutletSearchForm() {
     const { filters } = usePage<OutletSectionProps>().props;
     const { filterState, conditions, clearHandle, searchHandle } = useOutletFilters(filters);
 
     return (
-        <form className="flex w-full flex-col gap-3 md:flex-row md:items-center lg:max-w-2xl" onSubmit={searchHandle.handleSubmit}>
+        <form
+            className="flex w-full flex-col gap-3 md:flex-row md:items-center lg:max-w-2xl"
+            onSubmit={searchHandle.handleSubmit}
+        >
             <Input
                 type="text"
                 placeholder="Cari nama, alamat, email, atau nomor telepon outlet..."
@@ -29,22 +32,22 @@ function OutletSearchForm() {
 
                 <div className="ml-auto flex items-center gap-2 md:ml-0">
                     <Activity mode={filterState.search ? 'visible' : 'hidden'}>
-                    <Button
-                        variant="ghost"
-                        type="button"
-                        size="icon"
-                        className="cursor-pointer"
-                        onClick={clearHandle.handleClearSearch}
-                        disabled={conditions.shouldDisableSearch}
-                    >
-                        <X size={16} />
-                    </Button>
-                </Activity>
+                        <Button
+                            variant="ghost"
+                            type="button"
+                            size="icon"
+                            className="cursor-pointer"
+                            onClick={clearHandle.handleClearSearch}
+                            disabled={conditions.shouldDisableSearch}
+                        >
+                            <X size={16} />
+                        </Button>
+                    </Activity>
 
-                <Button type="submit" className="cursor-pointer" disabled={conditions.shouldDisableSearch}>
-                    <Search size={16} />
-                    Cari
-                </Button>
+                    <Button type="submit" className="cursor-pointer" disabled={conditions.shouldDisableSearch}>
+                        <Search size={16} />
+                        Cari
+                    </Button>
                 </div>
             </div>
         </form>

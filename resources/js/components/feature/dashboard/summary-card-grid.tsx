@@ -1,9 +1,9 @@
 import { usePage } from '@inertiajs/react';
 import { CheckCircle2, DollarSign, LoaderCircle, ShoppingBag } from 'lucide-react';
 import SummaryCard from '@/components/feature/dashboard/summary-card';
+import order from '@/routes/order';
 import { OrderStatusEnglish } from '@/types/feature/order';
 import type { DashboardSectionProps } from './dashboard-section';
-import order from '@/routes/order';
 
 const filterDate = {
     start_date: new Date().toISOString().split('T')[0],

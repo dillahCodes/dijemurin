@@ -41,7 +41,10 @@ export function OutletEditForm() {
                                             className="size-7 rounded-full"
                                             onClick={() => {
                                                 handleRemovePicture();
-                                                if (fileInputRef.current) fileInputRef.current.value = '';
+
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = '';
+                                                }
                                             }}
                                         >
                                             <X size={14} />

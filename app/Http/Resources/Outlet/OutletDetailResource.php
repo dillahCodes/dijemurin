@@ -25,7 +25,7 @@ class OutletDetailResource extends JsonResource
                 'created_at',
                 'updated_at',
             ]),
-            'picture' => $this->picture ? asset('storage/' . $this->picture) : null,
+            'picture' => $this->picture ? asset('storage/'.$this->picture) : null,
 
             'status' => [
                 'label' => $this->status->indonesianLabel(),

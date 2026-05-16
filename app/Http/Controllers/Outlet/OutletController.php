@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Outlet;
 
 use App\DTOs\Outlet\OutletFilterDTO;
-
 use App\Enums\Outlet\OutletStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Outlet\OutletEditRequest;
 use App\Http\Requests\Outlet\OutletStoreRequest;
 use App\Models\Outlet\Outlet;
 use App\Services\Outlet\OutletService;
-
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
