@@ -57,18 +57,13 @@ class ServiceController extends Controller
 
     /**
      * Store a newly created service in storage.
-     *
-     * @return RedirectResponse
      */
-    public function store(ServiceStoreRequest $request)
+    public function store(ServiceStoreRequest $request): RedirectResponse
     {
         $validate = $request->validated();
+        ServiceService::createService($validate);
 
-        Service::create($validate);
-
-        return redirect()
-            ->route('layanan.index')
-            ->with(['success' => 'Layanan berhasil ditambahkan']);
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil ditambahkan']);
     }
 
     /**
@@ -101,13 +96,9 @@ class ServiceController extends Controller
      */
     public function update(ServiceUpdateRequest $request, Service $service)
     {
-        $validate = $request->validated();
+        ServiceService::updateService($service, $request->validated());
 
-        $service->update($validate);
-
-        return redirect()
-            ->route('layanan.index')
-            ->with(['success' => 'Layanan berhasil diupdate']);
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil diupdate']);
     }
 
     /**
@@ -117,10 +108,8 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        $service->delete();
+        ServiceService::deleteService($service);
 
-        return redirect()
-            ->route('layanan.index')
-            ->with(['success' => 'Layanan berhasil dihapus']);
+        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil dihapus']);
     }
 }
