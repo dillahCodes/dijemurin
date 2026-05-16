@@ -14,18 +14,21 @@ function OutletSearchForm() {
     const { filterState, conditions, clearHandle, searchHandle } = useOutletFilters(filters);
 
     return (
-        <form className="flex w-full items-center justify-between gap-3 lg:max-w-2xl" onSubmit={searchHandle.handleSubmit}>
+        <form className="flex w-full flex-col gap-3 md:flex-row md:items-center lg:max-w-2xl" onSubmit={searchHandle.handleSubmit}>
             <Input
                 type="text"
                 placeholder="Cari nama, alamat, email, atau nomor telepon outlet..."
                 name="search"
-                className="flex-1"
+                className="w-full md:flex-1"
                 value={filterState.search}
                 onChange={searchHandle.handleChange}
             />
 
-            <div className="flex items-center gap-2">
-                <Activity mode={filterState.search ? 'visible' : 'hidden'}>
+            <div className="flex w-full items-center gap-2 md:w-auto">
+                <OutletStatusFilter />
+
+                <div className="ml-auto flex items-center gap-2 md:ml-0">
+                    <Activity mode={filterState.search ? 'visible' : 'hidden'}>
                     <Button
                         variant="ghost"
                         type="button"
@@ -42,6 +45,7 @@ function OutletSearchForm() {
                     <Search size={16} />
                     Cari
                 </Button>
+                </div>
             </div>
         </form>
     );
@@ -53,7 +57,7 @@ function OutletStatusFilter() {
 
     return (
         <Select value={filterState.status} onValueChange={filterHandle.handleFilterStatus}>
-            <SelectTrigger className="w-full min-w-28 cursor-pointer">
+            <SelectTrigger className="w-full cursor-pointer md:w-[180px]">
                 <SelectValue placeholder="Status" />
             </SelectTrigger>
 
@@ -86,10 +90,7 @@ export function OutletFilters() {
     return (
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
             <OutletSearchForm />
-            <div className="flex flex-wrap gap-3 md:flex-nowrap">
-                <OutletStatusFilter />
-                <OutletAdd />
-            </div>
+            <OutletAdd />
         </div>
     );
 }

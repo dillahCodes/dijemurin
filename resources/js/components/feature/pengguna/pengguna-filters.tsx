@@ -120,22 +120,31 @@ function PenggunaOutletFilter() {
 }
 
 interface PenggunaFilterModalContentProps {
-    initialState: { role: string; status: string };
-    options: { roleOptions: User['role'][]; statusOptions: User['status'][] };
-    onFilter: (role: string, status: string) => void;
+    role: string;
+    status: string;
+    userRoleOptions: User['role'][];
+    userStatusOptions: User['status'][];
+    onSubmit: (role: string, status: string) => void;
 }
 
-function PenggunaFilterModalContent({ initialState, options, onFilter }: PenggunaFilterModalContentProps) {
+function PenggunaFilterModalContent({
+    role,
+    status,
+    userRoleOptions,
+    userStatusOptions,
+    onSubmit,
+}: PenggunaFilterModalContentProps) {
     const modal = useModal();
-    const [formData, setFormData] = useState(initialState);
-    const { roleOptions: userRoleOptions, statusOptions: userStatusOptions } = options;
+
+    const initialFormData = { role: role || 'all', status: status || 'all' };
+    const [formData, setFormData] = useState(initialFormData);
 
     const handleRoleChange = (val: string) => setFormData((prev) => ({ ...prev, role: val }));
     const handleStatusChange = (val: string) => setFormData((prev) => ({ ...prev, status: val }));
 
     const handleSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
-        onFilter(formData.role, formData.status);
+        onSubmit(formData.role, formData.status);
         modal.close('filter-user');
     };
 
@@ -220,9 +229,11 @@ function PenggunaRoleStatusFilter() {
             withConfirmButton: false,
             content: (
                 <PenggunaFilterModalContent
-                    initialState={{ role, status }}
-                    options={{ roleOptions: userRoleOptions, statusOptions: userStatusOptions }}
-                    onFilter={(role, status) => handlers.filterHandle.handleFilterRoleStatus(role, status)}
+                    role={role}
+                    status={status}
+                    userRoleOptions={userRoleOptions}
+                    userStatusOptions={userStatusOptions}
+                    onSubmit={(role, status) => handlers.filterHandle.handleFilterRoleStatus(role, status)}
                 />
             ),
         });
