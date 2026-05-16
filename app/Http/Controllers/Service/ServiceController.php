@@ -57,8 +57,6 @@ class ServiceController extends Controller
 
     /**
      * Store a newly created service in storage.
-     *
-     * @return RedirectResponse
      */
     public function store(ServiceStoreRequest $request): RedirectResponse
     {

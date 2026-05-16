@@ -21,6 +21,7 @@ class OnlySuperAdminRule implements ValidationRule
 
         if (! $hasSuperAdmin && is_null($value)) {
             $fail('Outlet wajib diisi.');
+
             return;
         }
 

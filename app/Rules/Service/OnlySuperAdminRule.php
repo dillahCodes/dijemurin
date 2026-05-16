@@ -21,11 +21,12 @@ class OnlySuperAdminRule implements ValidationRule
 
         if (! $hasSuperAdmin && is_null($value)) {
             $fail('Outlet wajib diisi.');
+
             return;
         }
 
         if (! $hasSuperAdmin && ! is_null($value)) {
-            $fail("Hanya Super Admin yang berhak menentukan Outlet.");
+            $fail('Hanya Super Admin yang berhak menentukan Outlet.');
         }
     }
 }
