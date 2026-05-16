@@ -8,8 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useServiceActions } from '@/hooks/feature/layanan/use-service-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import layanan from '@/routes/layanan';
 import type { Service } from '@/types/feature/layanan';
+import layanan from '@/routes/layanan';
 
 export interface ServiceCardProps {
     id: number;
