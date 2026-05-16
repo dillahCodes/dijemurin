@@ -10,6 +10,7 @@ use App\Helpers\RoleHelper;
 use App\Http\Resources\Service\ServiceResource;
 use App\Models\Service\Service;
 use App\Models\Service\ServiceItem;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ServiceService
@@ -75,5 +76,51 @@ class ServiceService
         }
 
         return ServiceItem::findOrFail($id);
+    }
+
+    /**
+     * create a new service
+     */
+    public static function createService(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $user = auth()->user();
+
+            // NOTE: if non super admin → force outlet id related to user
+            if (! RoleHelper::isRole(UserRole::SUPER_ADMIN)) {
+                $data['outlet_id'] = $user->outlet_id;
+            }
+
+            return Service::create($data);
+        });
+    }
+
+    /**
+     * update an existing service
+     */
+    public static function updateService(Service $service, array $data)
+    {
+        return DB::transaction(function () use ($service, $data) {
+            $user = auth()->user();
+
+            // NOTE: if non super admin → force outlet id related to user
+            if (! RoleHelper::isRole(UserRole::SUPER_ADMIN)) {
+                $data['outlet_id'] = $user->outlet_id;
+            }
+
+            $service->update($data);
+
+            return $service;
+        });
+    }
+
+    /**
+     * delete a service
+     */
+    public static function deleteService(Service $service)
+    {
+        return DB::transaction(function () use ($service) {
+            return $service->delete();
+        });
     }
 }

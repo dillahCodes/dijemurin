@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Service;
 
+use App\Enums\User\UserRole;
+use App\Rules\Service\OnlySuperAdminRule;
 use App\Rules\Service\UniqueServiceNamePerOutletRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -13,7 +15,7 @@ class ServiceUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->hasAnyRole([UserRole::SUPER_ADMIN, UserRole::ADMIN]) ?? false;
     }
 
     /**
@@ -23,9 +25,12 @@ class ServiceUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $outletId = $this->outlet_id ?? $this->service->outlet_id;
+
         return [
-            'name' => ['required', 'string', 'max:255', new UniqueServiceNamePerOutletRule($this->service->outlet_id, $this->service->id)],
+            'name' => ['required', 'string', 'max:255', new UniqueServiceNamePerOutletRule($outletId, $this->service->id)],
             'description' => ['required', 'string', 'max:255'],
+            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OnlySuperAdminRule],
         ];
     }
 

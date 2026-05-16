@@ -21,8 +21,7 @@ export function LayananTambahForm() {
     const { outlets, auth } = usePage<LayananTambahSectionProps>().props;
     const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
 
-    const defaultOutletId = hasSuperAdmin ? undefined : (auth.user.outlet_id as number | null);
-    const { form, handlers } = useLayananTambah(defaultOutletId);
+    const { form, handlers } = useLayananTambah();
     const outletsData = outlets.data;
 
     return (

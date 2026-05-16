@@ -5,12 +5,11 @@ import type { AddServiceSchema } from '@/schema/feature/layanan/add-service-sche
 import { addServiceSchema } from '@/schema/feature/layanan/add-service-schema';
 import layanan from '@/routes/layanan';
 
-export function useLayananTambah(defaultOutletId?: number | null) {
-    const { setData, post, processing, errors, clearErrors, data, setError } = useForm<AddServiceSchema>({
-        name: '',
-        description: '',
-        outlet_id: (defaultOutletId as number) || 0,
-    });
+const generateInitialState = (): AddServiceSchema => ({ name: '', description: '', outlet_id: null });
+
+export function useLayananTambah() {
+    const initialData = generateInitialState();
+    const { setData, post, processing, errors, clearErrors, data, setError } = useForm<AddServiceSchema>(initialData);
 
     const handleCancel = () => {
         router.get(layanan.index().url);
