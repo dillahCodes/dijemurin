@@ -1,9 +1,9 @@
 import { Head } from '@inertiajs/react';
 import { PenggunaTambahSection } from '@/components/feature/pengguna/tambah/pengguna-tambah-section';
 import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
 import pengguna from '@/routes/pengguna';
-import type { BreadcrumbItem } from '@/types';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
