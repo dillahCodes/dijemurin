@@ -1,1 +1,0 @@
-import{i as e,p as t,v as n}from"./wayfinder-0qProybF.js";var r=e(),i=n(t(),1);function a(e,t){let n=(0,r.c)(3),a=(0,i.useRef)(null),o;return n[0]!==e||n[1]!==t?(o=(...n)=>{let r=n;a.current&&clearTimeout(a.current),a.current=setTimeout(()=>{e(...r)},t)},n[0]=e,n[1]=t,n[2]=o):o=n[2],o}export{a as t};
