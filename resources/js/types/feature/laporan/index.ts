@@ -1,4 +1,4 @@
-import type { OrderStatusIndonesian } from '../order';
+import type { OrderStatusIndonesian } from '../order/order';
 
 // ─── Period ──────────────────────────────────────────────────────────────────
 export interface ReportPeriod {
