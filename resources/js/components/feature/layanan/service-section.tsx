@@ -9,6 +9,7 @@ import type { ApiResponse } from '@/types/response';
 import { ServiceCard } from './service-card';
 import { ServiceEmpty } from './service-empty';
 import { ServiceHeader } from './service-header';
+import { ServiceOutletPicker } from './service-outlet-picker';
 import { ServicePagination } from './service-pagination';
 import { ServiceSearch } from './service-search';
 
@@ -21,7 +22,19 @@ export type ServicePageProps = {
 
 export function ServiceSection() {
     const { services, filters, auth } = usePage<ServicePageProps>().props;
+
+    // Superadmin must select an outlet first before seeing the service list
     const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
+    const needsOutletSelection = hasSuperAdmin && !filters.outletIdSelected;
+
+    if (needsOutletSelection) {
+        return (
+            <div className="flex flex-col gap-6">
+                <ServiceHeader />
+                <ServiceOutletPicker />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col gap-6">

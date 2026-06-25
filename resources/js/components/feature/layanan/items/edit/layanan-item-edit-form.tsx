@@ -4,6 +4,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/com
 import { Input } from '@/components/ui/input';
 import { formatPrice } from '@/helper/formatted-price';
 import { useLayananItemEdit } from '@/hooks/feature/layanan/use-layanan-item-edit';
+import { TimeField } from '../time-field';
 
 export function LayananItemEditForm() {
     const { form, handlers } = useLayananItemEdit();
@@ -49,23 +50,20 @@ export function LayananItemEditForm() {
                             </Activity>
                         </Field>
 
-                        <Field data-invalid={!!form.errors.time}>
-                            <FieldLabel htmlFor="time">Waktu Pengerjaan</FieldLabel>
-                            <Input
-                                aria-invalid={!!form.errors.time}
-                                onChange={(e) => {
-                                    form.setData('time', e.target.value);
-                                    form.clearErrors('time');
-                                }}
-                                id="time"
-                                type="text"
-                                placeholder="Contoh: 4 Jam"
-                                defaultValue={form.data.time}
-                            />
-                            <Activity mode={form.errors.time ? 'visible' : 'hidden'}>
-                                <FieldDescription className="text-destructive">{form.errors.time}</FieldDescription>
-                            </Activity>
-                        </Field>
+                        <TimeField
+                            valueNumber={form.data.time_number}
+                            valueType={form.data.time_type}
+                            errorNumber={form.errors.time_number}
+                            errorType={form.errors.time_type}
+                            onChangeNumber={(val) => {
+                                form.setData('time_number', val);
+                                form.clearErrors('time_number');
+                            }}
+                            onChangeType={(val) => {
+                                form.setData('time_type', val);
+                                form.clearErrors('time_type');
+                            }}
+                        />
 
                         <Field data-invalid={!!form.errors.price}>
                             <FieldLabel htmlFor="price">Harga</FieldLabel>

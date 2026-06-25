@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDrawer } from '@/components/ui/drawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useCartAddItem } from '@/hooks/feature/cart/use-cart-add-item';
 import { useServiceItemActions } from '@/hooks/feature/layanan/use-service-item-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import type { ServiceItem } from '@/types/feature/layanan';
+import { ServiceTimeType, type ServiceItem } from '@/types/feature/layanan';
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;
@@ -109,17 +110,25 @@ function ServiceItemHeader({ name, description, onEdit, onDelete }: ServiceItemH
 interface ServiceItemFooterProps {
     formattedPrice: string;
     unit: string;
-    time: string;
+    timeNumber: number;
+    timeType: ServiceTimeType;
 }
 
-function ServiceItemFooter({ formattedPrice, unit, time }: ServiceItemFooterProps) {
+function ServiceItemFooter({ formattedPrice, unit, timeNumber, timeType }: ServiceItemFooterProps) {
+    const timeLabelMap: Record<ServiceTimeType, string> = {
+        [ServiceTimeType.MINUTE]: 'menit',
+        [ServiceTimeType.HOUR]: 'jam',
+        [ServiceTimeType.DAY]: 'hari',
+    };
+    const displayTime = `${timeNumber} ${timeLabelMap[timeType] || timeType}`;
+
     return (
         <div className="flex items-end justify-between">
             <div className="flex flex-col gap-0.5">
                 <span className="text-lg font-bold tracking-tight text-foreground">{formattedPrice}</span>
                 <span className="text-xs text-muted-foreground">per {unit}</span>
             </div>
-            <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">{time}</span>
+            <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">{displayTime}</span>
         </div>
     );
 }
@@ -127,10 +136,11 @@ function ServiceItemFooter({ formattedPrice, unit, time }: ServiceItemFooterProp
 /** 3. Main Component */
 export function ServiceItemCard(props: ServiceItem) {
     const { handleEdit, handleDelete, formattedPrice } = useServiceItemActions(props);
-    // const { handleOpenModalAddItem } = useCartAddItem({ item: props });
+    const { handleOpenModalAddItem } = useCartAddItem({ item: props });
 
     return (
         <Card
+            onClick={handleOpenModalAddItem}
             className={cn(
                 'group relative w-full cursor-pointer overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
             )}
@@ -138,7 +148,12 @@ export function ServiceItemCard(props: ServiceItem) {
             <div className="absolute -top-8 -right-8 z-0 size-32 rounded-full bg-primary/10 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70" />
             <CardContent className="relative z-10 flex h-full flex-col justify-between gap-4 p-6">
                 <ServiceItemHeader {...props} onEdit={handleEdit} onDelete={handleDelete} />
-                <ServiceItemFooter formattedPrice={formattedPrice} unit={props.unit} time={props.time} />
+                <ServiceItemFooter
+                    formattedPrice={formattedPrice}
+                    unit={props.unit}
+                    timeNumber={props.time_number}
+                    timeType={props.time_type}
+                />
             </CardContent>
             <div className="absolute bottom-0 left-0 z-0 h-1 w-0 flex-none bg-primary transition-all duration-500 ease-out group-hover:w-full" />
         </Card>

@@ -1,9 +1,9 @@
 import { router, useForm } from '@inertiajs/react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import layanan from '@/routes/layanan';
 import type { AddServiceSchema } from '@/schema/feature/layanan/add-service-schema';
 import { addServiceSchema } from '@/schema/feature/layanan/add-service-schema';
-import layanan from '@/routes/layanan';
 
 const generateInitialState = (): AddServiceSchema => ({ name: '', description: '', outlet_id: null });
 

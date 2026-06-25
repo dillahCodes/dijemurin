@@ -1,65 +1,47 @@
 import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import type { ServicePageProps } from '@/components/feature/layanan/service-section';
-import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import layanan from '@/routes/layanan';
 
 export function useServiceSearch() {
     const { filters } = usePage<ServicePageProps>().props;
-    const [searchParam, setSearchParam] = useState<ServicePageProps['filters']>(filters);
-    const [resetKey, setResetKey] = useState(0);
-
-    const handleFetchComboboxOutlet = useDebouncedCallback((value: string) => {
-        if (value.length < 3) {
-            return;
-        }
-
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['outlets'] };
-        router.get(layanan.index().url, { outletSearch: value }, fetchConfig);
-    }, 300);
+    const [search, setSearch] = useState(filters.search ?? '');
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['services', 'outlets', 'outletSelected'] };
-        router.get(layanan.index().url, searchParam, fetchConfig);
+
+        // Preserve outletIdSelected so the outlet context is not lost
+        const params = { search: search, outletIdSelected: filters.outletIdSelected };
+        const config = { preserveState: true, preserveScroll: true, only: ['services'] };
+
+        router.get(layanan.index().url, params, config);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchParam((prev) => ({ ...prev, search: e.target.value }));
-    };
-
-    const handleSelectOutlet = (outlet: Outlet) => {
-        setSearchParam((prev) => ({ ...prev, outletIdSelected: outlet.id, outletSearch: outlet.name }));
+        setSearch(e.target.value);
     };
 
     const handleClear = () => {
-        const searchParams = { search: undefined, outletIdSelected: undefined, outletSearch: undefined };
-        setSearchParam(searchParams);
-        setResetKey((prev) => prev + 1);
+        setSearch('');
 
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['services', 'outlets', 'outletSelected'] };
-        router.get(layanan.index().url, searchParams, fetchConfig);
+        // Preserve outletIdSelected — outlet context must not be cleared here
+        const params = { search: undefined, outletIdSelected: filters.outletIdSelected };
+        const config = { preserveState: true, preserveScroll: true, only: ['services'] };
+
+        router.get(layanan.index().url, params, config);
     };
 
-    const isAllEmpty = () => {
-        return !searchParam?.search?.length && !searchParam?.outletIdSelected;
-    };
-
-    const shouldDisableSearch = isAllEmpty();
+    const shouldDisableSearch = !search?.length;
 
     return {
         data: {
-            searchParam,
+            search,
             shouldDisableSearch,
-            resetKey,
         },
 
         handlers: {
-            handleFetchComboboxOutlet,
             handleSubmit,
             handleSearchChange,
-            handleSelectOutlet,
             handleClear,
         },
     };

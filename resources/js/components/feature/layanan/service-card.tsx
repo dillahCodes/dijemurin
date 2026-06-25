@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { EllipsisVertical, Pencil, Store, Trash2 } from 'lucide-react';
+import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react';
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,8 +8,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useServiceActions } from '@/hooks/feature/layanan/use-service-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import type { Service } from '@/types/feature/layanan';
 import layanan from '@/routes/layanan';
+import type { Service } from '@/types/feature/layanan';
 
 export interface ServiceCardProps {
     id: number;
@@ -80,12 +80,6 @@ function ServiceHeaderContent({ service, onEdit, onDelete }: ServiceHeaderConten
     return (
         <div className="flex w-full items-start justify-between gap-4">
             <CardHeader className="flex w-[85%] flex-col gap-2 p-0! sm:w-[90%]">
-                <Activity mode={service.outlet?.name ? 'visible' : 'hidden'}>
-                    <div className="flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary sm:text-xs">
-                        <Store size={12} className="shrink-0" />
-                        <span className="line-clamp-1">{service.outlet?.name}</span>
-                    </div>
-                </Activity>
                 <div className="flex flex-col gap-0.5">
                     <CardTitle className="line-clamp-1 text-sm sm:text-base md:text-lg">{service.name}</CardTitle>
                     <CardDescription className="line-clamp-2 text-xs text-muted-foreground sm:text-sm md:text-sm">

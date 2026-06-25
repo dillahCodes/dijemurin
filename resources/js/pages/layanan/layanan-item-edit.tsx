@@ -7,10 +7,14 @@ import layanan from '@/routes/layanan';
 export default function LayananItemEdit() {
     const { service } = usePage<LayananItemEditSectionProps>().props;
 
+    const layananHref = layanan.index({
+        query: service.outlet_id ? { outletIdSelected: service.outlet_id } : undefined,
+    });
+
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Layanan', href: layanan.index() },
+                { title: 'Layanan', href: layananHref },
                 { title: `Price List ${service.name}`, href: layanan.items.index({ id: service.id }) },
                 { title: 'Edit Price List', href: '' },
             ]}

@@ -1,85 +1,75 @@
 import { router, usePage } from '@inertiajs/react';
-import { Plus, X } from 'lucide-react';
+import { Plus, Store, X } from 'lucide-react';
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-    Combobox,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxList,
-} from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
+import { useModal } from '@/components/ui/modal';
+import { useCart } from '@/context/feature/cart/cart-context';
 import { RoleHelper } from '@/helper/role-helper';
 import { useServiceSearch } from '@/hooks/feature/layanan/use-service-search';
-import type { Outlet } from '@/types/feature/outlet/outlet';
+import layanan from '@/routes/layanan';
 import { UserRole } from '@/types/feature/user/user';
 import type { ServicePageProps } from './service-section';
-import layanan from '@/routes/layanan';
 
-// 1. Local Types
-interface ServiceOutletFilterProps {
-    onFetchOutlet: (value: string) => void;
-    onSetOutlet: (outlet: Outlet) => void;
-    resetKey: number;
-    localOutletIdSelected: number | undefined | null;
-    localOutletSearch: string | undefined | null;
-}
+// 1. Sub-components
+function ServiceOutletDisplay() {
+    const modal = useModal();
+    const { dispatch } = useCart();
+    const { outletSelected } = usePage<ServicePageProps>().props;
+    const outletName = outletSelected?.data?.name;
 
-interface ServiceSearchActionsProps {
-    search: string | undefined | null;
-    outletIdSelected: number | undefined | null;
-    shouldDisableSearch: boolean;
-    onClear: () => void;
-}
+    const handleChangeOutlet = () => {
+        modal.open({
+            id: 'outlet-change-modal',
+            title: 'Ganti Outlet',
+            description: 'Apakah anda yakin ingin mengganti outlet?, daftar barang di keranjang akan dihapus',
+            onConfirm: () => {
+                dispatch({ type: 'CLEAR' });
+                router.get(layanan.index().url);
+            },
+            confirmContent: 'Ya, Ganti',
+            cancelContent: 'Tidak, Batalkan',
+        });
+    };
 
-// 2. Sub-components
-function ServiceOutletFilter({
-    onFetchOutlet,
-    onSetOutlet,
-    resetKey,
-    localOutletIdSelected,
-    localOutletSearch,
-}: ServiceOutletFilterProps) {
-    const { outlets, auth, outletSelected } = usePage<ServicePageProps>().props;
-    const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
-
-    if (!hasSuperAdmin) {
+    if (!outletName) {
         return null;
     }
 
     return (
         <div className="w-full sm:w-[250px] lg:w-[280px]">
-            <Combobox
-                key={`combo-${resetKey}-${localOutletIdSelected || 'empty-outlet'}`}
-                defaultInputValue={localOutletIdSelected ? outletSelected?.data?.name || localOutletSearch || '' : ''}
-                name="outlet_id"
-                items={outlets?.data}
-                onInputValueChange={onFetchOutlet}
-            >
-                <ComboboxInput placeholder="Cari Outlet..." />
-                <ComboboxContent>
-                    <Activity mode={outlets?.data?.length ? 'visible' : 'hidden'}>
-                        <ComboboxEmpty>Tidak ada outlet.</ComboboxEmpty>
-                    </Activity>
-                    <ComboboxList>
-                        {outlets?.data?.map((item: Outlet) => (
-                            <ComboboxItem key={item.id} value={item.name} onClick={() => onSetOutlet(item)}>
-                                {item.name}
-                            </ComboboxItem>
-                        ))}
-                    </ComboboxList>
-                </ComboboxContent>
-            </Combobox>
+            <InputGroup>
+                <InputGroupAddon align="inline-start">
+                    <InputGroupText>
+                        <Store size={14} />
+                    </InputGroupText>
+                </InputGroupAddon>
+                <InputGroupInput disabled readOnly value={outletName} className="cursor-not-allowed opacity-70" />
+                <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                        size="xs"
+                        onClick={handleChangeOutlet}
+                        className="cursor-pointer text-xs text-primary hover:text-primary"
+                    >
+                        Ganti
+                    </InputGroupButton>
+                </InputGroupAddon>
+            </InputGroup>
         </div>
     );
 }
 
-function ServiceSearchActions({ search, outletIdSelected, shouldDisableSearch, onClear }: ServiceSearchActionsProps) {
+interface ServiceSearchActionsProps {
+    search: string;
+    shouldDisableSearch: boolean;
+    onClear: () => void;
+}
+
+function ServiceSearchActions({ search, shouldDisableSearch, onClear }: ServiceSearchActionsProps) {
     return (
         <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
-            <Activity mode={search || outletIdSelected ? 'visible' : 'hidden'}>
+            <Activity mode={search ? 'visible' : 'hidden'}>
                 <Button variant="ghost" type="button" onClick={onClear} className="cursor-pointer px-3">
                     <X size={16} />
                 </Button>
@@ -105,9 +95,11 @@ function ServiceAddButton() {
     );
 }
 
-// 3. Main Component
+// 2. Main Component
 export function ServiceSearch() {
     const { handlers, data } = useServiceSearch();
+    const { auth } = usePage<ServicePageProps>().props;
+    const hasSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
 
     return (
         <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -117,31 +109,28 @@ export function ServiceSearch() {
                         type="text"
                         placeholder="Cari layanan..."
                         name="search"
-                        value={data.searchParam?.search || ''}
+                        value={data.search}
                         onChange={handlers.handleSearchChange}
                         className="w-full"
                     />
                 </div>
 
-                <ServiceOutletFilter
-                    onFetchOutlet={handlers.handleFetchComboboxOutlet}
-                    onSetOutlet={handlers.handleSelectOutlet}
-                    resetKey={data.resetKey}
-                    localOutletIdSelected={data.searchParam?.outletIdSelected}
-                    localOutletSearch={data.searchParam?.outletSearch}
-                />
+                <Activity mode={hasSuperAdmin ? 'visible' : 'hidden'}>
+                    <ServiceOutletDisplay />
+                </Activity>
 
                 <ServiceSearchActions
-                    search={data.searchParam?.search}
-                    outletIdSelected={data.searchParam?.outletIdSelected}
+                    search={data.search}
                     shouldDisableSearch={data.shouldDisableSearch}
                     onClear={handlers.handleClear}
                 />
             </form>
 
-            <div className="w-full shrink-0 sm:w-auto">
-                <ServiceAddButton />
-            </div>
+            <Activity mode={hasSuperAdmin ? 'visible' : 'hidden'}>
+                <div className="w-full shrink-0 sm:w-auto">
+                    <ServiceAddButton />
+                </div>
+            </Activity>
         </div>
     );
 }
