@@ -1,1 +1,0 @@
-function e(e){if(!e)return`-`;try{let t=new Date(e);return new Intl.DateTimeFormat(`id-ID`,{year:`numeric`,month:`short`,day:`2-digit`}).format(t)}catch{return e}}export{e as t};

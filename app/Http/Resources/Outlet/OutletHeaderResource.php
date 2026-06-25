@@ -18,6 +18,9 @@ class OutletHeaderResource extends JsonResource
             ...$this->only([
                 'id',
                 'name',
+                'phone',
+                'email',
+                'address',
             ]),
         ];
     }

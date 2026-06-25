@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\Order\Order;
 use App\Models\Outlet\Outlet;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -37,12 +39,14 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the outlet that the user belongs to.
-     */
     public function outlet(): BelongsTo
     {
         return $this->belongsTo(Outlet::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'cashier_id');
     }
 
     /**
@@ -123,10 +127,30 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user has any of the given roles.
+     * Helper to check whether the user has at least one of the given roles.
+     *
+     * @param  array<int, UserRole>  $roles
      */
     public function hasAnyRole(array $roles): bool
     {
-        return in_array($this->role, $roles);
+        return \in_array($this->role, $roles, true);
+    }
+
+    /**
+     * Helper to check whether the user has the given role.
+     */
+    public function hasRole(UserRole $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Helper method to get initials from a name string.
+     */
+    public static function getInitials(string $name): string
+    {
+        return collect(explode(' ', $name))
+            ->map(fn ($word) => strtoupper($word[0] ?? ''))
+            ->implode('');
     }
 }

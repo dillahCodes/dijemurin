@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Order;
 
+use App\Http\Resources\Outlet\OutletHeaderResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,15 +16,11 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            ...$this->only([
-                'id',
-                'order_code',
-                'customer_name',
-                'total_price',
-                'order_at',
-                'created_at',
-                'updated_at',
-            ]),
+            ...$this->only(['id', 'order_code', 'customer_name', 'total_price']),
+            'estimated_completed_at' => $this->estimated_completed_at?->toIso8601String(),
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+            'outlet' => OutletHeaderResource::make($this->whenLoaded('outlet')),
             'status' => [
                 'label' => $this->status->indonesianLabel(),
                 'value' => $this->status->value,

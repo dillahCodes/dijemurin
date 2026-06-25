@@ -3,7 +3,6 @@
 namespace App\Rules\User;
 
 use App\Enums\User\UserRole;
-use App\Helpers\RoleHelper;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
@@ -18,14 +17,8 @@ class AllowedRoleTransitionRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $user = request()->user();
-        $hasSuperAdmin = RoleHelper::isRole(UserRole::SUPER_ADMIN);
-        $hasSuperAdminSelected = RoleHelper::isRoleValueSame($value, UserRole::SUPER_ADMIN->value);
-
-        if (! $user) {
-            $fail('Pengguna tidak diotentikasi.');
-
-            return;
-        }
+        $hasSuperAdmin = $user?->hasRole(UserRole::SUPER_ADMIN) ?? false;
+        $hasSuperAdminSelected = $value === UserRole::SUPER_ADMIN->value;
 
         if ($hasSuperAdminSelected) {
             $fail('Anda tidak memiliki izin untuk memberikan role Super Admin.');
@@ -41,7 +34,7 @@ class AllowedRoleTransitionRule implements ValidationRule
 
         $allowedRoles = UserRole::allowedTransitions()[$user->role->value] ?? [];
 
-        if (! in_array($value, $allowedRoles, true)) {
+        if (! \in_array($value, $allowedRoles, true)) {
             $fail('Role tidak valid atau Anda tidak memiliki izin untuk memberikan role tersebut.');
         }
     }

@@ -32,7 +32,7 @@ class ReportOrderTopLevelResource extends JsonResource
         ]);
 
         $orderItems = $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])
-            ->flatMap->orderItem
+            ->flatMap->orderItems
             ->groupBy('item_name');
 
         $orderItemsMaped = $orderItems->map(fn ($item) => [

@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Order;
 
 use App\Enums\Payment\PaymentMethod;
+use App\Enums\User\UserRole;
+use App\Rules\Order\CartItemsSameOutletRule;
+use App\Rules\Order\CashPaymentSufficientRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -14,7 +17,7 @@ class OrderStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->hasAnyRole([UserRole::SUPER_ADMIN, UserRole::ADMIN, UserRole::CASHIER]) ?? false;
     }
 
     /**
@@ -25,10 +28,11 @@ class OrderStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id'],
             'customer_name' => ['required', 'string', 'max:255'],
             'payment_method' => ['required', new Enum(PaymentMethod::class)],
-            'payment_amount' => ['required', 'numeric', 'min:0'],
-            'cart_items' => ['required', 'array', 'min:1'],
+            'payment_amount' => ['required', 'numeric', 'min:0', new CashPaymentSufficientRule],
+            'cart_items' => ['required', 'array', 'min:1', new CartItemsSameOutletRule],
             'cart_items.*.id' => ['required', 'integer', 'exists:service_items,id'],
             'cart_items.*.qty' => ['required', 'numeric', 'min:1'],
         ];
@@ -37,6 +41,9 @@ class OrderStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'outlet_id.required' => 'Outlet wajib diisi.',
+            'outlet_id.integer' => 'Outlet harus berupa angka.',
+            'outlet_id.exists' => 'Outlet tidak valid.',
             'customer_name.required' => 'Nama pelanggan wajib diisi.',
             'customer_name.max' => 'Nama pelanggan maksimal 255 karakter.',
             'payment_method.required' => 'Metode pembayaran wajib diisi.',

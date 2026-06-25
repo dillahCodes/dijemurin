@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Outlet\OutletEditRequest;
 use App\Http\Requests\Outlet\OutletStoreRequest;
 use App\Models\Outlet\Outlet;
+use App\Services\Outlet\OutletQueryService;
 use App\Services\Outlet\OutletService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,7 +21,7 @@ class OutletController extends Controller
     public function index(Request $request)
     {
         $filterOutlet = OutletFilterDTO::fromRequest($request);
-        $outlets = OutletService::getOutletsData($filterOutlet);
+        $outlets = OutletQueryService::getOutletsData($filterOutlet);
         $filters = $filterOutlet->toArray();
 
         $outletStatusOptions = OutletStatus::options();
@@ -56,7 +57,7 @@ class OutletController extends Controller
      */
     public function show(Outlet $outlet)
     {
-        $outletDetail = OutletService::getOutletDetailData($outlet->id);
+        $outletDetail = OutletQueryService::getOutletDetailData($outlet->id);
 
         return Inertia::render('outlet/outlet-detail', [
             'outletDetail' => $outletDetail,
@@ -68,7 +69,7 @@ class OutletController extends Controller
      */
     public function edit(Request $request, Outlet $outlet)
     {
-        $outletDetail = OutletService::getOutletDetailData($outlet->id);
+        $outletDetail = OutletQueryService::getOutletDetailData($outlet->id);
         $outletStatusOptions = OutletStatus::options();
 
         return Inertia::render('outlet/outlet-edit', [

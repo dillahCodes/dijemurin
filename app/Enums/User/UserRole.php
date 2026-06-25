@@ -10,11 +10,17 @@ enum UserRole: string
     case OPERATOR = 'operator';
     case GHOST = 'ghost';
 
+    /**
+     * Returns all role values as a plain string array.
+     */
     public static function toArray(): array
     {
         return array_column(self::cases(), 'value');
     }
 
+    /**
+     * Returns the human-readable Indonesian label for this role.
+     */
     public function indonesianLabel(): string
     {
         return match ($this) {
@@ -26,23 +32,39 @@ enum UserRole: string
         };
     }
 
+    /**
+     * Returns selectable role options for a given role.
+     * Filters based on what roles $currentRole is allowed to assign,
+     * excluding SUPER_ADMIN from the result.
+     */
     public static function options(UserRole $currentRole): array
     {
-        $allowed = self::allowedTransitions()[$currentRole->value] ?? [];
+        $allowedRoles = self::allowedTransitions()[$currentRole->value] ?? [];
 
         return collect(self::cases())
-            ->filter(fn ($case) => $case !== self::SUPER_ADMIN)
-            ->filter(fn ($case) => in_array($case->value, $allowed, true))
-            ->map(fn ($case) => [
-                'label' => $case->indonesianLabel(),
-                'value' => $case->value,
-            ])
+            ->filter(fn (self $role) => self::isSelectableRole($role, $allowedRoles))
+            ->map(fn (self $role) => self::toOption($role))
             ->values()
             ->toArray();
     }
 
+    private static function isSelectableRole(self $role, array $allowedRoles): bool
+    {
+        return $role !== self::SUPER_ADMIN && \in_array($role->value, $allowedRoles, true);
+    }
+
+    private static function toOption(self $role): array
+    {
+        return [
+            'label' => $role->indonesianLabel(),
+            'value' => $role->value,
+        ];
+    }
+
     /**
-     * Define allowed transition rules for Frontend & Backend
+     * Defines which roles a given role is permitted to assign.
+     * Used for both frontend option filtering and backend validation.
+     * Roles not listed here cannot assign any role.
      */
     public static function allowedTransitions(): array
     {
@@ -53,7 +75,8 @@ enum UserRole: string
     }
 
     /**
-     * validation transition logic
+     * Checks whether this role is permitted to assign $newUserRole.
+     * A role can always keep its current value (no-op transition).
      */
     public function canTransitionTo(self $newUserRole): bool
     {

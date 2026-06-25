@@ -43,7 +43,7 @@ class ReportOrderFirstLevelResource extends JsonResource
             'status' => $this->resolveStatus($order->status),
             'total_price' => $order->total_price,
 
-            'order_items' => $this->mapOrderItems($order->orderItem),
+            'order_items' => $this->mapOrderItems($order->orderItems),
             'payment' => $this->mapOrderPayment($order->payment),
         ]);
     }

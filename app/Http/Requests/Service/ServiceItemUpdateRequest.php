@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Service;
 
+use App\Enums\Service\ServiceTimeType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,7 +27,8 @@ class ServiceItemUpdateRequest extends FormRequest
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'required', 'string', 'max:255'],
-            'time' => ['sometimes', 'required', 'string', 'max:255'],
+            'time_number' => ['sometimes', 'required', 'integer', 'min:1'],
+            'time_type' => ['sometimes', 'required', 'string', Rule::enum(ServiceTimeType::class)],
             'price' => ['sometimes', 'required', 'numeric', 'min:1'],
             'unit' => ['sometimes', 'required', 'string', 'max:255'],
             'service_id' => ['sometimes', 'required', 'integer', Rule::exists('services', 'id')],
@@ -40,8 +42,10 @@ class ServiceItemUpdateRequest extends FormRequest
             'name.max' => 'Nama layanan maksimal 255 karakter',
             'description.required' => 'Deskripsi layanan wajib diisi',
             'description.max' => 'Deskripsi layanan maksimal 255 karakter',
-            'time.required' => 'Waktu pengerjaan wajib diisi',
-            'time.max' => 'Waktu pengerjaan maksimal 255 karakter',
+            'time_number.required' => 'Waktu pengerjaan wajib diisi',
+            'time_number.integer' => 'Waktu pengerjaan harus berupa angka',
+            'time_number.min' => 'Waktu pengerjaan minimal 1',
+            'time_type.required' => 'Tipe waktu wajib dipilih',
             'price.required' => 'Harga wajib diisi',
             'price.min' => 'Harga minimal 1',
             'price.numeric' => 'Harga harus berupa angka',

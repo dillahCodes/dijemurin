@@ -24,7 +24,7 @@ class ReportOrderMiddleLevelResource extends JsonResource
 
         // get all order items and group by item name
         $orderItemsGroupByItemName = $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])
-            ->flatMap->orderItem->groupBy('item_name');
+            ->flatMap->orderItems->groupBy('item_name');
 
         $dailySummary = $ordersGroupByDate->map(fn ($items, $date) => [
             'date' => $date,

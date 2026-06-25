@@ -9,7 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceStoreRequest;
 use App\Http\Requests\Service\ServiceUpdateRequest;
 use App\Models\Service\Service;
-use App\Services\Outlet\OutletService;
+use App\Services\Outlet\OutletQueryService;
+use App\Services\Service\ServiceQueryService;
 use App\Services\Service\ServiceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,15 +25,15 @@ class ServiceController extends Controller
     public function index(Request $request): Response
     {
         $filterService = ServiceFilterDTO::fromRequest($request);
-        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+        $filterOutlet = OutletComboboxFilterDTO::fromRequest($request);
 
-        $filters = $filterService->toArray();
-        $comboboxFilters = $filterCombobox->toArray();
-        $mergedFilters = array_merge($filters, $comboboxFilters);
+        $filtersService = $filterService->toArray();
+        $filtersOutlet = $filterOutlet->toArray();
+        $mergedFilters = [...$filtersService, ...$filtersOutlet];
 
-        $services = ServiceService::getIndexServiceData($filterService, $filterCombobox);
-        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
-        $outletSelected = OutletService::getOutletSelected($filterCombobox);
+        $services = ServiceQueryService::getIndexServiceData($filterService, $filterOutlet);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterOutlet);
+        $outletSelected = OutletQueryService::getOutletComboboxSelectedData($filterOutlet);
 
         return Inertia::render('layanan/layanan', [
             'services' => $services,
@@ -48,7 +49,7 @@ class ServiceController extends Controller
     public function create(Request $request): Response
     {
         $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
-        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterCombobox);
 
         return Inertia::render('layanan/layanan-tambah', [
             'outlets' => $outlets,
@@ -80,8 +81,8 @@ class ServiceController extends Controller
     public function edit(Service $service, Request $request): Response
     {
         $filterOutlet = OutletFilterDTO::fromRequest($request);
-        $outlets = OutletService::getOutletsData($filterOutlet);
-        $serviceData = ServiceService::getServiceById($service->id);
+        $outlets = OutletQueryService::getOutletsData($filterOutlet);
+        $serviceData = ServiceQueryService::getServiceById($service->id);
 
         return Inertia::render('layanan/layanan-edit', [
             'service' => $serviceData,
@@ -110,6 +111,6 @@ class ServiceController extends Controller
     {
         ServiceService::deleteService($service);
 
-        return redirect()->route('layanan.index')->with(['success' => 'Layanan berhasil dihapus']);
+        return redirect()->route('layanan.index', ['outletIdSelected' => $service->outlet_id])->with(['success' => 'Layanan berhasil dihapus']);
     }
 }

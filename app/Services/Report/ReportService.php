@@ -15,6 +15,6 @@ class ReportService
             return collect();
         }
 
-        return Order::filterDateRange($filter->startDate, $filter->endDate)->reportStatuses()->with(['orderItem', 'payment'])->get();
+        return Order::filterDateRange($filter->startDate, $filter->endDate)->reportStatuses()->with(['orderItems', 'payment'])->get();
     }
 }

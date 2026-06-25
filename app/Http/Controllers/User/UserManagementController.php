@@ -10,7 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserEditRequest;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Models\User;
-use App\Services\Outlet\OutletService;
+use App\Services\Outlet\OutletQueryService;
+use App\Services\User\UserQueryService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,21 +24,21 @@ class UserManagementController extends Controller
     public function index(Request $request)
     {
         $filterUser = UserFilterDTO::fromRequest($request);
-        $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
+        $filterOutlet = OutletComboboxFilterDTO::fromRequest($request);
         $currentRole = $request->user()->role;
 
-        $users = UserService::getUsersDataIndex($filterUser, $filterCombobox);
+        $users = UserQueryService::getUsersDataIndex($filterUser, $filterOutlet);
 
         $filters = $filterUser->toArray();
-        $comboboxFilters = $filterCombobox->toArray();
-        $mergedFilters = array_merge($filters, $comboboxFilters);
+        $comboboxFilters = $filterOutlet->toArray();
+        $mergedFilters = [...$filters, ...$comboboxFilters];
 
         $userTransitionRules = UserRole::allowedTransitions();
         $userRoleOptions = UserRole::options($currentRole);
         $userStatusOptions = UserStatus::options();
 
-        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
-        $outletSelected = OutletService::getOutletSelected($filterCombobox);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterOutlet);
+        $outletSelected = OutletQueryService::getOutletComboboxSelectedData($filterOutlet);
 
         return Inertia::render('pengguna/pengguna', [
             'userTransitionRules' => $userTransitionRules,
@@ -56,7 +57,7 @@ class UserManagementController extends Controller
     public function create(Request $request)
     {
         $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
-        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterCombobox);
 
         $currentRole = $request->user()->role;
         $userRoleOptions = UserRole::options($currentRole);
@@ -83,7 +84,7 @@ class UserManagementController extends Controller
      */
     public function show(User $user)
     {
-        $userData = UserService::getUserById($user->id);
+        $userData = UserQueryService::getUserById($user->id);
 
         return Inertia::render('pengguna/pengguna-detail', [
             'user' => $userData,
@@ -96,10 +97,10 @@ class UserManagementController extends Controller
     public function edit(Request $request, User $user)
     {
         $userStatusOptions = UserStatus::options();
-        $userData = UserService::getUserById($user->id);
+        $userData = UserQueryService::getUserById($user->id);
 
         $filterCombobox = OutletComboboxFilterDTO::fromRequest($request);
-        $outlets = OutletService::getOutletsComboboxData($filterCombobox);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterCombobox);
 
         $currentRole = $request->user()->role;
         $userRoleOptions = UserRole::options($currentRole);

@@ -2,70 +2,46 @@
 
 namespace App\Services\Order;
 
-use App\DTOs\Order\OrderFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
-use App\Helpers\StringHelper;
-use App\Http\Resources\Order\OrderDetailResource;
-use App\Http\Resources\Order\OrderResource;
+use App\Enums\Service\ServiceTimeType;
+use App\Enums\User\UserRole;
 use App\Models\Order\Order;
 use App\Models\Service\ServiceItem;
+use App\Models\User;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class OrderService
 {
     /**
      * Create a new order
      */
-    public static function createOrder(array $data)
+    public static function createOrder(array $data): Order
     {
         return DB::transaction(function () use ($data) {
-            // get cart items from FE and get service items data from DB
             $cartItems = collect($data['cart_items']);
-            $serviceItems = ServiceItem::whereIn('id', $cartItems->pluck('id'))->get(['id', 'price', 'name', 'unit'])->keyBy('id');
-
+            $serviceItems = self::resolveServiceItems($cartItems);
             $totalPrice = self::sumTotalPrice($cartItems, $serviceItems);
-            $cashPaymentAmount = $data['payment_method'] === PaymentMethod::CASH->value ? $data['payment_amount'] : null;
-            $cashChangeAmount = $data['payment_method'] === PaymentMethod::CASH->value ? $data['payment_amount'] - $totalPrice : null;
 
-            self::validatePayment($data, $totalPrice);
+            $estimatedCompletedAt = self::calculateEstimatedCompletedAt($serviceItems);
 
-            // insert order data
-            $order = Order::create([
-                'order_code' => self::generateOrderCode($data['customer_name']),
-                'customer_name' => $data['customer_name'],
-                'total_price' => $totalPrice,
-            ]);
+            $order = self::createOrderRecord($data, $totalPrice, $estimatedCompletedAt);
+            self::createOrderItems($order, $cartItems, $serviceItems);
+            self::createOrderPayment($order, $data, $totalPrice);
 
-            // create and insert order items
-            $orderItems = $serviceItems->map(fn ($serviceItem) => [
-                'order_id' => $order->id,
-                'service_item_id' => $serviceItem->id,
-                'item_name' => $serviceItem->name,
-                'item_price' => $serviceItem->price,
-                'unit' => $serviceItem->unit,
-                'quantity' => $cartItems->firstWhere('id', $serviceItem->id)['qty'],
-                'subtotal' => $serviceItem->price * $cartItems->firstWhere('id', $serviceItem->id)['qty'],
-            ])->toArray();
-
-            $order->orderItem()->createMany($orderItems);
-
-            // insert payment data
-            $payment = [
-                'order_id' => $order->id,
-                'method' => $data['payment_method'],
-                'cash_payment_amount' => $cashPaymentAmount,
-                'cash_change_amount' => $cashChangeAmount,
-            ];
-
-            $order->payment()->create($payment);
+            // Log initial status log
+            OrderStatusLogService::log(
+                order: $order,
+                fromStatus: null,
+                toStatus: OrderStatus::PENDING,
+                userId: auth()->user()->id
+            );
 
             return $order;
         });
-
     }
 
     /**
@@ -76,158 +52,110 @@ class OrderService
         return DB::transaction(function () use ($data, $order) {
             $currentStatus = $order->status;
             $newStatus = $data['status'];
+            $newStatusEnum = OrderStatus::from($newStatus);
 
-            $isNewStatusDone = $newStatus === OrderStatus::DONE->value;
-            $isCurrentStatusDone = $currentStatus === OrderStatus::DONE->value;
+            $isNewStatusCompleted = in_array($newStatus, [OrderStatus::DONE->value, OrderStatus::PICKED_UP->value]);
+            $isCurrentStatusCompleted = in_array($currentStatus->value, [OrderStatus::DONE->value, OrderStatus::PICKED_UP->value]);
 
-            if ($isNewStatusDone && ! $isCurrentStatusDone) {
-                $data['completed_at'] = now();
-            }
+            $data['completed_at'] = match ([$isNewStatusCompleted, $isCurrentStatusCompleted]) {
+                [true, false] => now(),
+                [false, true] => null,
+                default => $order->completed_at,
+            };
 
-            if ($isCurrentStatusDone && ! $isNewStatusDone) {
-                $data['completed_at'] = null;
-            }
+            $isNewStatusPickedUp = $newStatus === OrderStatus::PICKED_UP->value;
+            $isCurrentStatusPickedUp = $currentStatus === OrderStatus::PICKED_UP->value;
+
+            $data['picked_up_at'] = match ([$isNewStatusPickedUp, $isCurrentStatusPickedUp]) {
+                [true, false] => now(),
+                [false, true] => null,
+                default => $order->picked_up_at,
+            };
 
             $order->update($data);
+
+            if ($currentStatus !== $newStatusEnum) {
+                OrderStatusLogService::log(
+                    order: $order,
+                    fromStatus: $currentStatus,
+                    toStatus: $newStatusEnum,
+                    userId: auth()->id()
+                );
+            }
 
             return $order;
         });
     }
 
-    /**
-     * Get orders data with filters
-     */
-    public static function getOrdersData(OrderFilterDTO $filter)
+    private static function resolveServiceItems(Collection $cartItems): Collection
     {
-        $orders = Order::with('payment')
-            ->search($filter->search)
-            ->filterStatus($filter->status)
-            ->filterPaymentMethod($filter->paymentMethod)
-            ->filterDateRange($filter->startDate, $filter->endDate)
-            ->latest()
-            ->paginate($filter->limit)
-            ->withQueryString();
-
-        return OrderResource::collection($orders);
+        return ServiceItem::whereIn('id', $cartItems->pluck('id'))
+            ->get(['id', 'price', 'name', 'unit', 'time_number', 'time_type'])
+            ->keyBy('id');
     }
 
-    /**
-     * Get Order detail
-     */
-    public static function getOrderDetail(Order $order)
+    private static function calculateEstimatedCompletedAt(Collection $serviceItems): CarbonInterface
     {
-        $order->load(['orderItem', 'payment']);
+        $maxDurationMinutes = 0;
 
-        return new OrderDetailResource($order);
-    }
+        foreach ($serviceItems as $serviceItem) {
+            $timeType = $serviceItem->time_type;
+            $enumType = $timeType instanceof ServiceTimeType ? $timeType : ServiceTimeType::tryFrom($timeType);
+            $minutes = $enumType ? $enumType->toMinutes($serviceItem->time_number) : 0;
 
-    /**
-     * Get Order detail by order code
-     */
-    public static function getOrderDetailByCode(?string $orderCode)
-    {
-        if (! $orderCode) {
-            throw ValidationException::withMessages([
-                'order_code' => 'Order code is required',
-            ]);
+            if ($minutes > $maxDurationMinutes) {
+                $maxDurationMinutes = $minutes;
+            }
         }
 
-        $order = Order::where('order_code', $orderCode)->whereNotIn('status', [OrderStatus::CANCELLED->value])->first();
+        return now()->addMinutes($maxDurationMinutes);
+    }
 
-        if (! $order) {
-            throw ValidationException::withMessages([
-                'order_code' => 'Order not found',
-            ]);
+    private static function createOrderRecord(array $data, int $totalPrice, CarbonInterface $estimatedCompletedAt): Order
+    {
+        $isSuperAdmin = auth()->user()->hasAnyRole([UserRole::SUPER_ADMIN]);
+        $outletId = $isSuperAdmin ? $data['outlet_id'] ?? null : auth()->user()->outlet_id;
+
+        if ($isSuperAdmin && ! $outletId) {
+            throw new \Exception('Outlet belum terpilih');
         }
 
-        $order->load(['orderItem', 'payment']);
-
-        return new OrderDetailResource($order);
+        return Order::create([
+            'outlet_id' => $outletId,
+            'cashier_id' => auth()->user()->id,
+            'order_code' => self::generateOrderCode($data['customer_name']),
+            'customer_name' => $data['customer_name'],
+            'status' => OrderStatus::PENDING,
+            'total_price' => $totalPrice,
+            'estimated_completed_at' => $estimatedCompletedAt,
+        ]);
     }
 
-    public static function getTodayOrderCount(): int
+    private static function createOrderItems(Order $order, Collection $cartItems, Collection $serviceItems): void
     {
-        return Order::whereBetween('created_at', [
-            now()->startOfDay(),
-            now()->endOfDay(),
-        ])
-            ->whereNot('status', OrderStatus::CANCELLED->value)
-            ->count();
+        $orderItems = $serviceItems->map(fn ($serviceItem) => [
+            'order_id' => $order->id,
+            'service_item_id' => $serviceItem->id,
+            'item_name' => $serviceItem->name,
+            'item_price' => $serviceItem->price,
+            'unit' => $serviceItem->unit,
+            'quantity' => $cartItems->firstWhere('id', $serviceItem->id)['qty'],
+            'subtotal' => $serviceItem->price * $cartItems->firstWhere('id', $serviceItem->id)['qty'],
+        ])->toArray();
+
+        $order->orderItems()->createMany($orderItems);
     }
 
-    /**
-     * Get Process Order Count
-     */
-    public static function getProcessOrderCount(): int
-    {
-        return Order::process()->count();
-    }
-
-    /**
-     * Get Done Order Count
-     */
-    public static function getDoneOrderCount(): int
-    {
-        return Order::done()->count();
-    }
-
-    /**
-     * Get Today Revenue
-     */
-    public static function getTodayRevenue(): int
-    {
-        return Order::today()->revenueStatuses()->sum('total_price');
-    }
-
-    /**
-     * Get Week Revenue for chart
-     */
-    public static function getChartWeekRevenue(): array
-    {
-        $orders = Order::thisWeek()->revenueStatuses()->get(['created_at', 'total_price']);
-
-        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-
-        // ex: items: [2026-04-06 => collection, 2026-04-07 => collection]
-        $grouped = $orders->groupBy(fn ($order) => $order->created_at->format('Y-m-d'));
-
-        return collect($days)->map(function ($day, $index) use ($grouped) {
-            // ex: 2026-04-06
-            $date = now()->startOfWeek()->addDays($index)->format('Y-m-d');
-            // ex: 100000
-            $sumRevenueThisDay = $grouped->get($date)?->sum('total_price') ?? 0;
-
-            return ['name' => $day, 'total' => $sumRevenueThisDay];
-        })->values()->toArray();
-    }
-
-    /**
-     * Get Month Statuses for chart
-     */
-    public static function getChartMonthStatuses()
-    {
-        $orders = Order::thisMonth()->get(['status']);
-        $englishStatuses = OrderStatus::toArray();
-
-        return collect($englishStatuses)->map(function ($status) use ($orders) {
-            $count = $orders->where('status', $status)->count();
-            $enum = OrderStatus::from($status);
-
-            $labelValue = ['name' => $enum->indonesianLabel(), 'value' => $enum->value];
-
-            return ['label' => $labelValue, 'value' => $count];
-        })->toArray();
-    }
-
-    public static function validatePayment(array $data, int $totalPrice): void
+    private static function createOrderPayment(Order $order, array $data, int $totalPrice): void
     {
         $isCash = $data['payment_method'] === PaymentMethod::CASH->value;
 
-        if ($isCash && $data['payment_amount'] < $totalPrice) {
-            throw ValidationException::withMessages([
-                'payment_amount' => 'Jumlah bayar tunai (cash) kurang dari total tagihan.',
-            ]);
-        }
+        $order->payment()->create([
+            'order_id' => $order->id,
+            'method' => $data['payment_method'],
+            'cash_payment_amount' => $isCash ? $data['payment_amount'] : null,
+            'cash_change_amount' => $isCash ? $data['payment_amount'] - $totalPrice : null,
+        ]);
     }
 
     public static function sumTotalPrice(Collection $cartItems, Collection $serviceItems): int
@@ -241,7 +169,7 @@ class OrderService
 
     public static function generateOrderCode(string $customerName): string
     {
-        $name = StringHelper::getInitials($customerName);
+        $name = User::getInitials($customerName);
         $date = now()->format('Ymd');
         $random = Str::upper(Str::random(3));
 

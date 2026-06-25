@@ -8,7 +8,7 @@ use App\Http\Requests\Service\ServiceItemsStoreRequest;
 use App\Http\Requests\Service\ServiceItemUpdateRequest;
 use App\Models\Service\Service;
 use App\Models\Service\ServiceItem;
-use App\Services\Service\ServiceService;
+use App\Services\Service\ServiceQueryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,8 +22,9 @@ class ServiceItemController extends Controller
     public function index(Service $service, Request $request): Response
     {
         $filterServiceItem = ServiceItemFilterDTO::fromRequest($request);
-        $items = ServiceService::getServiceItems($service, $filterServiceItem);
         $filters = $filterServiceItem->toArray();
+
+        $items = ServiceQueryService::getServiceItems($service, $filterServiceItem);
 
         return Inertia::render('layanan/layanan-items', [
             'service' => $service,
@@ -71,8 +72,8 @@ class ServiceItemController extends Controller
      */
     public function edit(Service $service, ServiceItem $serviceItem): Response
     {
-        $service = ServiceService::getServiceById($service->id);
-        $serviceItem = ServiceService::getServiceItemById($serviceItem->id);
+        $service = ServiceQueryService::getServiceById($service->id);
+        $serviceItem = ServiceQueryService::getServiceItemById($serviceItem->id);
 
         return Inertia::render('layanan/layanan-item-edit', [
             'service' => $service,

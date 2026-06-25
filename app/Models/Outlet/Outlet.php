@@ -3,6 +3,7 @@
 namespace App\Models\Outlet;
 
 use App\Enums\Outlet\OutletStatus;
+use App\Models\Order\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,6 +26,11 @@ class Outlet extends Model
     public function user(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     /**
