@@ -17,7 +17,6 @@ type Props = {
     // canRegister: boolean;
 };
 
-// export default function Login({ status, canResetPassword, canRegister }: Props) {
 export default function Login({ status, canResetPassword }: Props) {
     return (
         <AuthLayout
@@ -39,7 +38,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                     required
                                     autoFocus
                                     tabIndex={1}
-                                    autoComplete="email"
+                                    autoComplete="username"
                                     placeholder="email@contoh.com"
                                 />
                                 <InputError message={errors.email} />
@@ -54,6 +53,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                         </TextLink>
                                     )}
                                 </div>
+
                                 <PasswordInput
                                     id="password"
                                     name="password"
@@ -62,6 +62,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                     autoComplete="current-password"
                                     placeholder="Kata Sandi"
                                 />
+
                                 <InputError message={errors.password} />
                             </div>
 
@@ -83,6 +84,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                 Masuk
                             </Button>
                         </div>
+
                         {/* {canRegister && (
                             <div className="text-center text-sm text-muted-foreground">
                                 Belum punya akun?{' '}

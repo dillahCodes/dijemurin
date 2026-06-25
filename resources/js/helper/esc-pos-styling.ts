@@ -13,6 +13,9 @@ export const EscPosStyling = {
     size: {
         normal: new Uint8Array([0x1d, 0x21, 0x00]),
         double: new Uint8Array([0x1d, 0x21, 0x11]),
+        h1: new Uint8Array([0x1d, 0x21, 0x11]), // Double height & width
+        h2: new Uint8Array([0x1d, 0x21, 0x01]), // Double height
+        h3: new Uint8Array([0x1d, 0x21, 0x10]), // Double width
     },
 
     line(width: number = 32): Uint8Array {

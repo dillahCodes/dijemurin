@@ -1,5 +1,5 @@
 import { EscPosStyling as S } from '@/helper/esc-pos-styling';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 import concatBytes from './concat-byte';
 
 // ============================================================================
@@ -30,17 +30,23 @@ function truncateName(name: string, maxLength: number = 20): string {
 // RECEIPT SECTION BUILDERS
 // ============================================================================
 
-function buildHeader(): Uint8Array[] {
+function buildHeader(orderDetail: OrderDetail): Uint8Array[] {
     return [
         S.align.center,
-        S.bold.on,
-        S.size.double,
-        S.text('POINT OF SALE\n'),
-        S.size.normal,
-        S.bold.off,
 
-        S.text('Cabang Utama\n'),
-        S.text('Telp: 0812-3456-7890\n\n'),
+        S.bold.on,
+        S.size.h2,
+        S.text('POINT OF SALE DIJEMURIN.ID\n'),
+        S.bold.off,
+        S.size.normal,
+
+        S.bold.on,
+        S.size.normal,
+        S.text(`${orderDetail.outlet?.name}\n`),
+        S.bold.off,
+        S.size.normal,
+
+        S.text(`Telp: ${orderDetail.outlet?.phone}\n\n`),
 
         S.align.left,
         S.line(),
@@ -49,13 +55,14 @@ function buildHeader(): Uint8Array[] {
 
 function buildOrderInfo(orderDetail: OrderDetail): Uint8Array[] {
     const customerName = truncateName(orderDetail.customer_name || 'Pelanggan');
-    const formattedDate = formatReceiptDate(orderDetail.order_at);
+    const formattedDate = formatReceiptDate(orderDetail.created_at);
 
     return [
         S.text(`No: ${orderDetail.order_code}\n`),
-        S.text(`Kasir    : Admin\n`),
+        S.text(`Kasir    : ${orderDetail.cashier.name}\n`),
         S.text(`Tanggal  : ${formattedDate}\n`),
         S.text(`Pelanggan: ${customerName}\n`),
+        S.text(`Outlet   : ${orderDetail.outlet?.name}\n`),
         S.line(),
     ];
 }
@@ -115,7 +122,7 @@ function buildFooter(): Uint8Array[] {
 
 export function generateOrderInvoice(orderDetail: OrderDetail): Uint8Array {
     const parts: Uint8Array[] = [
-        ...buildHeader(),
+        ...buildHeader(orderDetail),
         ...buildOrderInfo(orderDetail),
         ...buildItemList(orderDetail.order_items),
         ...buildPaymentSection(orderDetail),

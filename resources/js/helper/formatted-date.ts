@@ -1,4 +1,4 @@
-export function formatDate(isoDateString: string): string {
+export function formatDate(isoDateString: string, showTime: boolean = false): string {
     if (!isoDateString) {
         return '-';
     }
@@ -10,6 +10,7 @@ export function formatDate(isoDateString: string): string {
             year: 'numeric',
             month: 'short',
             day: '2-digit',
+            ...(showTime ? { hour: '2-digit', minute: '2-digit' } : {}),
         }).format(date);
     } catch {
         return isoDateString;

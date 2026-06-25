@@ -10,6 +10,7 @@ export interface CartItemType {
 export type PaymentMethod = 'cash' | 'qris' | null;
 
 export interface CartStateType {
+    outlet_id: number | null;
     checkout_step: 1 | 2;
     customer_name: string;
     service_items: CartItemType[];
@@ -18,6 +19,7 @@ export interface CartStateType {
 }
 
 const initialState: CartStateType = {
+    outlet_id: null,
     checkout_step: 1,
     customer_name: '',
     service_items: [],
@@ -31,6 +33,7 @@ interface CartContextValue {
 }
 
 type CartAction =
+    | { type: 'SET_OUTLET_ID'; payload: number | null }
     | { type: 'SET_CHECKOUT_STEP'; payload: 1 | 2 }
     | { type: 'SET_ITEM'; payload: CartItemType }
     | { type: 'REMOVE_SERVICE_ITEM'; payload: { id: number } }
@@ -45,6 +48,10 @@ function cartReducer(state: CartStateType, action: CartAction): CartStateType {
     let newState: CartStateType;
 
     switch (action.type) {
+        case 'SET_OUTLET_ID':
+            newState = { ...state, outlet_id: action.payload };
+            break;
+
         case 'SET_CHECKOUT_STEP':
             newState = { ...state, checkout_step: action.payload };
             break;
