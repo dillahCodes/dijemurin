@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import type { Order } from '@/types/feature/order';
+import type { Order } from '@/types/feature/order/order';
 
 /**
  * 1. Local Types
@@ -111,7 +111,7 @@ function OrderTableRow({ order }: OrderTableRowProps) {
             <TableCell>
                 <OrderStatusBadge status={order.status} />
             </TableCell>
-            <TableCell className="text-muted-foreground">{displayDate(order.order_at)}</TableCell>
+            <TableCell className="text-muted-foreground">{displayDate(order.created_at)}</TableCell>
             <TableCell className="text-right font-semibold">{formatCurrency(order.total_price)}</TableCell>
         </TableRow>
     );

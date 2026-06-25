@@ -36,7 +36,7 @@ export default function SummaryCard({
         <Card
             onClick={handleClick}
             className={cn(
-                'group relative w-full overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-sidebar-border',
+                'group relative w-full overflow-hidden border-sidebar-border/70 p-0! shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-sidebar-border',
                 className,
                 {
                     'cursor-pointer': !!href,
@@ -46,22 +46,20 @@ export default function SummaryCard({
         >
             <div
                 className={cn(
-                    'absolute -top-8 -right-8 size-32 rounded-full opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-70',
+                    'absolute -top-8 -right-8 size-32 rounded-full opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60',
                     iconBg,
                 )}
             />
-            <CardContent className="relative z-10 flex h-full flex-col justify-between p-6">
-                <div className="flex flex-col gap-4">
-                    <div className={cn('flex size-12 items-center justify-center rounded-xl', iconBg)}>
-                        <Icon className={cn('size-6', iconColor)} />
-                    </div>
+            <CardContent className="relative z-10 flex items-center gap-3.5 p-4">
+                <div className={cn('flex size-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105', iconBg)}>
+                    <Icon className={cn('size-5', iconColor)} />
                 </div>
 
-                <div className="mt-4 flex flex-col gap-1">
-                    <span className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+                <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover:text-foreground/80 truncate">
                         {title}
                     </span>
-                    <span className="text-3xl font-bold tracking-tight text-foreground">
+                    <span className="text-xl font-bold tracking-tight text-foreground mt-0.5 truncate">
                         {type === 'currency'
                             ? new Intl.NumberFormat('id-ID', {
                                   style: 'currency',
@@ -74,7 +72,7 @@ export default function SummaryCard({
             </CardContent>
             <div
                 className={cn(
-                    'absolute bottom-0 left-0 h-1 w-0 flex-none transition-all duration-500 ease-out group-hover:w-full',
+                    'absolute bottom-0 left-0 h-0.5 w-0 flex-none transition-all duration-500 ease-out group-hover:w-full',
                     accentColor,
                 )}
             />

@@ -4,10 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { formatPrice } from '@/helper/formatted-price';
 import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
 import { useAppearance } from '@/hooks/use-appearance';
-import type { OrderStatusEnglish } from '@/types/feature/order';
-import { OrderStatusIndonesian } from '@/types/feature/order';
-import type { DashboardSectionProps } from './dashboard-section';
 import order from '@/routes/order';
+import type { OrderStatusEnglish } from '@/types/feature/order/order';
+import { OrderStatusIndonesian } from '@/types/feature/order/order';
+import type { DashboardSectionProps } from './dashboard-section';
 
 export type RevenueDataChart = {
     name: string;
