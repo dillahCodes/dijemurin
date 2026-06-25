@@ -1,7 +1,7 @@
 import { Activity } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 
 interface OrderPaymentProps {
     order: OrderDetail;
@@ -13,9 +13,9 @@ export function OrderPayment({ order }: OrderPaymentProps) {
     const isCashPayment = Boolean(payment && payment.method === 'cash');
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Informasi Pembayaran</CardTitle>
+        <Card className="pt-0">
+            <CardHeader className="border-b bg-muted/30 py-4">
+                <CardTitle className="text-base font-semibold">Informasi Pembayaran</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="flex justify-between">

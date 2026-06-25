@@ -13,7 +13,7 @@ import { generateOrderInvoice } from '@/helper/generate-order-invoice';
 import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
 import { useOrderTableActions } from '@/hooks/feature/order/use-order-table-actions';
 import { cn } from '@/lib/utils';
-import type { Order, OrderStatusIndonesian } from '@/types/feature/order';
+import type { Order, OrderStatusIndonesian } from '@/types/feature/order/order';
 import type { OrderPageProps } from './order-data-section';
 
 export function getStatusBadgeVariant(status: OrderStatusIndonesian): BadgeVariant {
@@ -69,9 +69,11 @@ function OrderTableHead() {
             <TableRow className="hover:bg-transparent">
                 <TableHead className="text-center text-xs">Order ID</TableHead>
                 <TableHead className="text-center text-xs">Pelanggan</TableHead>
+                <TableHead className="text-center text-xs">Outlet</TableHead>
                 <TableHead className="text-center text-xs">Metode Pembayaran</TableHead>
                 <TableHead className="text-center text-xs">Status</TableHead>
-                <TableHead className="text-center text-xs">Tanggal</TableHead>
+                <TableHead className="text-center text-xs">Tanggal Dibuat</TableHead>
+                <TableHead className="text-center text-xs">Terakhir Diubah</TableHead>
                 <TableHead className="text-center text-xs">Total</TableHead>
                 <TableHead className="text-center text-xs">Aksi</TableHead>
             </TableRow>
@@ -131,6 +133,7 @@ function OrderTableBody({ ordersData }: OrderTableBodyProps) {
                             {order.order_code}
                         </TableCell>
                         <TableCell className="text-center font-medium">{order.customer_name}</TableCell>
+                        <TableCell className="text-center text-xs">{order.outlet?.name ?? '-'}</TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground uppercase">
                             {order.payment_method}
                         </TableCell>
@@ -143,7 +146,10 @@ function OrderTableBody({ ordersData }: OrderTableBodyProps) {
                             </Badge>
                         </TableCell>
                         <TableCell className="text-center whitespace-nowrap text-muted-foreground">
-                            {formatDate(order.order_at)}
+                            {formatDate(order.created_at)}
+                        </TableCell>
+                        <TableCell className="text-center whitespace-nowrap text-muted-foreground">
+                            {formatDate(order.updated_at)}
                         </TableCell>
                         <TableCell className="text-center font-semibold">{formatPrice(order.total_price)}</TableCell>
                         <TableCell className="flex items-center justify-center gap-2">
