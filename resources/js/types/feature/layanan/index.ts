@@ -14,12 +14,25 @@ export interface ServiceDetail extends Service {
     outlet: Outlet;
 }
 
+export enum ServiceTimeType {
+    MINUTE = 'minute',
+    HOUR = 'hour',
+    DAY = 'day',
+}
+
+export enum ServiceTimeTypeIndonesian {
+    MINUTE = 'menit',
+    HOUR = 'jam',
+    DAY = 'hari',
+}
+
 export interface ServiceItem {
     id: number;
 
     name: string;
     description: string;
-    time: string;
+    time_number: number;
+    time_type: ServiceTimeType;
     price: number;
     unit: string;
 
