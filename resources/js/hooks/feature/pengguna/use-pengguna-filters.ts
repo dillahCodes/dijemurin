@@ -1,77 +1,135 @@
 import { router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import type { ChangeEvent, FormEvent, SubmitEvent } from 'react';
 import type { PenggunaFilterPageProps, PenggunaSectionProps } from '@/components/feature/pengguna/pengguna-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import pengguna from '@/routes/pengguna';
+import type { Outlet } from '@/types/feature/outlet/outlet';
+
+const FILTER_KEYS: (keyof PenggunaFilterPageProps)[] = ['search', 'role', 'status', 'outletIdSelected', 'outletSearch'];
+
+const FETCH_COMMON = { preserveState: true, preserveScroll: true };
+
+const FETCH_ONLY_USERS = { ...FETCH_COMMON, only: ['users', 'outlets', 'outletSelected'] };
+
+const FETCH_ONLY_OUTLETS = { ...FETCH_COMMON, only: ['outlets'] };
+
+function normalizeFilterValue(value: string) {
+    return value === 'all' ? undefined : value;
+}
 
 export function usePenggunaFilters() {
     const { filters } = usePage<PenggunaSectionProps>().props;
-    const [searchParam, setSearchParam] = useState<PenggunaFilterPageProps>(filters);
+
+    const [filterState, setFilterState] = useState<PenggunaFilterPageProps>(filters);
     const [resetKey, setResetKey] = useState(0);
+
+    const filterStateRef = useRef(filterState);
+    filterStateRef.current = filterState;
+
+    const shouldDisableSearch = !filterState.search && !filterState.outletIdSelected;
+
+    const updateFilterState = (params: Partial<PenggunaFilterPageProps>) => {
+        setFilterState((prev) => ({
+            ...prev,
+            ...params,
+        }));
+    };
+
+    const getCurrentFilters = (params: Partial<PenggunaFilterPageProps> = {}): PenggunaFilterPageProps => ({
+        ...filters,
+        ...filterStateRef.current,
+        ...params,
+    });
+
+    const fetchUsers = (params: PenggunaFilterPageProps) => {
+        router.get(pengguna.index().url, params, FETCH_ONLY_USERS);
+    };
+
+    const fetchOutlets = (params: PenggunaFilterPageProps) => {
+        router.get(pengguna.index().url, params, FETCH_ONLY_OUTLETS);
+    };
 
     const handleFetchComboboxOutlet = useDebouncedCallback((value: string) => {
         if (value.length < 3) {
             return;
         }
 
-        setSearchParam((prev) => ({ ...prev, outletIdSelected: undefined }));
+        updateFilterState({
+            outletIdSelected: undefined,
+            outletSearch: value,
+        });
 
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['outlets'] };
-        router.get(pengguna.index().url, { outletSearch: value }, fetchConfig);
+        fetchOutlets(
+            getCurrentFilters({
+                outletIdSelected: undefined,
+                outletSearch: value,
+            }),
+        );
     }, 300);
 
     const handleSelectOutlet = (outlet: Outlet) => {
-        setSearchParam((prev) => ({ ...prev, outletIdSelected: outlet.id, outletSearch: undefined }));
+        updateFilterState({
+            outletIdSelected: outlet.id,
+            outletSearch: undefined,
+        });
     };
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+        updateFilterState({
+            search: e.target.value,
+        });
+    };
+
+    const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
-        router.get(pengguna.index().url, searchParam, fetchConfig);
-    };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchParam((prev) => ({ ...prev, search: e.target.value }));
+        fetchUsers(getCurrentFilters());
     };
 
     const handleFilterRoleStatus = (role: string, status: string) => {
-        const roleValue = role === 'all' ? undefined : role;
-        const statusValue = status === 'all' ? undefined : status;
+        const nextFilters = getCurrentFilters({
+            role: normalizeFilterValue(role),
+            status: normalizeFilterValue(status),
+        });
 
-        setSearchParam((prev) => ({ ...prev, role: roleValue ?? '', status: statusValue ?? '' }));
-
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
-        router.get(pengguna.index().url, { ...searchParam, role: roleValue, status: statusValue }, fetchConfig);
+        setFilterState(nextFilters);
+        fetchUsers(nextFilters);
     };
 
     const handleClearSearch = () => {
-        const searchParamsKeys = ['search', 'role', 'status', 'outletIdSelected', 'outletSearch'];
-        const searchParams = createUndefinedObject(searchParamsKeys);
+        const emptyFilters = createUndefinedObject(FILTER_KEYS);
 
-        setSearchParam(searchParams);
+        setFilterState(emptyFilters);
         setResetKey((prev) => prev + 1);
 
-        const fetchConfig = { preserveState: true, preserveScroll: true, only: ['users', 'outlets', 'outletSelected'] };
-        router.get(pengguna.index().url, searchParams, fetchConfig);
-    };
-
-    const conditions = {
-        shouldDisableSearch: !searchParam.search && !searchParam.outletIdSelected,
+        fetchUsers(emptyFilters);
     };
 
     return {
         data: {
-            filterState: searchParam,
+            filterState,
             resetKey,
-            conditions,
+            conditions: {
+                shouldDisableSearch,
+            },
         },
         handlers: {
-            searchHandle: { handleSubmit, handleChange: handleSearchChange },
-            filterHandle: { handleFilterRoleStatus },
-            comboboxHandle: { handleFetchComboboxOutlet, handleSelectOutlet },
-            clearHandle: { handleClearSearch },
+            searchHandle: {
+                handleSubmit,
+                handleChange: handleSearchChange,
+            },
+            filterHandle: {
+                handleFilterRoleStatus,
+            },
+            comboboxHandle: {
+                handleFetchComboboxOutlet,
+                handleSelectOutlet,
+            },
+            clearHandle: {
+                handleClearSearch,
+            },
         },
     };
 }

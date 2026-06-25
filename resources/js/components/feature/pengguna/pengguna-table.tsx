@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import pengguna from '@/routes/pengguna';
 import type { User } from '@/types/feature/user/user';
 import { UserRole, UserStatusIndonesian } from '@/types/feature/user/user';
 import type { PenggunaSectionProps } from './pengguna-section';
-import pengguna from '@/routes/pengguna';
 
 export function getStatusBadgeVariant(status: UserStatusIndonesian): BadgeVariant {
     switch (status) {
