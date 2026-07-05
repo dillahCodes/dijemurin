@@ -1,6 +1,6 @@
 import { router, usePage } from '@inertiajs/react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { useRef, useState } from 'react';
-import type { ChangeEvent, FormEvent, SubmitEvent } from 'react';
 import type { PenggunaFilterPageProps, PenggunaSectionProps } from '@/components/feature/pengguna/pengguna-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';

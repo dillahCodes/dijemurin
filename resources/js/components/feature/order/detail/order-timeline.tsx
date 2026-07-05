@@ -1,5 +1,5 @@
-import { Activity } from 'react';
 import { Check } from 'lucide-react';
+import { Activity } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';

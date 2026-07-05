@@ -37,6 +37,7 @@ export function TimeField({ valueNumber, valueType, errorNumber, errorType, onCh
                     <SelectContent className="z-2000">
                         {Object.entries(ServiceTimeTypeIndonesian).map(([key, label]) => {
                             const val = ServiceTimeType[key as keyof typeof ServiceTimeType];
+
                             return (
                                 <SelectItem key={val} value={val}>
                                     {label}

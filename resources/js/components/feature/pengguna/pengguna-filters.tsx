@@ -1,3 +1,6 @@
+import { usePage } from '@inertiajs/react';
+import { Filter, RotateCcw, Search, Store, X } from 'lucide-react';
+import { Activity, createContext, useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Combobox,
@@ -8,7 +11,6 @@ import {
     ComboboxList,
 } from '@/components/ui/combobox';
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { useModal } from '@/components/ui/modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,9 +19,6 @@ import { usePenggunaFilters } from '@/hooks/feature/pengguna/use-pengguna-filter
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { User } from '@/types/feature/user/user';
 import { UserRole } from '@/types/feature/user/user';
-import { usePage } from '@inertiajs/react';
-import { Filter, RotateCcw, Search, Store, X } from 'lucide-react';
-import { Activity, createContext, useContext, useState } from 'react';
 import type { PenggunaSectionProps } from './pengguna-section';
 
 type PenggunaFilterContextType = ReturnType<typeof usePenggunaFilters>;

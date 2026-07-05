@@ -50,7 +50,6 @@ const FETCH_ONLY_ALL = {
 };
 
 type DateFilter = Pick<OrderFilterPageProps, 'startDate' | 'endDate'>;
-type DateFilterName = keyof DateFilter;
 
 function normalizeSelectValue(value: string) {
     return value === 'all' ? undefined : value;
