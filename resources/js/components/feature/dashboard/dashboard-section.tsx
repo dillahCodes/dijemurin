@@ -1,7 +1,7 @@
-import { UserRole } from '@/types/feature/user/user';
-import type { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';
 import { usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
+import type { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';
+import { UserRole } from '@/types/feature/user/user';
 import { AdminDashboardSection } from './admin/admin-dashboard-section';
 import { CashierDashboardSection } from './cashier/cashier-dashboard-section';
 import { OperatorDashboardSection } from './operator/operator-dashboard-section';
@@ -112,6 +112,7 @@ export function DashboardSection() {
     const role = auth.user?.role as UserRole;
 
     const Section = (role ? DASHBOARD_ROLE_CONTENT[role] : null) as ReactNode;
+
     return <>{Section}</>;
 }
 

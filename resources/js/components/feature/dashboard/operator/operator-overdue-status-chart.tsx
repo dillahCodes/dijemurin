@@ -1,14 +1,14 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
-import { useOperatorCharts } from '@/hooks/feature/dashboard/use-operator-charts';
 import { router } from '@inertiajs/react';
-import orderRoutes from '@/routes/order';
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useOperatorCharts } from '@/hooks/feature/dashboard/use-operator-charts';
+import { useAppearance } from '@/hooks/use-appearance';
+import orderRoutes from '@/routes/order';
 
 const CHART_CONFIG = {
     colors: {
         almostOverdue: { light: '#ea580c', dark: '#fb923c' }, // Orange
-        overdue: { light: '#e11d48', dark: '#fb7185' },       // Rose
+        overdue: { light: '#e11d48', dark: '#fb7185' }, // Rose
         tick: { light: '#71717a', dark: '#a1a1aa' },
         tooltipBg: { light: '#ffffff', dark: '#09090b' },
         tooltipText: { light: '#09090b', dark: '#f4f4f5' },
@@ -45,25 +45,24 @@ function OverdueBarChart({ almostOverdueCount, overdueCount, height, isDark }: O
     ];
 
     const handleClickBar = (dataObj: any) => {
-        if (!dataObj) return;
-        router.get(orderRoutes.index({
-            query: {
-                timeStatus: dataObj.valueKey,
-            }
-        }).url);
+        if (!dataObj) {
+            return;
+        }
+
+        router.get(
+            orderRoutes.index({
+                query: {
+                    timeStatus: dataObj.valueKey,
+                },
+            }).url,
+        );
     };
 
     return (
         <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
             <BarChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={BORDER} opacity={0.5} />
-                <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: TICK }}
-                    dy={10}
-                />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: TICK }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: TICK }} allowDecimals={false} />
                 <Tooltip
                     formatter={(value: any) => [value, 'Total']}
@@ -109,9 +108,7 @@ export function OperatorOverdueStatusChart() {
         <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-3">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Status Keterlambatan</CardTitle>
-                <CardDescription>
-                    {totalTracked} order perlu diperhatikan terkait estimasi waktu pengerjaan
-                </CardDescription>
+                <CardDescription>{totalTracked} order perlu diperhatikan terkait estimasi waktu pengerjaan</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pt-0">
                 <OverdueBarChart

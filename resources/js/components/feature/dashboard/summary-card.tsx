@@ -51,15 +51,20 @@ export default function SummaryCard({
                 )}
             />
             <CardContent className="relative z-10 flex items-center gap-3.5 p-4">
-                <div className={cn('flex size-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105', iconBg)}>
+                <div
+                    className={cn(
+                        'flex size-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105',
+                        iconBg,
+                    )}
+                >
                     <Icon className={cn('size-5', iconColor)} />
                 </div>
 
-                <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover:text-foreground/80 truncate">
+                <div className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate text-xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover:text-foreground/80">
                         {title}
                     </span>
-                    <span className="text-xl font-bold tracking-tight text-foreground mt-0.5 truncate">
+                    <span className="mt-0.5 truncate text-xl font-bold tracking-tight text-foreground">
                         {type === 'currency'
                             ? new Intl.NumberFormat('id-ID', {
                                   style: 'currency',

@@ -1,17 +1,17 @@
+import { router } from '@inertiajs/react';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
 import { useCashierCharts } from '@/hooks/feature/dashboard/use-cashier-charts';
-import type { PaymentMethodData } from '../dashboard-section';
-import { router } from '@inertiajs/react';
+import { useAppearance } from '@/hooks/use-appearance';
 import orderRoutes from '@/routes/order';
 import { OrderDateTypeEnglish } from '@/types/feature/order/order';
+import type { PaymentMethodData } from '../dashboard-section';
 
 type TooltipValue = number | string | readonly (number | string)[] | undefined;
 
 const PIE_CHART_STATUS_CONFIG: Record<string, { light: string; dark: string }> = {
-    cash: { light: '#d97706', dark: '#fbbf24' },   // Cash (Amber)
-    qris: { light: '#4f46e5', dark: '#818cf8' },   // QRIS (Indigo)
+    cash: { light: '#d97706', dark: '#fbbf24' }, // Cash (Amber)
+    qris: { light: '#4f46e5', dark: '#818cf8' }, // QRIS (Indigo)
 };
 
 const PIE_CHART_CONFIG = {
@@ -52,14 +52,16 @@ function PaymentMethodPieChart({ data, height, isDark }: PaymentMethodPieChartPr
         const day = String(today.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
 
-        router.get(orderRoutes.index({
-            query: {
-                dateType: OrderDateTypeEnglish.STATUS_CHANGED,
-                startDate: todayStr,
-                endDate: todayStr,
-                paymentMethod: paymentMethod,
-            }
-        }).url);
+        router.get(
+            orderRoutes.index({
+                query: {
+                    dateType: OrderDateTypeEnglish.STATUS_CHANGED,
+                    startDate: todayStr,
+                    endDate: todayStr,
+                    paymentMethod: paymentMethod,
+                },
+            }).url,
+        );
     };
 
     return (

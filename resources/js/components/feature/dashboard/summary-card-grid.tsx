@@ -1,8 +1,9 @@
+import type { LucideIcon } from 'lucide-react';
+import { Zap, BarChart3, Building2 } from 'lucide-react';
+import { Activity } from 'react';
 import SummaryCard from '@/components/feature/dashboard/summary-card';
 import { useSummaryCardGrid } from '@/hooks/feature/dashboard/use-summary-card-grid';
 import { cn } from '@/lib/utils';
-import { LucideIcon, Zap, BarChart3, Building2 } from 'lucide-react';
-import { Activity } from 'react';
 
 interface CardData {
     title: string;
@@ -49,7 +50,7 @@ export function SummaryCardGrid() {
             </Activity>
 
             <Activity mode={summaryCards.length > 0 ? 'visible' : 'hidden'}>
-                <CardSection icon={BarChart3} iconColor="text-blue-500" label="Ringkasan Hari Ini" cards={summaryCards} />
+                <CardSection icon={BarChart3} iconColor="text-blue-500" label="Ringkasan" cards={summaryCards} />
             </Activity>
 
             <Activity mode={overviewCards.length > 0 ? 'visible' : 'hidden'}>

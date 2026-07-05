@@ -1,10 +1,3 @@
-import { DashboardPageProps } from '@/components/feature/dashboard/dashboard-section';
-import orderRoutes from '@/routes/order';
-import outlet from '@/routes/outlet';
-import pengguna from '@/routes/pengguna';
-import { OrderDateTypeEnglish, OrderStatusEnglish, OrderTimeStatusEnglish } from '@/types/feature/order/order';
-import { OutletStatusOption } from '@/types/feature/outlet/outlet';
-import { UserRole, UserStatus } from '@/types/feature/user/user';
 import { usePage } from '@inertiajs/react';
 import {
     AlertTriangle,
@@ -21,6 +14,13 @@ import {
     Users,
     XCircle,
 } from 'lucide-react';
+import type { DashboardPageProps } from '@/components/feature/dashboard/dashboard-section';
+import orderRoutes from '@/routes/order';
+import outlet from '@/routes/outlet';
+import pengguna from '@/routes/pengguna';
+import { OrderDateTypeEnglish, OrderStatusEnglish, OrderTimeStatusEnglish } from '@/types/feature/order/order';
+import { OutletStatusOption } from '@/types/feature/outlet/outlet';
+import { UserRole, UserStatus } from '@/types/feature/user/user';
 
 const formatLocalDateString = (date: Date) => {
     const year = date.getFullYear();

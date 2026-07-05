@@ -1,9 +1,9 @@
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatPrice } from '@/helper/formatted-price';
-import { useAppearance } from '@/hooks/use-appearance';
 import { useAdminCharts } from '@/hooks/feature/dashboard/use-admin-charts';
+import { useAppearance } from '@/hooks/use-appearance';
 import type { MonthRevenueTrendData } from '../dashboard-section';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type TooltipValue = number | string | readonly (number | string)[] | undefined;
 
@@ -32,7 +32,9 @@ function RevenueTrendAreaChart({ data, height, isDark }: RevenueTrendAreaChartPr
     const TOOLTIP_TEXT = isDark ? LINE_CHART_CONFIG.colors.tooltipText.dark : LINE_CHART_CONFIG.colors.tooltipText.light;
     const BORDER = isDark ? LINE_CHART_CONFIG.colors.border.dark : LINE_CHART_CONFIG.colors.border.light;
     const LINE_COLOR = isDark ? LINE_CHART_CONFIG.colors.line.dark : LINE_CHART_CONFIG.colors.line.light;
-    const GRADIENT_START = isDark ? LINE_CHART_CONFIG.colors.gradientStart.dark : LINE_CHART_CONFIG.colors.gradientStart.light;
+    const GRADIENT_START = isDark
+        ? LINE_CHART_CONFIG.colors.gradientStart.dark
+        : LINE_CHART_CONFIG.colors.gradientStart.light;
     const GRADIENT_END = isDark ? LINE_CHART_CONFIG.colors.gradientEnd.dark : LINE_CHART_CONFIG.colors.gradientEnd.light;
 
     return (

@@ -1,10 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
-import { useAdminCharts } from '@/hooks/feature/dashboard/use-admin-charts';
-import type { OrderMovementData } from '../dashboard-section';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
-type TooltipValue = number | string | readonly (number | string)[] | undefined;
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAdminCharts } from '@/hooks/feature/dashboard/use-admin-charts';
+import { useAppearance } from '@/hooks/use-appearance';
+import type { OrderMovementData } from '../dashboard-section';
 
 const BAR_CHART_CONFIG = {
     colors: {
