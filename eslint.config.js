@@ -87,6 +87,7 @@ export default [
     },
     {
         ignores: [
+            '.browser/**',
             'vendor',
             'node_modules',
             'public',
