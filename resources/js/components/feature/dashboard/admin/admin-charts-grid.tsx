@@ -9,7 +9,7 @@ export function AdminChartsGrid() {
                 <TrendingUp className="size-4 text-emerald-500" />
                 <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Statistik</h2>
             </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <AdminRevenueTrend />
                 <AdminOrderMovementChart />
             </div>

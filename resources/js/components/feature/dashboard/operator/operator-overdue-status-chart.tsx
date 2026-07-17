@@ -105,7 +105,7 @@ export function OperatorOverdueStatusChart() {
     const totalTracked = almostOverdueCount + overdueCount;
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-3">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-3">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Status Keterlambatan</CardTitle>
                 <CardDescription>{totalTracked} order perlu diperhatikan terkait estimasi waktu pengerjaan</CardDescription>

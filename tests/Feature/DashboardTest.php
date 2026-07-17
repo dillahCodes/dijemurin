@@ -1,10 +1,11 @@
 <?php
- 
+
 use App\Enums\Order\OrderStatus;
 use App\Enums\Outlet\OutletStatus;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Models\Order\Order;
+use App\Models\Order\OrderStatusLog;
 use App\Models\Outlet\Outlet;
 use App\Models\User;
 use Carbon\Carbon;
@@ -25,12 +26,12 @@ test('authenticated users can visit the dashboard', function () {
 
 test('admin dashboard provides correct month chart props with data isolation', function () {
     // 1. Create two outlets
-    $outlet1 = Outlet::create([
+    $outlet1 = Outlet::factory()->create([
         'name' => 'Outlet 1',
         'status' => OutletStatus::ACTIVE,
     ]);
 
-    $outlet2 = Outlet::create([
+    $outlet2 = Outlet::factory()->create([
         'name' => 'Outlet 2',
         'status' => OutletStatus::ACTIVE,
     ]);
@@ -49,7 +50,7 @@ test('admin dashboard provides correct month chart props with data isolation', f
     Carbon::setTestNow('2026-06-22 10:00:00');
 
     // 4. Create an order in Outlet 1 that is completed
-    $order1 = Order::create([
+    $order1 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-1',
         'customer_name' => 'John',
@@ -60,7 +61,7 @@ test('admin dashboard provides correct month chart props with data isolation', f
     ]);
 
     // 5. Create an order in Outlet 2 (should not be counted for Outlet 1)
-    $order2 = Order::create([
+    $order2 = Order::forceCreate([
         'outlet_id' => $outlet2->id,
         'order_code' => 'ORD-2',
         'customer_name' => 'Jane',
@@ -109,12 +110,12 @@ test('admin dashboard provides correct month chart props with data isolation', f
 
 test('cashier dashboard provides correct today hourly and payment method charts with data isolation', function () {
     // 1. Create two outlets
-    $outlet1 = Outlet::create([
+    $outlet1 = Outlet::factory()->create([
         'name' => 'Outlet 1',
         'status' => OutletStatus::ACTIVE,
     ]);
 
-    $outlet2 = Outlet::create([
+    $outlet2 = Outlet::factory()->create([
         'name' => 'Outlet 2',
         'status' => OutletStatus::ACTIVE,
     ]);
@@ -134,7 +135,7 @@ test('cashier dashboard provides correct today hourly and payment method charts 
 
     // 4. Create orders in Outlet 1
     // Order 1: Incoming today at 08:30:00 (not completed, pending)
-    $order1 = Order::create([
+    $order1 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-1',
         'customer_name' => 'John',
@@ -144,7 +145,7 @@ test('cashier dashboard provides correct today hourly and payment method charts 
     ]);
 
     // Order 2: Completed today at 09:30:00, paid via CASH (status DONE)
-    $order2 = Order::create([
+    $order2 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-2',
         'customer_name' => 'Mary',
@@ -160,7 +161,7 @@ test('cashier dashboard provides correct today hourly and payment method charts 
     ]);
 
     // Order 3: Completed today at 09:45:00, paid via QRIS (status PICKED_UP)
-    $order3 = Order::create([
+    $order3 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-3',
         'customer_name' => 'Bob',
@@ -174,7 +175,7 @@ test('cashier dashboard provides correct today hourly and payment method charts 
     ]);
 
     // Order 4: Cancelled order today at 09:00:00 (should not be counted in hourly order list)
-    $order4 = Order::create([
+    $order4 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-4',
         'customer_name' => 'David',
@@ -184,7 +185,7 @@ test('cashier dashboard provides correct today hourly and payment method charts 
     ]);
 
     // Order 5: Order in Outlet 2 (should not be counted for Outlet 1)
-    $order5 = Order::create([
+    $order5 = Order::forceCreate([
         'outlet_id' => $outlet2->id,
         'order_code' => 'ORD-5',
         'customer_name' => 'Jane',
@@ -237,12 +238,12 @@ test('cashier dashboard provides correct today hourly and payment method charts 
 
 test('operator dashboard provides correct today hourly processed vs completed chart with data isolation', function () {
     // 1. Create two outlets
-    $outlet1 = Outlet::create([
+    $outlet1 = Outlet::factory()->create([
         'name' => 'Outlet 1',
         'status' => OutletStatus::ACTIVE,
     ]);
 
-    $outlet2 = Outlet::create([
+    $outlet2 = Outlet::factory()->create([
         'name' => 'Outlet 2',
         'status' => OutletStatus::ACTIVE,
     ]);
@@ -262,7 +263,7 @@ test('operator dashboard provides correct today hourly processed vs completed ch
 
     // 4. Create orders in Outlet 1
     // Order 1: Processed today at 08:30:00 (via status log)
-    $order1 = Order::create([
+    $order1 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-1',
         'customer_name' => 'John',
@@ -271,7 +272,7 @@ test('operator dashboard provides correct today hourly processed vs completed ch
         'created_at' => '2026-06-22 08:00:00',
     ]);
     // Log PROCESS status change at 08:30:00
-    OrderStatusLog::create([
+    OrderStatusLog::forceCreate([
         'order_id' => $order1->id,
         'user_id' => $operator->id,
         'from_status' => OrderStatus::PENDING,
@@ -280,7 +281,7 @@ test('operator dashboard provides correct today hourly processed vs completed ch
     ]);
 
     // Order 2: Completed today at 09:30:00 (via completed_at on order)
-    $order2 = Order::create([
+    $order2 = Order::forceCreate([
         'outlet_id' => $outlet1->id,
         'order_code' => 'ORD-2',
         'customer_name' => 'Mary',
@@ -290,7 +291,7 @@ test('operator dashboard provides correct today hourly processed vs completed ch
         'completed_at' => '2026-06-22 09:30:00',
     ]);
     // Log PROCESS status change at 09:10:00
-    OrderStatusLog::create([
+    OrderStatusLog::forceCreate([
         'order_id' => $order2->id,
         'user_id' => $operator->id,
         'from_status' => OrderStatus::PENDING,
@@ -299,7 +300,7 @@ test('operator dashboard provides correct today hourly processed vs completed ch
     ]);
 
     // Order 3: Order in Outlet 2 (should not be counted for Outlet 1)
-    $order3 = Order::create([
+    $order3 = Order::forceCreate([
         'outlet_id' => $outlet2->id,
         'order_code' => 'ORD-3',
         'customer_name' => 'Jane',
@@ -308,9 +309,9 @@ test('operator dashboard provides correct today hourly processed vs completed ch
         'created_at' => '2026-06-22 08:00:00',
         'completed_at' => '2026-06-22 09:25:00',
     ]);
-    OrderStatusLog::create([
+    OrderStatusLog::forceCreate([
         'order_id' => $order3->id,
-        'user_id' => 999,
+        'user_id' => $operator->id,
         'from_status' => OrderStatus::PENDING,
         'to_status' => OrderStatus::PROCESS,
         'created_at' => '2026-06-22 09:10:00',

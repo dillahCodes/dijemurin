@@ -63,7 +63,7 @@ export function CashierHourlyOrdersChart() {
     const totalOrders = todayHourlyOrders.reduce((acc, item) => acc + item.count, 0);
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Order Masuk per Jam Hari Ini</CardTitle>
                 <CardDescription>Total {totalOrders} order masuk hari ini</CardDescription>

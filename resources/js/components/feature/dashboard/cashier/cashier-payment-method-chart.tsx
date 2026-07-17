@@ -113,7 +113,7 @@ export function CashierPaymentMethodChart() {
     const totalCompletedToday = todayPaymentMethods.reduce((acc, item) => acc + item.value, 0);
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-3">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-3">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Cash vs QRIS Hari Ini</CardTitle>
                 <CardDescription>

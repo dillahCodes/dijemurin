@@ -74,7 +74,7 @@ export function OperatorHourlyMovementChart() {
     const totalCompleted = processedVsCompletedData.reduce((acc, item) => acc + item.selesai, 0);
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Order Diproses vs Selesai Hari Ini</CardTitle>
                 <CardDescription>

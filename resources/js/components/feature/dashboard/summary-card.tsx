@@ -1,6 +1,8 @@
 import { router } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
+import { Activity } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatPrice } from '@/helper/formatted-price';
 import { cn } from '@/lib/utils';
 
 interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,6 +14,7 @@ interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
     iconBg?: string;
     accentColor?: string;
     href?: string;
+    description?: string;
 }
 
 export default function SummaryCard({
@@ -24,6 +27,7 @@ export default function SummaryCard({
     accentColor = 'bg-primary',
     className,
     href,
+    description,
     ...props
 }: SummaryCardProps) {
     const handleClick = () => {
@@ -65,14 +69,11 @@ export default function SummaryCard({
                         {title}
                     </span>
                     <span className="mt-0.5 truncate text-xl font-bold tracking-tight text-foreground">
-                        {type === 'currency'
-                            ? new Intl.NumberFormat('id-ID', {
-                                  style: 'currency',
-                                  currency: 'IDR',
-                                  minimumFractionDigits: 0,
-                              }).format(count as number)
-                            : count}
+                        {type === 'currency' ? formatPrice(count as number) : count}
                     </span>
+                    <Activity mode={description ? 'visible' : 'hidden'}>
+                        <span className="mt-1 line-clamp-2 text-[11px] text-muted-foreground">{description}</span>
+                    </Activity>
                 </div>
             </CardContent>
             <div

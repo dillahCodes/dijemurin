@@ -7,11 +7,15 @@ export function useSuperAdminCharts() {
     const revenueTrendData = chartMonthRevenueTrend ?? [];
     const orderStatusData = chartMonthOrderStatuses ?? [];
 
-    const totalMonthRevenue = revenueTrendData.reduce((acc, item) => acc + item.total, 0);
+    const totalGrossRevenue = revenueTrendData.reduce((acc, item) => acc + item.grossRevenue, 0);
+    const totalLoss = revenueTrendData.reduce((acc, item) => acc + item.loss, 0);
+    const totalNetRevenue = totalGrossRevenue - totalLoss;
 
     return {
         revenueTrendData,
         orderStatusData,
-        totalMonthRevenue,
+        totalGrossRevenue,
+        totalLoss,
+        totalNetRevenue,
     };
 }
