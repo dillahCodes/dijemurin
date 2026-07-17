@@ -1,1 +1,0 @@
-var e=function(e){return e.ACTIVE=`active`,e.INACTIVE=`inactive`,e}({}),t=function(e){return e.ACTIVE=`Aktif`,e.INACTIVE=`Tidak Aktif`,e}({});export{t as n,e as t};

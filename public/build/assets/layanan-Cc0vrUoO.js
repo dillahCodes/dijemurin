@@ -1,1 +1,0 @@
-var e=function(e){return e.MINUTE=`minute`,e.HOUR=`hour`,e.DAY=`day`,e}({}),t=function(e){return e.MINUTE=`menit`,e.HOUR=`jam`,e.DAY=`hari`,e}({});export{t as n,e as t};
