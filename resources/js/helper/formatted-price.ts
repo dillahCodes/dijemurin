@@ -5,3 +5,9 @@ export const formatPrice = (price: number) => {
         minimumFractionDigits: 0,
     }).format(price);
 };
+
+export const parseRawPrice = (value: string): number => {
+    const rawValue = value.replace(/\D/g, '');
+
+    return rawValue === '' ? 0 : parseInt(rawValue, 10);
+};

@@ -19,3 +19,4 @@ require __DIR__.'/order.php';
 require __DIR__.'/service.php';
 require __DIR__.'/user.php';
 require __DIR__.'/outlet.php';
+require __DIR__.'/accident.php';

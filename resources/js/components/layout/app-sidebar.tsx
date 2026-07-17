@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { FileText, LayoutGrid, ShoppingBag, Store, Users, WashingMachine } from 'lucide-react';
+import { AlertTriangle, FileText, LayoutGrid, ShoppingBag, Store, Users, WashingMachine } from 'lucide-react';
 import AppLogo from '@/components/layout/app-logo';
 import { NavMain } from '@/components/layout/nav-main';
 import { NavUser } from '@/components/layout/nav-user';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useNavItems } from '@/hooks/use-nav-items';
 import { dashboard, laporan } from '@/routes';
+import accidents from '@/routes/accidents';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
 import outlet from '@/routes/outlet';
@@ -39,6 +40,12 @@ const mainNavItems: NavItem[] = [
         href: layanan.index(),
         icon: WashingMachine,
         role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER],
+    },
+    {
+        title: 'Insiden',
+        href: accidents.index(),
+        icon: AlertTriangle,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Pengguna',
