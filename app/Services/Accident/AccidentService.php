@@ -176,6 +176,7 @@ class AccidentService
 
         if (empty($dirty)) {
             $accident->save();
+
             return;
         }
 
@@ -194,8 +195,8 @@ class AccidentService
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'user_id' => $userId,
-                ]);
-            }
+            ]);
+        }
 
         $accident->save();
     }

@@ -76,4 +76,3 @@ class AccidentStatsService
             ->toArray();
     }
 }
-

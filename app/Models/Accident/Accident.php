@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
-#[Fillable(['outlet_id','order_id','reporter_id','resolver_id','description','status','resolved_at'])]
+#[Fillable(['outlet_id', 'order_id', 'reporter_id', 'resolver_id', 'description', 'status', 'resolved_at'])]
 class Accident extends Model
 {
     use HasFactory;

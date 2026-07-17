@@ -7,7 +7,6 @@ use App\Enums\Accident\AccidentStatus;
 use App\Enums\Accident\AccidentType;
 use App\Enums\User\UserRole;
 use App\Models\Order\Order;
-use App\Models\Order\OrderItem;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

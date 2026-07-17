@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Accident;
 
+use App\Enums\Accident\AccidentCompensationType;
 use App\Enums\Accident\AccidentStatus;
 use App\Enums\Accident\AccidentType;
 use App\Enums\Order\OrderStatus;
@@ -10,7 +11,6 @@ use App\Enums\Service\ServiceTimeType;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Models\Accident\Accident;
-use App\Models\Accident\AccidentItem;
 use App\Models\Order\Order;
 use App\Models\Order\OrderItem;
 use App\Models\Outlet\Outlet;
@@ -264,7 +264,7 @@ class AccidentLogTest extends TestCase
                     'type' => $item->type->value,
                     'item_details' => 'Kemeja biru',
                     'description' => 'Sobek parah',
-                    'compensation_type' => \App\Enums\Accident\AccidentCompensationType::REFUND->value,
+                    'compensation_type' => AccidentCompensationType::REFUND->value,
                     'compensation_amount' => 50000,
                 ],
             ],
@@ -285,7 +285,7 @@ class AccidentLogTest extends TestCase
             'accident_item_id' => $item->id,
             'field_name' => 'compensation_type',
             'old_value' => null,
-            'new_value' => \App\Enums\Accident\AccidentCompensationType::REFUND->value,
+            'new_value' => AccidentCompensationType::REFUND->value,
         ]);
     }
 

@@ -20,7 +20,7 @@ class UniqueActiveAccidentItemRule implements ValidationRule
         }
 
         $exists = AccidentItem::where('order_item_id', $value)
-            ->whereHas('accident', fn($query) => $query->whereNotIn('status', [
+            ->whereHas('accident', fn ($query) => $query->whereNotIn('status', [
                 AccidentStatus::REJECTED->value,
                 AccidentStatus::CANCELLED->value,
             ]))

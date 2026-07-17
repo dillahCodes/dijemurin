@@ -7,8 +7,8 @@ use App\Enums\Accident\AccidentStatus;
 use App\Enums\Accident\AccidentType;
 use App\Rules\Accident\RoleCanUpdateAccidentFieldsRule;
 use App\Rules\Accident\RoleCanUpdateAccidentItemFieldsRule;
-use App\Rules\Accident\ValidAccidentStatusTransition;
 use App\Rules\Accident\ValidAccidentCompensationAmountRule;
+use App\Rules\Accident\ValidAccidentStatusTransition;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -84,7 +84,7 @@ class AccidentUpdateRequest extends FormRequest
                 'integer',
                 'required_if:items.*.compensation_type,refund,replacement,free_service,repair',
                 new RoleCanUpdateAccidentItemFieldsRule($user),
-                new ValidAccidentCompensationAmountRule(),
+                new ValidAccidentCompensationAmountRule,
             ],
         ];
     }
