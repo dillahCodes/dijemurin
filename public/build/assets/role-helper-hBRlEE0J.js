@@ -1,0 +1,1 @@
+var e={hasRole:(e,t)=>e.role===t,hasRoles:(e,t)=>t.includes(e.role)};export{e as t};
