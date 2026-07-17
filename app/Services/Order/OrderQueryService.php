@@ -2,14 +2,18 @@
 
 namespace App\Services\Order;
 
+use App\DTOs\Order\OrderComboboxFilterDTO;
 use App\DTOs\Order\OrderFilterDTO;
 use App\DTOs\Outlet\OutletComboboxFilterDTO;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Order\OrderTimeStatus;
 use App\Enums\User\UserRole;
+use App\Http\Resources\Order\OrderComboboxResource;
 use App\Http\Resources\Order\OrderDetailResource;
+use App\Http\Resources\Order\OrderItemComboboxResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Order\Order;
+use App\Models\Order\OrderItem;
 use Illuminate\Validation\ValidationException;
 
 class OrderQueryService
@@ -79,5 +83,40 @@ class OrderQueryService
         $order->load(['orderItems', 'payment', 'outlet', 'cashier', 'statusLogs.user']);
 
         return new OrderDetailResource($order);
+    }
+
+    /**
+     * Get orders for combobox selection, filtered by outlet and search query.
+     */
+    public static function getOrdersComboboxData(OrderComboboxFilterDTO $filter)
+    {
+        $hasSuperAdmin = auth()->user()?->hasRole(UserRole::SUPER_ADMIN) ?? false;
+        $outletIdSelected = $hasSuperAdmin ? $filter->outletId : auth()->user()->outlet_id;
+
+        $orders = Order::query()
+            ->forOutlet($outletIdSelected)
+            ->searchCode($filter->orderSearch)
+            ->latest()
+            ->paginate($filter->limit)
+            ->withQueryString();
+
+        return OrderComboboxResource::collection($orders);
+    }
+
+    /**
+     * Get order items for combobox selection, filtered by the selected order.
+     */
+    public static function getOrderItemsComboboxData(OrderComboboxFilterDTO $filter)
+    {
+        if (! $filter->orderIdSelected) {
+            return OrderItemComboboxResource::collection(collect([]));
+        }
+
+        $orderItems = OrderItem::query()
+            ->where('order_id', $filter->orderIdSelected)
+            ->paginate($filter->limit)
+            ->withQueryString();
+
+        return OrderItemComboboxResource::collection($orderItems);
     }
 }
