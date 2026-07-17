@@ -3,6 +3,7 @@
 namespace App\Models\Outlet;
 
 use App\Enums\Outlet\OutletStatus;
+use App\Models\Accident\Accident;
 use App\Models\Order\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -31,6 +32,11 @@ class Outlet extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function accidents(): HasMany
+    {
+        return $this->hasMany(Accident::class);
     }
 
     /**

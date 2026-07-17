@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
+use App\Models\Accident\Accident;
 use App\Models\Order\Order;
 use App\Models\Outlet\Outlet;
 use Database\Factories\UserFactory;
@@ -47,6 +48,16 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'cashier_id');
+    }
+
+    public function reportedAccidents(): HasMany
+    {
+        return $this->hasMany(Accident::class, 'reporter_id');
+    }
+
+    public function resolvedAccidents(): HasMany
+    {
+        return $this->hasMany(Accident::class, 'resolver_id');
     }
 
     /**
