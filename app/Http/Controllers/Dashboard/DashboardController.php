@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Enums\Payment\PaymentMethod;
 use App\Enums\User\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Dashboard\DashboardRevenueTrendResource;
+use App\Services\Accident\AccidentStatsService;
 use App\Services\Order\OrderStatsService;
 use App\Services\Outlet\OutletStatsService;
 use App\Services\Service\ServiceStatsService;
@@ -19,46 +21,6 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Old Dashboard Logic
-        |--------------------------------------------------------------------------
-        |
-        | Kode lama dashboard masih disimpan di sini, tetapi dinonaktifkan karena
-        | dashboard sekarang akan dirender berdasarkan role user.
-        |
-        */
-
-        /*
-        $filterOrder = OrderFilterDTO::fromRequestDashboard();
-        $orders = OrderQueryService::getOrdersData($filterOrder, null);
-
-        $todayOrderCount = OrderStatsService::getTodayOrderCount();
-        $processOrderCount = OrderStatsService::getProcessOrderCount();
-        $doneOrderCount = OrderStatsService::getDoneOrderCount();
-        $todayRevenue = OrderStatsService::getTodayRevenue();
-
-        $chartWeekRevenue = OrderStatsService::getChartWeekRevenue();
-        $chartMonthStatuses = OrderStatsService::getChartMonthStatuses();
-
-        $orderStatusOptions = OrderStatus::options();
-        $orderTransitionRules = OrderStatus::allowedRoleTransitions();
-
-        return Inertia::render('dashboard', [
-            'orders' => $orders,
-            'orderTransitionRules' => $orderTransitionRules,
-            'orderStatusOptions' => $orderStatusOptions,
-
-            'chartWeekRevenue' => $chartWeekRevenue,
-            'chartMonthStatuses' => $chartMonthStatuses,
-
-            'todayRevenue' => $todayRevenue,
-            'todayOrderCount' => $todayOrderCount,
-            'processOrderCount' => $processOrderCount,
-            'doneOrderCount' => $doneOrderCount,
-        ]);
-        */
-
         $user = $request->user();
 
         return match ($user->role) {
@@ -75,6 +37,13 @@ class DashboardController extends Controller
      */
     private function renderSuperAdminDashboard(Request $request)
     {
+        $thisMonthRevenue = OrderStatsService::getThisMonthRevenue();
+        $resolvedLoss = AccidentStatsService::getResolvedThisMonthLoss();
+
+        $revenueTrend = OrderStatsService::getChartMonthRevenueTrend();
+        $lossTrend = AccidentStatsService::getChartMonthLossTrend();
+        $chartMonthRevenueTrend = new DashboardRevenueTrendResource($revenueTrend, $lossTrend);
+
         return Inertia::render('dashboard', [
             'dashboardRole' => UserRole::SUPER_ADMIN->value,
             'stats' => [
@@ -83,15 +52,19 @@ class DashboardController extends Controller
                 'almostOverdueOrdersAllOutlets' => OrderStatsService::getAlmostOverdueCount(),
                 'overdueOrdersAllOutlets' => OrderStatsService::getOverdueCount(),
                 'todayRevenueAllOutlets' => OrderStatsService::getTodayRevenue(),
-                'thisMonthRevenueAllOutlets' => OrderStatsService::getThisMonthRevenue(),
+                'thisMonthRevenueAllOutlets' => $thisMonthRevenue,
+                'thisMonthNetRevenueAllOutlets' => $thisMonthRevenue - $resolvedLoss,
                 'todayOrdersAllOutlets' => OrderStatsService::getTodayOrderCount(),
                 'thisMonthOrdersAllOutlets' => OrderStatsService::getThisMonthOrderCount(),
                 'cancelledTodayAllOutlets' => OrderStatsService::getCancelledTodayCount(),
                 'cancelledThisMonthAllOutlets' => OrderStatsService::getCancelledThisMonthCount(),
                 'activeOutlets' => OutletStatsService::getActiveOutletCount(),
                 'activeUsers' => UserStatsService::getActiveUserCount(),
+                'activeAccidentsAllOutlets' => AccidentStatsService::getActiveAccidentCount(),
+                'resolvedAccidentsThisMonthAllOutlets' => AccidentStatsService::getResolvedThisMonthCount(),
+                'resolvedAccidentLossThisMonthAllOutlets' => $resolvedLoss,
             ],
-            'chartMonthRevenueTrend' => OrderStatsService::getChartMonthRevenueTrend(),
+            'chartMonthRevenueTrend' => $chartMonthRevenueTrend->toArray(),
             'chartMonthOrderStatuses' => OrderStatsService::getChartMonthOrderStatuses(),
         ]);
     }
@@ -103,6 +76,12 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $outletId = $user->outlet_id ?? 0;
+
+        $monthRevenue = OrderStatsService::getThisMonthRevenueForOutlet($outletId);
+        $resolvedLoss = AccidentStatsService::getResolvedThisMonthLoss($outletId);
+
+        $revenueTrend = OrderStatsService::getChartMonthRevenueTrendForOutlet($outletId);
+        $lossTrend = AccidentStatsService::getChartMonthLossTrend($outletId);
 
         return Inertia::render('dashboard', [
             'dashboardRole' => UserRole::ADMIN->value,
@@ -118,9 +97,13 @@ class DashboardController extends Controller
                 'pickedUpToday' => OrderStatsService::getPickedUpTodayCountForOutlet($outletId),
                 'cancelledToday' => OrderStatsService::getCancelledTodayCountForOutlet($outletId),
                 'employeeCount' => UserStatsService::getEmployeeCountForOutlet($outletId),
-                'monthRevenue' => OrderStatsService::getThisMonthRevenueForOutlet($outletId),
+                'monthRevenue' => $monthRevenue,
+                'netRevenue' => $monthRevenue - $resolvedLoss,
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
+                'resolvedAccidentLossThisMonth' => $resolvedLoss,
             ],
-            'chartRevenueTrend' => OrderStatsService::getChartMonthRevenueTrendForOutlet($outletId),
+            'chartRevenueTrend' => (new DashboardRevenueTrendResource($revenueTrend, $lossTrend))->toArray(),
             'chartOrderMovement' => OrderStatsService::getChartMonthOrderMovementForOutlet($outletId),
         ]);
     }
@@ -147,6 +130,9 @@ class DashboardController extends Controller
                 'completedToday' => OrderStatsService::getCompletedTodayCountForOutlet($outletId),
                 'cancelledToday' => OrderStatsService::getCancelledTodayCountForOutlet($outletId),
                 'activeServices' => ServiceStatsService::getActiveServiceCountForOutlet($outletId),
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'myReportedAccidents' => AccidentStatsService::getReportedAccidentCount($user->id),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
             ],
             'chartTodayHourlyOrders' => OrderStatsService::getTodayHourlyOrderCountForOutlet($outletId),
             'chartTodayPaymentMethods' => OrderStatsService::getTodayPaymentMethodChartDataForOutlet($outletId),
@@ -171,6 +157,9 @@ class DashboardController extends Controller
                 'completedToday' => OrderStatsService::getCompletedTodayCountForOutlet($outletId),
                 'readyOrders' => OrderStatsService::getDoneOrderCountForOutlet($outletId),
                 'pickedUpToday' => OrderStatsService::getPickedUpTodayCountForOutlet($outletId),
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'myReportedAccidents' => AccidentStatsService::getReportedAccidentCount($user->id),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
             ],
             'chartTodayHourlyProcessedVsCompleted' => OrderStatsService::getTodayHourlyProcessedVsCompletedForOutlet($outletId),
         ]);

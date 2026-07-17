@@ -1,23 +1,11 @@
-import { Activity } from 'react';
 import { User, ArrowRight } from 'lucide-react';
-import { formatDate } from '@/helper/formatted-date';
+import { Activity } from 'react';
+import { formatDate, formatTime } from '@/helper/formatted-date';
 import type { OrderStatusLog } from '@/types/feature/order/order';
 
 interface OrderTimelineHistoryProps {
     logs: OrderStatusLog[];
 }
-
-const formatTime = (isoString: string): string => {
-    try {
-        const date = new Date(isoString);
-        return new Intl.DateTimeFormat('id-ID', {
-            hour: '2-digit',
-            minute: '2-digit',
-        }).format(date);
-    } catch {
-        return '';
-    }
-};
 
 export function OrderTimelineHistory({ logs }: OrderTimelineHistoryProps) {
     return (

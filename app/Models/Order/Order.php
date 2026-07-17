@@ -5,6 +5,7 @@ namespace App\Models\Order;
 use App\Enums\Order\OrderDateType;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
+use App\Models\Accident\Accident;
 use App\Models\Outlet\Outlet;
 use App\Models\Payment\Payment;
 use App\Models\User;
@@ -58,6 +59,11 @@ class Order extends Model
         return $this->belongsTo(User::class, 'cashier_id');
     }
 
+    public function accidents(): HasMany
+    {
+        return $this->hasMany(Accident::class);
+    }
+
     /**
      * Scope a query to search orders by customer name or order code.
      */
@@ -68,6 +74,16 @@ class Order extends Model
                 $q->where('customer_name', 'like', "%$search%")
                     ->orWhere('order_code', 'like', "%$search%");
             });
+        });
+    }
+
+    /**
+     * Scope a query to search orders solely by order code (lighter).
+     */
+    public function scopeSearchCode(Builder $query, ?string $search): Builder
+    {
+        return $query->when($search, function (Builder $query) use ($search) {
+            $query->where('order_code', 'like', "%{$search}%");
         });
     }
 

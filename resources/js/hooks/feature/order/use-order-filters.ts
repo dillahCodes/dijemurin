@@ -1,5 +1,5 @@
 import { router, usePage } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import type { OrderFilterPageProps, OrderPageProps } from '@/components/feature/order/order-data-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
@@ -50,7 +50,6 @@ const FETCH_ONLY_ALL = {
 };
 
 type DateFilter = Pick<OrderFilterPageProps, 'startDate' | 'endDate'>;
-type DateFilterName = keyof DateFilter;
 
 function normalizeSelectValue(value: string) {
     return value === 'all' ? undefined : value;
@@ -88,7 +87,10 @@ export function useOrderFilters() {
     const [resetKey, setResetKey] = useState(0);
 
     const filterStateRef = useRef(filterState);
-    filterStateRef.current = filterState;
+
+    useEffect(() => {
+        filterStateRef.current = filterState;
+    }, [filterState]);
 
     const shouldDisableSearch = !filterState.search && !filterState.outletIdSelected;
 

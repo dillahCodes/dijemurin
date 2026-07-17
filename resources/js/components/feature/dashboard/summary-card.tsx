@@ -1,6 +1,8 @@
 import { router } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
+import { Activity } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatPrice } from '@/helper/formatted-price';
 import { cn } from '@/lib/utils';
 
 interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,6 +14,7 @@ interface SummaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
     iconBg?: string;
     accentColor?: string;
     href?: string;
+    description?: string;
 }
 
 export default function SummaryCard({
@@ -24,6 +27,7 @@ export default function SummaryCard({
     accentColor = 'bg-primary',
     className,
     href,
+    description,
     ...props
 }: SummaryCardProps) {
     const handleClick = () => {
@@ -51,23 +55,25 @@ export default function SummaryCard({
                 )}
             />
             <CardContent className="relative z-10 flex items-center gap-3.5 p-4">
-                <div className={cn('flex size-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105', iconBg)}>
+                <div
+                    className={cn(
+                        'flex size-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105',
+                        iconBg,
+                    )}
+                >
                     <Icon className={cn('size-5', iconColor)} />
                 </div>
 
-                <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover:text-foreground/80 truncate">
+                <div className="flex min-w-0 flex-1 flex-col">
+                    <span className="truncate text-xs font-semibold tracking-wider text-muted-foreground uppercase transition-colors duration-300 group-hover:text-foreground/80">
                         {title}
                     </span>
-                    <span className="text-xl font-bold tracking-tight text-foreground mt-0.5 truncate">
-                        {type === 'currency'
-                            ? new Intl.NumberFormat('id-ID', {
-                                  style: 'currency',
-                                  currency: 'IDR',
-                                  minimumFractionDigits: 0,
-                              }).format(count as number)
-                            : count}
+                    <span className="mt-0.5 truncate text-xl font-bold tracking-tight text-foreground">
+                        {type === 'currency' ? formatPrice(count as number) : count}
                     </span>
+                    <Activity mode={description ? 'visible' : 'hidden'}>
+                        <span className="mt-1 line-clamp-2 text-[11px] text-muted-foreground">{description}</span>
+                    </Activity>
                 </div>
             </CardContent>
             <div

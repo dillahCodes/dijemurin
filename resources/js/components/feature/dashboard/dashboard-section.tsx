@@ -1,7 +1,7 @@
-import { UserRole } from '@/types/feature/user/user';
-import type { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';
 import { usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
+import type { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';
+import { UserRole } from '@/types/feature/user/user';
 import { AdminDashboardSection } from './admin/admin-dashboard-section';
 import { CashierDashboardSection } from './cashier/cashier-dashboard-section';
 import { OperatorDashboardSection } from './operator/operator-dashboard-section';
@@ -21,7 +21,8 @@ import { SuperAdminDashboardSection } from './superadmin/superadmin-dashboard-se
 
 export type MonthRevenueTrendData = {
     name: string;
-    total: number;
+    grossRevenue: number;
+    loss: number;
 };
 
 export type OrderMovementData = {
@@ -42,6 +43,7 @@ export interface DashboardStats {
     activeOutlets?: number;
     activeUsers?: number;
     thisMonthRevenueAllOutlets?: number;
+    thisMonthNetRevenueAllOutlets?: number;
     thisMonthOrdersAllOutlets?: number;
     processingOrdersAllOutlets?: number;
     readyOrdersAllOutlets?: number;
@@ -49,6 +51,9 @@ export interface DashboardStats {
     almostOverdueOrdersAllOutlets?: number;
     cancelledTodayAllOutlets?: number;
     cancelledThisMonthAllOutlets?: number;
+    activeAccidentsAllOutlets?: number;
+    resolvedAccidentsThisMonthAllOutlets?: number;
+    resolvedAccidentLossThisMonthAllOutlets?: number;
 
     // Admin
     todayRevenue?: number;
@@ -59,13 +64,18 @@ export interface DashboardStats {
     readyOrders?: number;
     employeeCount?: number;
     monthRevenue?: number;
+    netRevenue?: number;
     pickedUpToday?: number;
     cancelledToday?: number;
+    activeAccidents?: number;
+    resolvedAccidentsThisMonth?: number;
+    resolvedAccidentLossThisMonth?: number;
 
     // Cashier
     cashRevenue?: number;
     qrisRevenue?: number;
     activeServices?: number;
+    myReportedAccidents?: number;
 
     // Operator
     overdueOrders?: number;
@@ -112,6 +122,7 @@ export function DashboardSection() {
     const role = auth.user?.role as UserRole;
 
     const Section = (role ? DASHBOARD_ROLE_CONTENT[role] : null) as ReactNode;
+
     return <>{Section}</>;
 }
 

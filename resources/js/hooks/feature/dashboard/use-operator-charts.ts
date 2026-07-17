@@ -1,5 +1,5 @@
-import type { DashboardPageProps } from '@/components/feature/dashboard/dashboard-section';
 import { usePage } from '@inertiajs/react';
+import type { DashboardPageProps } from '@/components/feature/dashboard/dashboard-section';
 
 export function useOperatorCharts() {
     const { chartTodayHourlyProcessedVsCompleted, stats } = usePage<DashboardPageProps>().props;

@@ -243,7 +243,7 @@ class OrderStatsService
             $dateKey = $date->format('Y-m-d');
             $sumRevenueThisDay = $grouped->get($dateKey)?->sum('total_price') ?? 0;
 
-            return ['name' => $date->format('j M'), 'total' => $sumRevenueThisDay];
+            return ['name' => $date->format('j M'), 'grossRevenue' => $sumRevenueThisDay];
         })->values()->toArray();
     }
 
@@ -285,7 +285,7 @@ class OrderStatsService
             $dateKey = $date->format('Y-m-d');
             $sumRevenueThisDay = $grouped->get($dateKey)?->sum('total_price') ?? 0;
 
-            return ['name' => $date->format('j M'), 'total' => (int) $sumRevenueThisDay];
+            return ['name' => $date->format('j M'), 'grossRevenue' => (int) $sumRevenueThisDay];
         })->values()->toArray();
     }
 
@@ -338,7 +338,7 @@ class OrderStatsService
             $count = $grouped->get($hourStr)?->count() ?? 0;
 
             return [
-                'hour' => $hourStr . ':00',
+                'hour' => $hourStr.':00',
                 'count' => (int) $count,
             ];
         })->values()->toArray();
@@ -397,11 +397,10 @@ class OrderStatsService
             $completedCount = $groupedCompleted->get($hourStr)?->count() ?? 0;
 
             return [
-                'hour' => $hourStr . ':00',
+                'hour' => $hourStr.':00',
                 'diproses' => (int) $processedCount,
                 'selesai' => (int) $completedCount,
             ];
         })->values()->toArray();
     }
 }
-

@@ -1,11 +1,11 @@
+import { usePage } from '@inertiajs/react';
+import { NotepadText, Search, X } from 'lucide-react';
+import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOutletFilters } from '@/hooks/feature/outlet/use-outlet-filters';
 import type { Outlet } from '@/types/feature/outlet/outlet';
-import { usePage } from '@inertiajs/react';
-import { NotepadText, Search, X } from 'lucide-react';
-import { Activity } from 'react';
 import type { OutletSectionProps } from './outlet-section';
 
 function OutletStatusFilter() {

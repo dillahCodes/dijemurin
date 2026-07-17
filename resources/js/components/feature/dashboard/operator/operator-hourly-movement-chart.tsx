@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
-import { useOperatorCharts } from '@/hooks/feature/dashboard/use-operator-charts';
-import type { ProcessedVsCompletedData } from '../dashboard-section';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useOperatorCharts } from '@/hooks/feature/dashboard/use-operator-charts';
+import { useAppearance } from '@/hooks/use-appearance';
+import type { ProcessedVsCompletedData } from '../dashboard-section';
 
 const BAR_CHART_CONFIG = {
     colors: {
@@ -33,13 +33,7 @@ function HourlyMovementBarChart({ data, height, isDark }: HourlyMovementBarChart
         <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
             <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={BORDER} opacity={0.5} />
-                <XAxis
-                    dataKey="hour"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: TICK }}
-                    dy={10}
-                />
+                <XAxis dataKey="hour" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: TICK }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: TICK }} allowDecimals={false} />
                 <Tooltip
                     formatter={(value: any, name: any) => [value, name]}
@@ -64,20 +58,8 @@ function HourlyMovementBarChart({ data, height, isDark }: HourlyMovementBarChart
                         </span>
                     )}
                 />
-                <Bar
-                    dataKey="diproses"
-                    name="Order Diproses"
-                    fill={DIPROSES_COLOR}
-                    radius={[4, 4, 0, 0]}
-                    barSize={12}
-                />
-                <Bar
-                    dataKey="selesai"
-                    name="Order Selesai"
-                    fill={SELESAI_COLOR}
-                    radius={[4, 4, 0, 0]}
-                    barSize={12}
-                />
+                <Bar dataKey="diproses" name="Order Diproses" fill={DIPROSES_COLOR} radius={[4, 4, 0, 0]} barSize={12} />
+                <Bar dataKey="selesai" name="Order Selesai" fill={SELESAI_COLOR} radius={[4, 4, 0, 0]} barSize={12} />
             </BarChart>
         </ResponsiveContainer>
     );
@@ -92,7 +74,7 @@ export function OperatorHourlyMovementChart() {
     const totalCompleted = processedVsCompletedData.reduce((acc, item) => acc + item.selesai, 0);
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Order Diproses vs Selesai Hari Ini</CardTitle>
                 <CardDescription>

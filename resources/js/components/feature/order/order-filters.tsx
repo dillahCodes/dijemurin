@@ -79,6 +79,7 @@ function getActiveModalFilterCount(filterState: OrderFilterContextType['data']['
 function hasActiveModalFilters(filterState: OrderModalFilterState) {
     const { status, paymentMethod, startDate, endDate, timeStatus, dateType } = filterState;
     const hasStatus = Array.isArray(status) ? status.length > 0 : !!status;
+
     return !!hasStatus || !!paymentMethod || !!startDate || !!endDate || !!timeStatus || !!dateType;
 }
 
@@ -181,6 +182,7 @@ function OrderStatusComboboxField({ options, value, onChange }: OrderStatusCombo
         return (itemValue: string, query: string) => {
             const option = options.find((opt) => opt.value === itemValue);
             const label = option ? option.label : itemValue;
+
             return label.toLowerCase().includes(query.toLowerCase());
         };
     }, [options]);
@@ -205,6 +207,7 @@ function OrderStatusComboboxField({ options, value, onChange }: OrderStatusCombo
                             <>
                                 {values.map((val: string) => {
                                     const option = options.find((opt) => opt.value === val);
+
                                     return <ComboboxChip key={val}>{option ? option.label : val}</ComboboxChip>;
                                 })}
                                 <ComboboxChipsInput placeholder="Pilih status..." onFocus={() => setOpen(true)} />
@@ -217,6 +220,7 @@ function OrderStatusComboboxField({ options, value, onChange }: OrderStatusCombo
                     <ComboboxList>
                         {(item) => {
                             const option = options.find((opt) => opt.value === item);
+
                             return (
                                 <ComboboxItem key={item} value={item}>
                                     {option ? option.label : item}
@@ -253,8 +257,14 @@ function OrderFilterModalContent({
     const hasModalFilters = hasActiveModalFilters(modalFilters);
 
     const selectedStatusArray = useMemo(() => {
-        if (!modalFilters.status) return [];
-        if (Array.isArray(modalFilters.status)) return modalFilters.status;
+        if (!modalFilters.status) {
+            return [];
+        }
+
+        if (Array.isArray(modalFilters.status)) {
+            return modalFilters.status;
+        }
+
         return [modalFilters.status];
     }, [modalFilters.status]);
 
@@ -342,7 +352,9 @@ function OrderFilterModalContent({
                         <div className="flex flex-col gap-4 rounded-xl border border-border/80 bg-muted/10 p-4 dark:bg-muted/5">
                             <div className="flex flex-col gap-0.5">
                                 <span className="text-xs font-semibold text-foreground">Rentang Tanggal</span>
-                                <span className="text-[11px] text-muted-foreground">Tentukan rentang tanggal filter dan jenis pencocokan tanggalnya.</span>
+                                <span className="text-[11px] text-muted-foreground">
+                                    Tentukan rentang tanggal filter dan jenis pencocokan tanggalnya.
+                                </span>
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">

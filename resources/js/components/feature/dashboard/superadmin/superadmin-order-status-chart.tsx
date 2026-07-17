@@ -2,8 +2,8 @@ import { router } from '@inertiajs/react';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
-import { useAppearance } from '@/hooks/use-appearance';
 import { useSuperAdminCharts } from '@/hooks/feature/dashboard/use-superadmin-charts';
+import { useAppearance } from '@/hooks/use-appearance';
 import order from '@/routes/order';
 import { OrderStatusIndonesian } from '@/types/feature/order/order';
 import type { MonthOrderStatusData } from '../dashboard-section';
@@ -109,7 +109,7 @@ export function SuperAdminOrderStatusChart() {
     const isDark = resolvedAppearance === 'dark';
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-3">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-3">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base font-semibold">Status Pesanan</CardTitle>
                 <CardDescription>Distribusi status pesanan bulan ini</CardDescription>

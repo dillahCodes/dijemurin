@@ -8,7 +8,8 @@ import { useCartAddItem } from '@/hooks/feature/cart/use-cart-add-item';
 import { useServiceItemActions } from '@/hooks/feature/layanan/use-service-item-actions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { ServiceTimeType, type ServiceItem } from '@/types/feature/layanan';
+import { ServiceTimeType } from '@/types/feature/layanan';
+import type { ServiceItem } from '@/types/feature/layanan';
 
 interface GetMenus {
     handleEdit: (e: React.MouseEvent) => void;

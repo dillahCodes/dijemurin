@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppearance } from '@/hooks/use-appearance';
-import { useCashierCharts } from '@/hooks/feature/dashboard/use-cashier-charts';
-import type { HourlyOrderData } from '../dashboard-section';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCashierCharts } from '@/hooks/feature/dashboard/use-cashier-charts';
+import { useAppearance } from '@/hooks/use-appearance';
+import type { HourlyOrderData } from '../dashboard-section';
 
 const BAR_CHART_CONFIG = {
     colors: {
@@ -36,13 +36,7 @@ function HourlyOrdersBarChart({ data, height, isDark }: HourlyOrdersBarChartProp
         <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>
             <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={BORDER} opacity={0.5} />
-                <XAxis
-                    dataKey="hour"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: TICK }}
-                    dy={10}
-                />
+                <XAxis dataKey="hour" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: TICK }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: TICK }} allowDecimals={false} />
                 <Tooltip
                     formatter={(value: any) => [value, 'Order Masuk']}
@@ -55,13 +49,7 @@ function HourlyOrdersBarChart({ data, height, isDark }: HourlyOrdersBarChartProp
                     }}
                     cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)', radius: 4 }}
                 />
-                <Bar
-                    dataKey="count"
-                    name="Jumlah Order"
-                    fill={BAR_COLOR}
-                    radius={[4, 4, 0, 0]}
-                    barSize={20}
-                />
+                <Bar dataKey="count" name="Jumlah Order" fill={BAR_COLOR} radius={[4, 4, 0, 0]} barSize={20} />
             </BarChart>
         </ResponsiveContainer>
     );
@@ -75,12 +63,10 @@ export function CashierHourlyOrdersChart() {
     const totalOrders = todayHourlyOrders.reduce((acc, item) => acc + item.count, 0);
 
     return (
-        <Card className="col-span-1 flex min-h-fit flex-col lg:col-span-4">
+        <Card className="col-span-1 flex min-h-fit flex-col xl:col-span-4">
             <CardHeader className="pb-4">
                 <CardTitle className="text-base font-semibold">Order Masuk per Jam Hari Ini</CardTitle>
-                <CardDescription>
-                    Total {totalOrders} order masuk hari ini
-                </CardDescription>
+                <CardDescription>Total {totalOrders} order masuk hari ini</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-2">
                 <HourlyOrdersBarChart data={todayHourlyOrders} height={280} isDark={isDark} />
