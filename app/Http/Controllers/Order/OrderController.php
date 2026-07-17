@@ -9,6 +9,7 @@ use App\Enums\Order\OrderDateType;
 use App\Enums\Order\OrderStatus;
 use App\Enums\Order\OrderTimeStatus;
 use App\Enums\Payment\PaymentMethod;
+use App\Enums\User\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderStoreRequest;
 use App\Http\Requests\Order\OrderUpdateRequest;
@@ -70,6 +71,13 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        $hasSuperAdmin = auth()->user()->hasAnyRole([UserRole::SUPER_ADMIN]);
+        $user = auth()->user();
+
+        if (! $hasSuperAdmin && $user->outlet_id != $order->outlet_id) {
+            abort(403);
+        }
+
         $orderDetail = OrderQueryService::getOrderDetail($order);
 
         return Inertia::render('order/order-detail', [
