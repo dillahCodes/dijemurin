@@ -18,7 +18,9 @@ export function SuperAdminDashboardSection() {
                         <div>
                             <div className="mb-3 flex items-center gap-2">
                                 <BarChart3 className="size-4 text-blue-500" />
-                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Ringkasan</h2>
+                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                                    Ringkasan
+                                </h2>
                             </div>
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 {summaryCards.map((card) => (
@@ -35,7 +37,9 @@ export function SuperAdminDashboardSection() {
                         <div>
                             <div className="mb-3 flex items-center gap-2">
                                 <Zap className="size-4 text-amber-500" />
-                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Perlu Tindakan</h2>
+                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                                    Perlu Tindakan
+                                </h2>
                             </div>
                             <div className="flex flex-col gap-3">
                                 {actionCards.map((card) => (
@@ -49,7 +53,9 @@ export function SuperAdminDashboardSection() {
                         <div>
                             <div className="mb-3 flex items-center gap-2">
                                 <Building2 className="size-4 text-slate-500" />
-                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Manajemen</h2>
+                                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+                                    Manajemen
+                                </h2>
                             </div>
                             <div className="flex flex-col gap-3">
                                 {overviewCards.map((card) => (

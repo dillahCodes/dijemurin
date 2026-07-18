@@ -12,9 +12,8 @@ const transformCompensationAmount = (val: string): number | null => {
 
 const validateCompensation = (data: CompensationValidationData): boolean => {
     const type = data.compensation_type;
-    const amount = typeof data.compensation_amount === 'string' 
-        ? Number(data.compensation_amount) 
-        : data.compensation_amount;
+    const amount =
+        typeof data.compensation_amount === 'string' ? Number(data.compensation_amount) : data.compensation_amount;
 
     if (type === 'none' || !type) {
         return amount === 0 || amount === null || amount === undefined;
@@ -23,22 +22,31 @@ const validateCompensation = (data: CompensationValidationData): boolean => {
     return amount !== null && amount !== undefined && amount > 0;
 };
 
-export const editAccidentItemSchema = z.object({
-    id: z.number(),
-    type: z.enum(AccidentTypeEnglish, { message: 'Jenis insiden wajib diisi.' }),
-    item_details: z.string().max(255, { message: 'Detail item maksimal 255 karakter.' }).nullable().optional(),
-    description: z.string().min(1, { message: 'Kronologi kerusakan wajib diisi.' }),
-    compensation_type: z.enum(AccidentCompensationTypeEnglish, { message: 'Jenis kompensasi wajib diisi.' }).nullable().optional(),
-    compensation_amount: z.union([
-        z.number(),
-        z.string()
-            .regex(/^\d*$/, { message: 'Estimasi kerugian harus berupa angka.' })
-            .transform(transformCompensationAmount),
-    ]).nullable().optional(),
-}).refine(validateCompensation, {
-    message: 'Estimasi kerugian wajib diisi > 0 jika ada ganti rugi, atau harus bernilai 0 / kosong jika tidak ada.',
-    path: ['compensation_amount'],
-});
+export const editAccidentItemSchema = z
+    .object({
+        id: z.number(),
+        type: z.enum(AccidentTypeEnglish, { message: 'Jenis insiden wajib diisi.' }),
+        item_details: z.string().max(255, { message: 'Detail item maksimal 255 karakter.' }).nullable().optional(),
+        description: z.string().min(1, { message: 'Kronologi kerusakan wajib diisi.' }),
+        compensation_type: z
+            .enum(AccidentCompensationTypeEnglish, { message: 'Jenis kompensasi wajib diisi.' })
+            .nullable()
+            .optional(),
+        compensation_amount: z
+            .union([
+                z.number(),
+                z
+                    .string()
+                    .regex(/^\d*$/, { message: 'Estimasi kerugian harus berupa angka.' })
+                    .transform(transformCompensationAmount),
+            ])
+            .nullable()
+            .optional(),
+    })
+    .refine(validateCompensation, {
+        message: 'Estimasi kerugian wajib diisi > 0 jika ada ganti rugi, atau harus bernilai 0 / kosong jika tidak ada.',
+        path: ['compensation_amount'],
+    });
 
 export const editAccidentSchema = z.object({
     description: z.string().nullable().optional(),
