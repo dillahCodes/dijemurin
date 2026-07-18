@@ -326,6 +326,44 @@ class Order extends Model
         ]);
     }
 
+    /**
+     * Scope Completed
+     */
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->whereIn('status', [
+            OrderStatus::DONE->value,
+            OrderStatus::PICKED_UP->value,
+        ]);
+    }
+
+    /**
+     * Scope Cancelled
+     */
+    public function scopeCancelled(Builder $query): Builder
+    {
+        return $query->where('status', OrderStatus::CANCELLED->value);
+    }
+
+    /**
+     * Check if order is completed
+     */
+    public function isCompleted(): bool
+    {
+        return in_array($this->status, [
+            OrderStatus::DONE,
+            OrderStatus::PICKED_UP,
+        ]);
+    }
+
+    /**
+     * Check if order is cancelled
+     */
+    public function isCancelled(): bool
+    {
+        return $this->status === OrderStatus::CANCELLED;
+    }
+
     /*
     * Generate order code
     */
