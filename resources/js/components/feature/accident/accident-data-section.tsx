@@ -17,7 +17,6 @@ import { AccidentFilters } from './accident-filters';
 import { AccidentTable } from './accident-table';
 import { AccidentTablePagination } from './accident-table-pagination';
 
-
 export type AccidentStatusOption = {
     label: AccidentStatusIndonesian;
     value: AccidentStatusEnglish;

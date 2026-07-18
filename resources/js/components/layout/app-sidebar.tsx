@@ -13,14 +13,14 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useNavItems } from '@/hooks/use-nav-items';
+import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { dashboard, laporan } from '@/routes';
 import accidents from '@/routes/accidents';
 import layanan from '@/routes/layanan';
 import order from '@/routes/order';
 import outlet from '@/routes/outlet';
 import pengguna from '@/routes/pengguna';
-import type { NavItem } from '@/types';
-import { UserRole } from '@/types/feature/user/user';
 
 const mainNavItems: NavItem[] = [
     {
@@ -63,7 +63,7 @@ const mainNavItems: NavItem[] = [
         title: 'Laporan',
         href: laporan(),
         icon: FileText,
-        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
 ];
 

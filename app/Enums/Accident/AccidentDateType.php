@@ -6,6 +6,7 @@ enum AccidentDateType: string
 {
     case ACCIDENT_CREATED = 'accident_created';
     case ACCIDENT_UPDATED = 'accident_updated';
+    case ACCIDENT_RESOLVED = 'accident_resolved';
 
     /**
      * Get all values
@@ -23,6 +24,7 @@ enum AccidentDateType: string
         return match ($this) {
             self::ACCIDENT_CREATED => 'Insiden Dilaporkan',
             self::ACCIDENT_UPDATED => 'Insiden Diubah',
+            self::ACCIDENT_RESOLVED => 'Insiden Diselesaikan',
         };
     }
 

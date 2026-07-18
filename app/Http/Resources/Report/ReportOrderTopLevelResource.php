@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Report;
 
-use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,22 +15,27 @@ class ReportOrderTopLevelResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $orders = $this->resource;
+        $orders = $this->resource['orders'];
+        $accidents = $this->resource['accidents'];
 
         $totalOrder = $orders->count();
-        $completed = $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])->count();
-        $cancelled = $orders->where('status', OrderStatus::CANCELLED)->count();
+        $completed = $orders->filter(fn ($order) => $order->isCompleted())->count();
+        $cancelled = $orders->filter(fn ($order) => $order->isCancelled())->count();
 
-        $total_revenue = $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])
+        $total_revenue = $orders->filter(fn ($order) => $order->isCompleted())
             ->sum('total_price');
 
+        $accident_loss = (int) $accidents->flatMap->items->sum('compensation_amount');
+        $gross_revenue = $total_revenue;
+        $net_revenue = $gross_revenue - $accident_loss;
+
         $paymentSummary = collect(PaymentMethod::cases())->mapWithKeys(fn ($paymentCase) => [
-            $paymentCase->value => $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])
+            $paymentCase->value => $orders->filter(fn ($order) => $order->isCompleted())
                 ->where('payment.method', $paymentCase->value)
                 ->sum('total_price'),
         ]);
 
-        $orderItems = $orders->whereIn('status', [OrderStatus::DONE, OrderStatus::PICKED_UP])
+        $orderItems = $orders->filter(fn ($order) => $order->isCompleted())
             ->flatMap->orderItems
             ->groupBy('item_name');
 
@@ -50,6 +54,9 @@ class ReportOrderTopLevelResource extends JsonResource
                 'cancelled' => $cancelled,
             ],
             'total_revenue' => $total_revenue,
+            'gross_revenue' => $gross_revenue,
+            'accident_loss' => $accident_loss,
+            'net_revenue' => $net_revenue,
             'payment_summary' => $paymentSummary,
             'top_services' => $topServiceItems,
         ];

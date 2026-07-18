@@ -32,18 +32,22 @@ export function LaporanSection() {
 
             <Activity mode={hasDateRange ? 'visible' : 'hidden'}>
                 <div className="grid gap-6">
-                    <LaporanCard
-                        title="Laporan Ringkasan"
-                        description="Ringkasan eksekutif: total pesanan, pendapatan, rekap pembayaran, dan top 5 layanan terlaris dalam periode yang dipilih."
-                        filename={`laporan-ringkasan_${periodLabel}.pdf`}
-                        document={<TopLevelPdf period={period} data={top_level} />}
-                    />
-                    <LaporanCard
-                        title="Laporan Analitik"
-                        description="Analitik mendalam: rekap harian, distribusi status pesanan, rekap pembayaran, dan performa setiap layanan per periode."
-                        filename={`laporan-analitik_${periodLabel}.pdf`}
-                        document={<MiddleLevelPdf period={period} data={middle_level} />}
-                    />
+                    <Activity mode={top_level ? 'visible' : 'hidden'}>
+                        <LaporanCard
+                            title="Laporan Ringkasan"
+                            description="Ringkasan eksekutif: total pesanan, pendapatan, rekap pembayaran, dan top 5 layanan terlaris dalam periode yang dipilih."
+                            filename={`laporan-ringkasan_${periodLabel}.pdf`}
+                            document={<TopLevelPdf period={period} data={top_level} />}
+                        />
+                    </Activity>
+                    <Activity mode={middle_level ? 'visible' : 'hidden'}>
+                        <LaporanCard
+                            title="Laporan Analitik"
+                            description="Analitik mendalam: rekap harian, distribusi status pesanan, rekap pembayaran, dan performa setiap layanan per periode."
+                            filename={`laporan-analitik_${periodLabel}.pdf`}
+                            document={<MiddleLevelPdf period={period} data={middle_level} />}
+                        />
+                    </Activity>
                     <LaporanCard
                         title="Laporan Detail Transaksi"
                         description="Rincian lengkap setiap transaksi harian: item layanan, jumlah, subtotal, metode pembayaran, dan kembalian."

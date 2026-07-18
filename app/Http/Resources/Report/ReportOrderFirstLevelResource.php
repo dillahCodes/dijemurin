@@ -55,10 +55,10 @@ class ReportOrderFirstLevelResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $orders = $this->resource;
+        $orders = $this->resource['orders'];
 
         // group all order data by date
-        $ordersGroupByDate = $orders->groupBy(fn ($order) => $order->order_at->format('Y-m-d'));
+        $ordersGroupByDate = $orders->groupBy(fn ($order) => $order->created_at->format('Y-m-d'));
 
         $transactions = $ordersGroupByDate->map(fn ($orderByDate, $date) => [
             'date' => $date,

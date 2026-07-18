@@ -41,10 +41,18 @@ function RevenueTrendAreaChart({ data, height, isDark }: RevenueTrendAreaChartPr
     const GROSS_COLOR = isDark ? LINE_CHART_CONFIG.colors.grossRevenue.dark : LINE_CHART_CONFIG.colors.grossRevenue.light;
     const LOSS_COLOR = isDark ? LINE_CHART_CONFIG.colors.loss.dark : LINE_CHART_CONFIG.colors.loss.light;
 
-    const GRADIENT_GROSS_START = isDark ? LINE_CHART_CONFIG.colors.gradientGross.dark : LINE_CHART_CONFIG.colors.gradientGross.light;
-    const GRADIENT_GROSS_END = isDark ? LINE_CHART_CONFIG.colors.gradientGrossEnd.dark : LINE_CHART_CONFIG.colors.gradientGrossEnd.light;
-    const GRADIENT_LOSS_START = isDark ? LINE_CHART_CONFIG.colors.gradientLoss.dark : LINE_CHART_CONFIG.colors.gradientLoss.light;
-    const GRADIENT_LOSS_END = isDark ? LINE_CHART_CONFIG.colors.gradientLossEnd.dark : LINE_CHART_CONFIG.colors.gradientLossEnd.light;
+    const GRADIENT_GROSS_START = isDark
+        ? LINE_CHART_CONFIG.colors.gradientGross.dark
+        : LINE_CHART_CONFIG.colors.gradientGross.light;
+    const GRADIENT_GROSS_END = isDark
+        ? LINE_CHART_CONFIG.colors.gradientGrossEnd.dark
+        : LINE_CHART_CONFIG.colors.gradientGrossEnd.light;
+    const GRADIENT_LOSS_START = isDark
+        ? LINE_CHART_CONFIG.colors.gradientLoss.dark
+        : LINE_CHART_CONFIG.colors.gradientLoss.light;
+    const GRADIENT_LOSS_END = isDark
+        ? LINE_CHART_CONFIG.colors.gradientLossEnd.dark
+        : LINE_CHART_CONFIG.colors.gradientLossEnd.light;
 
     return (
         <ResponsiveContainer width="100%" height={height} minWidth={1} minHeight={1}>

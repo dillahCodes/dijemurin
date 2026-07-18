@@ -3,8 +3,8 @@ import { Activity } from 'react';
 import { AccidentTimelineHistory } from '@/components/feature/accident/detail/accident-timeline-history';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { AccidentStatusEnglish   } from '@/types/feature/accident/accident';
-import type {AccidentDetail, AccidentStatusLog} from '@/types/feature/accident/accident';
+import { AccidentStatusEnglish } from '@/types/feature/accident/accident';
+import type { AccidentDetail, AccidentStatusLog } from '@/types/feature/accident/accident';
 
 interface AccidentTimelineProps {
     accident: AccidentDetail;
@@ -20,8 +20,8 @@ export function AccidentTimeline({ accident }: AccidentTimelineProps) {
     const hasRejected = [AccidentStatusEnglish.REJECTED].includes(accident.status.value);
 
     if (hasRejected) {
-steps[2] = { key: 'rejected', label: 'Ditolak' };
-}
+        steps[2] = { key: 'rejected', label: 'Ditolak' };
+    }
 
     const currentStepIndex = steps.findIndex((s) => s.key === accident.status.value);
     const logs = accident.logs || [];

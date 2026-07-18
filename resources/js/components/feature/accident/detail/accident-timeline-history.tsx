@@ -40,22 +40,22 @@ const formatLogValue = (field: string, value: string | null) => {
 
     if (!value || emptyEquivalents[value]) {
         if (currencyFields.includes(field)) {
-return 'Rp 0';
-}
+            return 'Rp 0';
+        }
 
         return 'Kosong';
     }
 
     if (valueLabels[value]) {
-return valueLabels[value];
-}
+        return valueLabels[value];
+    }
 
     if (currencyFields.includes(field)) {
         const num = parseFloat(value);
 
         if (!isNaN(num)) {
-return formatPrice(num);
-}
+            return formatPrice(num);
+        }
     }
 
     return value;
@@ -68,12 +68,10 @@ function StatusLogItem({ log }: { log: AccidentStatusLog }) {
             {/* Header: Event & Time */}
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                         <History className="h-3.5 w-3.5" />
                     </div>
-                    <span className="font-semibold text-foreground">
-                        Perubahan Status
-                    </span>
+                    <span className="font-semibold text-foreground">Perubahan Status</span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock className="h-3.5 w-3.5 text-muted-foreground/60" />
@@ -84,33 +82,30 @@ function StatusLogItem({ log }: { log: AccidentStatusLog }) {
             </div>
 
             {/* Body: Status badges */}
-            <div className="pl-9 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 pl-9">
                 {log.from_status ? (
                     <>
-                        <span className="inline-flex items-center rounded-full bg-muted/60 px-2.5 py-0.5 text-xs font-medium text-muted-foreground border border-muted-foreground/10">
+                        <span className="inline-flex items-center rounded-full border border-muted-foreground/10 bg-muted/60 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                             {log.from_status.label}
                         </span>
                         <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/75" />
-                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary border border-primary/20">
+                        <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
                             {log.to_status.label}
                         </span>
                     </>
                 ) : (
-                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary border border-primary/20">
+                    <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
                         Laporan Insiden Dibuat ({log.to_status.label})
                     </span>
                 )}
             </div>
 
             {/* Footer: Actor */}
-            <div className="pl-9 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground border-t border-muted/40 pt-2">
+            <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-muted/40 pt-2 pl-9 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5 text-muted-foreground/60" />
                     <span>
-                        Diubah oleh:{' '}
-                        <span className="font-semibold text-foreground">
-                            {log.user?.name ?? 'Sistem'}
-                        </span>
+                        Diubah oleh: <span className="font-semibold text-foreground">{log.user?.name ?? 'Sistem'}</span>
                     </span>
                 </div>
             </div>
@@ -127,7 +122,7 @@ function FieldLogItem({ log }: { log: AccidentFieldLog }) {
             {/* Header: Event & Time */}
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
                         <Edit2 className="h-3.5 w-3.5" />
                     </div>
                     <span className="font-semibold text-foreground">
@@ -143,16 +138,16 @@ function FieldLogItem({ log }: { log: AccidentFieldLog }) {
             </div>
 
             {/* Body: Comparison details */}
-            <div className="pl-9 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 pl-9">
                 <span
-                    className="inline-flex items-center rounded bg-muted/60 px-2.5 py-0.5 text-xs font-medium text-muted-foreground/80 line-through border border-muted-foreground/10 max-w-[200px] sm:max-w-[300px] truncate"
+                    className="inline-flex max-w-[200px] items-center truncate rounded border border-muted-foreground/10 bg-muted/60 px-2.5 py-0.5 text-xs font-medium text-muted-foreground/80 line-through sm:max-w-[300px]"
                     title={oldValueFormatted}
                 >
                     {oldValueFormatted}
                 </span>
                 <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/75" />
                 <span
-                    className="inline-flex items-center rounded bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary border border-primary/20 max-w-[200px] sm:max-w-[300px] truncate"
+                    className="inline-flex max-w-[200px] items-center truncate rounded border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary sm:max-w-[300px]"
                     title={newValueFormatted}
                 >
                     {newValueFormatted}
@@ -160,24 +155,18 @@ function FieldLogItem({ log }: { log: AccidentFieldLog }) {
             </div>
 
             {/* Footer: Actor & Item */}
-            <div className="pl-9 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground border-t border-muted/40 pt-2">
+            <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-muted/40 pt-2 pl-9 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5 text-muted-foreground/60" />
                     <span>
-                        Diubah oleh:{' '}
-                        <span className="font-semibold text-foreground">
-                            {log.user?.name ?? 'Sistem'}
-                        </span>
+                        Diubah oleh: <span className="font-semibold text-foreground">{log.user?.name ?? 'Sistem'}</span>
                     </span>
                 </div>
                 <Activity mode={log.item ? 'visible' : 'hidden'}>
                     <div className="flex items-center gap-1.5">
                         <Package className="h-3.5 w-3.5 text-muted-foreground/60" />
                         <span>
-                            Item Layanan:{' '}
-                            <span className="font-semibold text-foreground">
-                                {log.item?.name ?? '-'}
-                            </span>
+                            Item Layanan: <span className="font-semibold text-foreground">{log.item?.name ?? '-'}</span>
                         </span>
                     </div>
                 </Activity>
@@ -196,7 +185,7 @@ export function AccidentTimelineHistory({ logs }: AccidentTimelineHistoryProps) 
             {/* Section 1: Riwayat Perubahan Status */}
             <Activity mode={statusLogs.length ? 'visible' : 'hidden'}>
                 <div className="flex flex-col gap-4">
-                    <h4 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
+                    <h4 className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                         <History className="h-3.5 w-3.5" />
                         Riwayat Perubahan Status
                     </h4>
@@ -211,7 +200,7 @@ export function AccidentTimelineHistory({ logs }: AccidentTimelineHistoryProps) 
             {/* Section 2: Riwayat Perubahan Data */}
             <Activity mode={fieldLogs.length > 0 ? 'visible' : 'hidden'}>
                 <div className="flex flex-col gap-4">
-                    <h4 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
+                    <h4 className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                         <Edit2 className="h-3.5 w-3.5" />
                         Riwayat Perubahan Data
                     </h4>

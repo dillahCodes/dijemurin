@@ -118,6 +118,7 @@ class Accident extends Model
         return $query->when($startDate && $endDate, function ($queryInstance) use ($startDate, $endDate, $dateType) {
             $column = match ($dateType) {
                 AccidentDateType::ACCIDENT_UPDATED => 'updated_at',
+                AccidentDateType::ACCIDENT_RESOLVED => 'resolved_at',
                 default => 'created_at',
             };
 
@@ -126,6 +127,17 @@ class Accident extends Model
                 Carbon::parse($endDate)->endOfDay(),
             ]);
         });
+    }
+
+    /**
+     * Scope Today
+     */
+    public function scopeToday(Builder $query): Builder
+    {
+        return $query->whereBetween('created_at', [
+            now()->startOfDay(),
+            now()->endOfDay(),
+        ]);
     }
 
     /**
