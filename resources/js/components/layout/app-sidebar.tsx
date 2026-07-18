@@ -63,7 +63,7 @@ const mainNavItems: NavItem[] = [
         title: 'Laporan',
         href: laporan(),
         icon: FileText,
-        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN],
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
 ];
 

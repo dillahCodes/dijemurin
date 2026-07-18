@@ -1,14 +1,22 @@
 import { Document, Page, Text, View } from '@react-pdf/renderer';
 import type { ReportMiddleLevel, ReportPeriod } from '@/types/feature/laporan';
-import { shared, formatRupiah, formatDate } from './pdf-styles';
+import { shared, colors, formatRupiah, formatDate } from './pdf-styles';
 
 interface Props {
     period: ReportPeriod;
-    data: ReportMiddleLevel;
+    data: ReportMiddleLevel | null;
 }
 
 export function MiddleLevelPdf({ period, data }: Props) {
+    if (!data) {
+        return null;
+    }
+
     const { daily_summary, status_summary, payment_summary, service_summary } = data;
+
+    const totalGross = daily_summary.reduce((acc, row) => acc + row.gross_revenue, 0);
+    const totalLoss = daily_summary.reduce((acc, row) => acc + row.accident_loss, 0);
+    const totalNet = daily_summary.reduce((acc, row) => acc + row.net_revenue, 0);
 
     return (
         <Document title="Laporan Analitik" author="Sistem Laundry">
@@ -27,31 +35,75 @@ export function MiddleLevelPdf({ period, data }: Props) {
                     </View>
                 </View>
 
+                {/* Stat Cards Financials */}
+                <View style={shared.statRow}>
+                    <View style={shared.statCard}>
+                        <Text style={shared.statLabel}>Total Pendapatan Kotor</Text>
+                        <Text style={[shared.statValue, { fontSize: 11 }]}>{formatRupiah(totalGross)}</Text>
+                    </View>
+                    <View style={shared.statCard}>
+                        <Text style={shared.statLabel}>Total Kerugian Insiden</Text>
+                        <Text style={[shared.statValue, { fontSize: 11, color: colors.danger }]}>
+                            {formatRupiah(totalLoss)}
+                        </Text>
+                    </View>
+                    <View style={shared.statCard}>
+                        <Text style={shared.statLabel}>Total Pendapatan Bersih</Text>
+                        <Text style={[shared.statValue, { fontSize: 11, color: colors.success }]}>
+                            {formatRupiah(totalNet)}
+                        </Text>
+                    </View>
+                </View>
+
                 {/* Daily Summary */}
                 <View style={shared.section}>
                     <Text style={shared.sectionTitle}>Rekap Harian</Text>
                     <View style={shared.table}>
                         <View style={shared.tableHeader}>
-                            <Text style={[shared.thText, { flex: 2 }]}>Tanggal</Text>
+                            <Text style={[shared.thText, { flex: 1.5 }]}>Tanggal</Text>
                             <Text style={[shared.thText, { flex: 1, textAlign: 'right' }]}>Pesanan</Text>
-                            <Text style={[shared.thText, { flex: 2, textAlign: 'right' }]}>Pendapatan</Text>
+                            <Text style={[shared.thText, { flex: 2, textAlign: 'right' }]}>Kotor</Text>
+                            <Text style={[shared.thText, { flex: 2, textAlign: 'right' }]}>Insiden</Text>
+                            <Text style={[shared.thText, { flex: 2, textAlign: 'right' }]}>Bersih</Text>
                         </View>
                         {daily_summary.map((row, i) => (
                             <View key={row.date} style={[shared.tableRow, i % 2 !== 0 ? shared.tableRowAlt : {}]}>
-                                <Text style={[shared.tdText, { flex: 2 }]}>{formatDate(row.date)}</Text>
+                                <Text style={[shared.tdText, { flex: 1.5 }]}>{formatDate(row.date)}</Text>
                                 <Text style={[shared.tdText, { flex: 1, textAlign: 'right' }]}>{row.total_order}</Text>
                                 <Text style={[shared.tdText, { flex: 2, textAlign: 'right' }]}>
-                                    {formatRupiah(row.total_revenue)}
+                                    {formatRupiah(row.gross_revenue)}
+                                </Text>
+                                <Text style={[shared.tdText, { flex: 2, textAlign: 'right', color: colors.danger }]}>
+                                    {formatRupiah(row.accident_loss)}
+                                </Text>
+                                <Text style={[shared.tdText, { flex: 2, textAlign: 'right', color: colors.success }]}>
+                                    {formatRupiah(row.net_revenue)}
                                 </Text>
                             </View>
                         ))}
                         <View style={shared.tableRow}>
-                            <Text style={[shared.tdText, { flex: 2, fontWeight: 'bold' }]}>Total</Text>
+                            <Text style={[shared.tdText, { flex: 1.5, fontWeight: 'bold' }]}>Total</Text>
                             <Text style={[shared.tdText, { flex: 1, textAlign: 'right', fontWeight: 'bold' }]}>
                                 {daily_summary.reduce((acc, row) => acc + row.total_order, 0)}
                             </Text>
                             <Text style={[shared.tdText, { flex: 2, textAlign: 'right', fontWeight: 'bold' }]}>
-                                {formatRupiah(daily_summary.reduce((acc, row) => acc + row.total_revenue, 0))}
+                                {formatRupiah(totalGross)}
+                            </Text>
+                            <Text
+                                style={[
+                                    shared.tdText,
+                                    { flex: 2, textAlign: 'right', fontWeight: 'bold', color: colors.danger },
+                                ]}
+                            >
+                                {formatRupiah(totalLoss)}
+                            </Text>
+                            <Text
+                                style={[
+                                    shared.tdText,
+                                    { flex: 2, textAlign: 'right', fontWeight: 'bold', color: colors.success },
+                                ]}
+                            >
+                                {formatRupiah(totalNet)}
                             </Text>
                         </View>
                     </View>
@@ -98,7 +150,7 @@ export function MiddleLevelPdf({ period, data }: Props) {
                             <View style={shared.tableRow}>
                                 <Text style={[shared.tdText, { flex: 2, fontWeight: 'bold' }]}>Total</Text>
                                 <Text style={[shared.tdText, { flex: 2, textAlign: 'right', fontWeight: 'bold' }]}>
-                                    {formatRupiah(daily_summary.reduce((acc, row) => acc + row.total_revenue, 0))}
+                                    {formatRupiah(totalGross)}
                                 </Text>
                             </View>
                         </View>
