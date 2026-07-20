@@ -1,9 +1,9 @@
+import { Link, usePage } from '@inertiajs/react';
+import { Activity } from 'react';
 import { MobileNav } from '@/components/feature/landing/mobile-nav';
 import { useScrollHeader } from '@/hooks/feature/landing/use-scroll-header';
 import { useSmoothScroll } from '@/hooks/feature/landing/use-smooth-scroll';
 import { dashboard, login } from '@/routes';
-import { Link, usePage } from '@inertiajs/react';
-import { Activity } from 'react';
 
 export function LandingHeader() {
     const { auth } = usePage().props;

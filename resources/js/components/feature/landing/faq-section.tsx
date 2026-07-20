@@ -1,8 +1,8 @@
+import { ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useFadeUp } from '@/hooks/animations';
 import { useFaqAccordion } from '@/hooks/feature/landing/use-faq-accordion';
-import { FAQItem } from '@/types/feature/landing';
-import { ChevronDown } from 'lucide-react';
+import type { FAQItem } from '@/types/feature/landing';
 
 interface FAQCardProps {
     item: FAQItem;
@@ -34,7 +34,7 @@ function FAQCard({ item, isOpen, onToggle }: FAQCardProps) {
 
 export function FAQSection() {
     const { faqs, openIndex, toggle } = useFaqAccordion(0);
-    const { ref } = useFadeUp<HTMLDivElement>({ delay: 100 });
+    const ref = useFadeUp<HTMLDivElement>({ delay: 100 });
 
     return (
         <section className="px-4 py-16 sm:px-6 md:py-24" id="faq">

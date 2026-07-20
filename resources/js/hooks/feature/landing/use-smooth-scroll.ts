@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 export function useSmoothScroll() {
     const scrollToSection = (
@@ -15,11 +15,16 @@ export function useSmoothScroll() {
                 top: 0,
                 behavior: 'smooth',
             });
-            if (onComplete) onComplete();
+
+            if (onComplete) {
+                onComplete();
+            }
+
             return;
         }
 
         const element = document.getElementById(cleanId);
+
         if (element) {
             const headerOffset = 90;
             const elementPosition = element.getBoundingClientRect().top;
@@ -31,7 +36,9 @@ export function useSmoothScroll() {
             });
         }
 
-        if (onComplete) onComplete();
+        if (onComplete) {
+            onComplete();
+        }
     };
 
     return { scrollToSection };

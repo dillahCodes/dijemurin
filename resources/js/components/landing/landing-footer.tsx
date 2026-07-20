@@ -6,19 +6,17 @@ export function LandingFooter() {
             <div className="mx-auto max-w-6xl">
                 <div className="grid grid-cols-1 gap-12 border-b border-zinc-200/80 pb-12 md:grid-cols-4 lg:gap-16 dark:border-zinc-800">
                     <div className="space-y-6 md:col-span-2">
-                        <a
-                            href="#"
-                            className="font-sans text-2xl font-black tracking-tighter text-zinc-950 dark:text-white"
-                        >
+                        <a href="#" className="font-sans text-2xl font-black tracking-tighter text-zinc-950 dark:text-white">
                             DIJEMURIN.ID
                         </a>
                         <p className="max-w-sm font-sans text-sm text-zinc-600 dark:text-zinc-400">
-                            Solusi ERP laundry modern yang fokus pada transparansi operasional dan pertumbuhan bisnis berkelanjutan. Didukung teknologi cloud terintegrasi.
+                            Solusi ERP laundry modern yang fokus pada transparansi operasional dan pertumbuhan bisnis
+                            berkelanjutan. Didukung teknologi cloud terintegrasi.
                         </p>
                     </div>
 
                     <div className="space-y-4">
-                        <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-zinc-950 dark:text-white">
+                        <h4 className="font-sans text-xs font-bold tracking-wider text-zinc-950 uppercase dark:text-white">
                             Produk
                         </h4>
                         <ul className="space-y-2.5 font-sans text-sm text-zinc-600 dark:text-zinc-400">
@@ -46,7 +44,7 @@ export function LandingFooter() {
                     </div>
 
                     <div className="space-y-4">
-                        <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-zinc-950 dark:text-white">
+                        <h4 className="font-sans text-xs font-bold tracking-wider text-zinc-950 uppercase dark:text-white">
                             Perusahaan
                         </h4>
                         <ul className="space-y-2.5 font-sans text-sm text-zinc-600 dark:text-zinc-400">

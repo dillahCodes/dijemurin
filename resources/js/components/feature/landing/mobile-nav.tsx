@@ -1,10 +1,10 @@
+import { Link } from '@inertiajs/react';
+import { Menu } from 'lucide-react';
+import { Activity } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useMobileNav } from '@/hooks/feature/landing/use-mobile-nav';
 import { useSmoothScroll } from '@/hooks/feature/landing/use-smooth-scroll';
 import { dashboard, login } from '@/routes';
-import { Link } from '@inertiajs/react';
-import { Menu } from 'lucide-react';
-import { Activity } from 'react';
 
 interface MobileNavProps {
     user: unknown | null;
@@ -24,7 +24,7 @@ export function MobileNav({ user }: MobileNavProps) {
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
             </SheetTrigger>
-            <SheetContent side="right" className="flex flex-col w-80 p-6">
+            <SheetContent side="right" className="flex w-80 flex-col p-6">
                 <SheetHeader className="p-0 text-left">
                     <SheetTitle className="font-sans text-xl font-extrabold tracking-tighter text-zinc-950 dark:text-white">
                         Dijemurin.id
@@ -35,39 +35,39 @@ export function MobileNav({ user }: MobileNavProps) {
                     <a
                         href="#"
                         onClick={(e) => handleNavClick(e, '')}
-                        className="font-sans text-sm font-semibold uppercase tracking-wider text-zinc-950 dark:text-white"
+                        className="font-sans text-sm font-semibold tracking-wider text-zinc-950 uppercase dark:text-white"
                     >
                         Beranda
                     </a>
                     <a
                         href="#fitur"
                         onClick={(e) => handleNavClick(e, '#fitur')}
-                        className="font-sans text-sm font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="font-sans text-sm font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                     >
                         Fitur
                     </a>
                     <a
                         href="#lacak"
                         onClick={(e) => handleNavClick(e, '#lacak')}
-                        className="font-sans text-sm font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="font-sans text-sm font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                     >
                         Lacak
                     </a>
                     <a
                         href="#faq"
                         onClick={(e) => handleNavClick(e, '#faq')}
-                        className="font-sans text-sm font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="font-sans text-sm font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                     >
                         FAQ
                     </a>
                 </nav>
 
-                <div className="mt-auto border-t border-zinc-200 pt-6 flex flex-col gap-3 dark:border-zinc-800">
+                <div className="mt-auto flex flex-col gap-3 border-t border-zinc-200 pt-6 dark:border-zinc-800">
                     <Activity mode={user ? 'visible' : 'hidden'}>
                         <Link
                             href={dashboard()}
                             onClick={closeNav}
-                            className="w-full text-center rounded-full bg-zinc-950 py-3 font-sans text-xs font-bold uppercase tracking-wider text-white dark:bg-white dark:text-zinc-950"
+                            className="w-full rounded-full bg-zinc-950 py-3 text-center font-sans text-xs font-bold tracking-wider text-white uppercase dark:bg-white dark:text-zinc-950"
                         >
                             Dashboard
                         </Link>
@@ -78,14 +78,14 @@ export function MobileNav({ user }: MobileNavProps) {
                             <Link
                                 href={login()}
                                 onClick={closeNav}
-                                className="w-full text-center rounded-full border border-zinc-300 py-3 font-sans text-xs font-semibold uppercase tracking-wider text-zinc-950 dark:border-zinc-700 dark:text-white"
+                                className="w-full rounded-full border border-zinc-300 py-3 text-center font-sans text-xs font-semibold tracking-wider text-zinc-950 uppercase dark:border-zinc-700 dark:text-white"
                             >
                                 Masuk
                             </Link>
                             <Link
                                 href={login()}
                                 onClick={closeNav}
-                                className="w-full text-center rounded-full bg-zinc-950 py-3 font-sans text-xs font-bold uppercase tracking-wider text-white dark:bg-white dark:text-zinc-950"
+                                className="w-full rounded-full bg-zinc-950 py-3 text-center font-sans text-xs font-bold tracking-wider text-white uppercase dark:bg-white dark:text-zinc-950"
                             >
                                 Coba Gratis
                             </Link>

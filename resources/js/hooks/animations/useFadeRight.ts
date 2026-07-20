@@ -1,7 +1,8 @@
-import { useScrollAnimation, ScrollAnimationOptions } from "./useScrollAnimation";
+import type { ScrollAnimationOptions } from './useScrollAnimation';
+import { useScrollAnimation } from './useScrollAnimation';
 
-type FadeRightOptions = Omit<ScrollAnimationOptions, "type">;
+type FadeRightOptions = Omit<ScrollAnimationOptions, 'type'>;
 
 export function useFadeRight<T extends HTMLElement = HTMLDivElement>(options: FadeRightOptions = {}) {
-  return useScrollAnimation<T>({ ...options, type: "fade-right" });
+    return useScrollAnimation<T>({ ...options, type: 'fade-right' });
 }

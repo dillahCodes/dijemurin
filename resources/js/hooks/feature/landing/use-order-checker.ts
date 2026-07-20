@@ -1,7 +1,8 @@
-import { customerStatusOrder } from '@/actions/App/Http/Controllers/Order/OrderController';
 import { router } from '@inertiajs/react';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+import { customerStatusOrder } from '@/actions/App/Http/Controllers/Order/OrderController';
 
 interface PageFlasError {
     error?: string;
@@ -19,11 +20,17 @@ export function useOrderChecker() {
             router.get(customerStatusOrder.url({ query: { order_code: trimmedCode } }), undefined, {
                 onSuccess: (page) => {
                     const flash = page.props.flash as PageFlasError;
-                    if (flash.error) toast.error(flash.error, { position: 'top-center' });
+
+                    if (flash.error) {
+                        toast.error(flash.error, { position: 'top-center' });
+                    }
                 },
                 onError: (errors) => {
                     const firstError = Object.values(errors)[0];
-                    if (firstError) toast.error(firstError, { position: 'top-center' });
+
+                    if (firstError) {
+                        toast.error(firstError, { position: 'top-center' });
+                    }
                 },
             });
         }

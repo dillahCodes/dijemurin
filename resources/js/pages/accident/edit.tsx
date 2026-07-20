@@ -1,9 +1,9 @@
 import { Head } from '@inertiajs/react';
 import { AccidentEditSection } from '@/components/feature/accident/edit/accident-edit-section';
 import AppLayout from '@/layouts/app-layout';
+import accidents from '@/routes/accidents';
 import type { Accident, AccidentTypeOption, AccidentTransitionRules } from '@/types/feature/accident/accident';
 import type { ApiResponse } from '@/types/response';
-import accidents from '@/routes/accidents';
 
 interface OptionItem {
     label: string;

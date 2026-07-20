@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { AnalyticsShowcase } from '@/components/feature/landing/analytics-showcase';
 import { BentoFeatures } from '@/components/feature/landing/bento-features';
 import { CTASection } from '@/components/feature/landing/cta-section';
@@ -5,7 +6,6 @@ import { FAQSection } from '@/components/feature/landing/faq-section';
 import { HeroSection } from '@/components/feature/landing/hero-section';
 import { LandingFooter } from '@/components/feature/landing/landing-footer';
 import { LandingHeader } from '@/components/feature/landing/landing-header';
-import { Head } from '@inertiajs/react';
 
 export default function Welcome() {
     return (

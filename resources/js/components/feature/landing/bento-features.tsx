@@ -1,8 +1,9 @@
-import { useFadeLeft, useFadeRight, useFadeUp } from '@/hooks/animations';
 import { AlertTriangle, GitFork, ShieldCheck, ShoppingCart, Store, Workflow } from 'lucide-react';
+import { useFadeLeft, useFadeRight, useFadeUp } from '@/hooks/animations';
 
 function BentoHeader() {
-    const { ref } = useFadeUp<HTMLDivElement>({ delay: 100 });
+    const ref = useFadeUp<HTMLDivElement>({ delay: 100 });
+
     return (
         <div ref={ref} className="space-y-4 text-center">
             <span className="inline-block rounded-full bg-zinc-100 px-4 py-1 font-sans text-xs font-bold tracking-widest text-zinc-900 uppercase dark:bg-zinc-800 dark:text-zinc-100">
@@ -28,7 +29,7 @@ export function BentoFeatures() {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-6">
                     {/* Multi-Outlet */}
                     <div
-                        ref={leftCard.ref}
+                        ref={leftCard}
                         className="group relative flex flex-col justify-between overflow-hidden rounded-4xl border border-zinc-800 bg-zinc-950 p-8 text-white md:col-span-3 md:p-10 dark:bg-zinc-900"
                     >
                         <div className="relative z-10 space-y-4">
@@ -46,7 +47,7 @@ export function BentoFeatures() {
 
                     {/* RBAC */}
                     <div
-                        ref={rightCard.ref}
+                        ref={rightCard}
                         className="flex flex-col justify-between rounded-4xl border border-zinc-200/80 bg-zinc-50/50 p-8 md:col-span-3 md:p-10 dark:border-zinc-800 dark:bg-zinc-900/40"
                     >
                         <div className="space-y-4">
@@ -72,7 +73,7 @@ export function BentoFeatures() {
                     </div>
 
                     {/* Bottom Cards */}
-                    <div ref={bottomCards.ref} className="grid grid-cols-1 gap-6 md:col-span-6 md:grid-cols-3">
+                    <div ref={bottomCards} className="grid grid-cols-1 gap-6 md:col-span-6 md:grid-cols-3">
                         <div className="flex flex-col justify-between rounded-4xl border border-zinc-200/80 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900/60">
                             <ShoppingCart className="h-9 w-9 text-zinc-950 dark:text-white" />
                             <div className="mt-8 space-y-2">

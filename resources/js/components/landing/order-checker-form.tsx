@@ -12,6 +12,7 @@ export function OrderCheckerForm({ className = '' }: OrderCheckerFormProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const trimmedCode = orderCode.trim();
+
         if (trimmedCode) {
             router.get('/order/status-check', { order_code: trimmedCode });
         }
@@ -27,7 +28,7 @@ export function OrderCheckerForm({ className = '' }: OrderCheckerFormProps) {
                         value={orderCode}
                         onChange={(e) => setOrderCode(e.target.value)}
                         placeholder="Kode Pesanan (Cth: ORD-JD-2026)"
-                        className="w-full border-none bg-transparent py-3 text-zinc-900 font-sans text-sm focus:ring-0 focus:outline-none dark:text-zinc-100 placeholder:text-zinc-400"
+                        className="w-full border-none bg-transparent py-3 font-sans text-sm text-zinc-900 placeholder:text-zinc-400 focus:ring-0 focus:outline-none dark:text-zinc-100"
                         required
                     />
                 </div>

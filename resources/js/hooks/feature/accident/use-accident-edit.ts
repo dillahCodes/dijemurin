@@ -1,9 +1,9 @@
 import { router, useForm } from '@inertiajs/react';
 import { toast } from 'sonner';
+import accidents from '@/routes/accidents';
 import type { EditAccidentSchema, EditAccidentItemSchema } from '@/schema/feature/accident/edit-accident-schema';
 import { editAccidentSchema } from '@/schema/feature/accident/edit-accident-schema';
 import type { Accident } from '@/types/feature/accident/accident';
-import accidents from '@/routes/accidents';
 
 type EditItemField = keyof EditAccidentItemSchema;
 type EditItemValue = EditAccidentItemSchema[EditItemField];

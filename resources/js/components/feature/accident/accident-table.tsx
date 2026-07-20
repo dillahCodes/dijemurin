@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { RoleHelper } from '@/helper/role-helper';
+import accidents from '@/routes/accidents';
 import type { Accident } from '@/types/feature/accident/accident';
 import { AccidentStatusEnglish } from '@/types/feature/accident/accident';
 import { UserRole } from '@/types/feature/user/user';
 import type { AccidentPageProps } from './accident-data-section';
-import accidents from '@/routes/accidents';
 
 // Styling for status badge
 function getStatusBadgeVariant(statusValue: string): BadgeVariant {

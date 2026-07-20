@@ -33,7 +33,7 @@ export function FAQSection() {
     };
 
     return (
-        <section className="py-16 px-4 sm:px-6 md:py-24" id="faq">
+        <section className="px-4 py-16 sm:px-6 md:py-24" id="faq">
             <div className="mx-auto max-w-3xl space-y-12">
                 <div className="space-y-4 text-center">
                     <h2 className="font-sans text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl md:text-5xl dark:text-white">
@@ -47,6 +47,7 @@ export function FAQSection() {
                 <div className="space-y-4">
                     {faqs.map((faq, idx) => {
                         const isOpen = openIndex === idx;
+
                         return (
                             <div
                                 key={idx}
@@ -65,7 +66,7 @@ export function FAQSection() {
                                     />
                                 </button>
                                 {isOpen && (
-                                    <div className="border-t border-zinc-100 p-6 font-sans text-sm text-zinc-600 sm:text-base leading-relaxed dark:border-zinc-800/80 dark:text-zinc-400">
+                                    <div className="border-t border-zinc-100 p-6 font-sans text-sm leading-relaxed text-zinc-600 sm:text-base dark:border-zinc-800/80 dark:text-zinc-400">
                                         <p>{faq.answer}</p>
                                     </div>
                                 )}

@@ -21,7 +21,7 @@ export function HeroSection() {
 
                     <div className="relative z-10 max-w-4xl space-y-8">
                         <h1
-                            ref={titleRef.ref}
+                            ref={titleRef}
                             className="font-sans text-4xl leading-[1.1] font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
                         >
                             Digitalisasi Operasional Laundry <br className="hidden sm:block" />
@@ -29,14 +29,14 @@ export function HeroSection() {
                         </h1>
 
                         <p
-                            ref={subtitleRef.ref}
+                            ref={subtitleRef}
                             className="mx-auto max-w-2xl font-sans text-base font-normal text-zinc-200 opacity-90 sm:text-lg md:text-xl"
                         >
                             Sistem ERP multi-outlet terintegrasi untuk kasir, operator, dan manajemen yang lebih transparan,
                             efisien, dan profesional.
                         </p>
 
-                        <div ref={formRef.ref} className="pt-6">
+                        <div ref={formRef} className="pt-6">
                             <OrderCheckerForm />
                         </div>
                     </div>

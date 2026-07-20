@@ -1,9 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
 import { AccidentDetailSection } from '@/components/feature/accident/detail/accident-detail-section';
 import AppLayout from '@/layouts/app-layout';
+import accidents from '@/routes/accidents';
 import type { AccidentDetail } from '@/types/feature/accident/accident';
 import type { ApiResponse } from '@/types/response';
-import accidents from '@/routes/accidents';
 
 export type AccidentDetailPageProps = {
     accident: ApiResponse<AccidentDetail>;

@@ -9,6 +9,7 @@ export function useScrollHeader(threshold = 50) {
         };
 
         window.addEventListener('scroll', handleScroll);
+
         return () => window.removeEventListener('scroll', handleScroll);
     }, [threshold]);
 

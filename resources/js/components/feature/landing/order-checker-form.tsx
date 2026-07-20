@@ -1,6 +1,6 @@
-import { useOrderChecker } from '@/hooks/feature/landing/use-order-checker';
-import { OrderCheckerFormProps } from '@/types/feature/landing';
 import { ArrowRight, Search } from 'lucide-react';
+import { useOrderChecker } from '@/hooks/feature/landing/use-order-checker';
+import type { OrderCheckerFormProps } from '@/types/feature/landing';
 
 export function OrderCheckerForm({ className = '' }: OrderCheckerFormProps) {
     const { orderCode, setOrderCode, handleSubmit } = useOrderChecker();
@@ -16,7 +16,7 @@ export function OrderCheckerForm({ className = '' }: OrderCheckerFormProps) {
                         value={orderCode}
                         onChange={(e) => setOrderCode(e.target.value)}
                         placeholder="Kode Pesanan (Cth: ORD-JD-2026)"
-                        className="w-full border-none bg-transparent py-3 font-sans text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-hidden focus:ring-0 dark:text-zinc-100"
+                        className="w-full border-none bg-transparent py-3 font-sans text-sm text-zinc-900 placeholder:text-zinc-400 focus:ring-0 focus:outline-hidden dark:text-zinc-100"
                         required
                     />
                 </div>

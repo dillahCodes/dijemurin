@@ -1,8 +1,8 @@
-import { useFadeLeft, useZoomIn } from '@/hooks/animations';
 import { FileText, TrendingUp } from 'lucide-react';
+import { useFadeLeft, useZoomIn } from '@/hooks/animations';
 
 function AnalyticsMetricsPreview() {
-    const { ref } = useZoomIn<HTMLDivElement>({ delay: 300, duration: 900 });
+    const ref = useZoomIn<HTMLDivElement>({ delay: 300, duration: 900 });
 
     return (
         <div ref={ref} className="relative">
@@ -39,7 +39,9 @@ function AnalyticsMetricsPreview() {
 
                         <div className="rounded-xl border border-zinc-100 bg-zinc-50/50 p-4 dark:border-zinc-900 dark:bg-zinc-900/50">
                             <div className="mb-3 flex items-center justify-between">
-                                <span className="font-sans text-xs font-bold text-zinc-800 dark:text-zinc-200">Grafik Pendapatan Branch</span>
+                                <span className="font-sans text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                    Grafik Pendapatan Branch
+                                </span>
                                 <span className="font-sans text-[11px] text-zinc-400">Juli 2026</span>
                             </div>
                             <div className="flex h-24 items-end justify-between gap-2 pt-2">
@@ -66,17 +68,18 @@ export function AnalyticsShowcase() {
         <section className="px-4 py-16 sm:px-6 md:py-24">
             <div className="mx-auto max-w-6xl">
                 <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-                    <div ref={textContentRef.ref} className="space-y-8">
-                        <span className="inline-block rounded-full bg-zinc-100 px-4 py-1 font-sans text-xs font-bold uppercase tracking-widest text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+                    <div ref={textContentRef} className="space-y-8">
+                        <span className="inline-block rounded-full bg-zinc-100 px-4 py-1 font-sans text-xs font-bold tracking-widest text-zinc-900 uppercase dark:bg-zinc-800 dark:text-zinc-100">
                             ANALYTICS
                         </span>
 
-                        <h2 className="font-sans text-3xl font-bold leading-tight tracking-tight text-zinc-950 sm:text-4xl md:text-5xl dark:text-white">
+                        <h2 className="font-sans text-3xl leading-tight font-bold tracking-tight text-zinc-950 sm:text-4xl md:text-5xl dark:text-white">
                             Analisis Keuangan & Laporan PDF Eksekutif
                         </h2>
 
                         <p className="font-sans text-base text-zinc-600 sm:text-lg dark:text-zinc-400">
-                            Dapatkan visibilitas penuh terhadap kesehatan bisnis Anda. Pantau omzet, laba rugi, dan kerugian insiden secara real-time. Unduh laporan formal untuk kebutuhan manajerial.
+                            Dapatkan visibilitas penuh terhadap kesehatan bisnis Anda. Pantau omzet, laba rugi, dan kerugian
+                            insiden secara real-time. Unduh laporan formal untuk kebutuhan manajerial.
                         </p>
 
                         <div className="space-y-4 pt-2">
@@ -85,8 +88,12 @@ export function AnalyticsShowcase() {
                                     <FileText className="h-6 w-6 text-zinc-950 dark:text-white" />
                                 </div>
                                 <div>
-                                    <h4 className="font-sans text-base font-bold text-zinc-950 dark:text-white">Export PDF Formal</h4>
-                                    <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400">Siap cetak untuk laporan harian, mingguan, atau bulanan.</p>
+                                    <h4 className="font-sans text-base font-bold text-zinc-950 dark:text-white">
+                                        Export PDF Formal
+                                    </h4>
+                                    <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400">
+                                        Siap cetak untuk laporan harian, mingguan, atau bulanan.
+                                    </p>
                                 </div>
                             </div>
 
@@ -95,8 +102,12 @@ export function AnalyticsShowcase() {
                                     <TrendingUp className="h-6 w-6 text-zinc-950 dark:text-white" />
                                 </div>
                                 <div>
-                                    <h4 className="font-sans text-base font-bold text-zinc-950 dark:text-white">Net Profit Tracking</h4>
-                                    <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400">Perhitungan laba bersih setelah dikurangi biaya operasional & kompensasi insiden.</p>
+                                    <h4 className="font-sans text-base font-bold text-zinc-950 dark:text-white">
+                                        Net Profit Tracking
+                                    </h4>
+                                    <p className="font-sans text-sm text-zinc-600 dark:text-zinc-400">
+                                        Perhitungan laba bersih setelah dikurangi biaya operasional & kompensasi insiden.
+                                    </p>
                                 </div>
                             </div>
                         </div>

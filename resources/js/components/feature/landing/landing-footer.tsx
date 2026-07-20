@@ -3,12 +3,28 @@ import { Globe } from 'lucide-react';
 function ProductLinks() {
     return (
         <div className="space-y-4">
-            <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-zinc-950 dark:text-white">Produk</h4>
+            <h4 className="font-sans text-xs font-bold tracking-wider text-zinc-950 uppercase dark:text-white">Produk</h4>
             <ul className="space-y-2.5 font-sans text-sm text-zinc-600 dark:text-zinc-400">
-                <li><a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Sistem Kasir</a></li>
-                <li><a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Manajemen Antrean</a></li>
-                <li><a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Laporan Keuangan</a></li>
-                <li><a href="#lacak" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Lacak Pesanan</a></li>
+                <li>
+                    <a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Sistem Kasir
+                    </a>
+                </li>
+                <li>
+                    <a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Manajemen Antrean
+                    </a>
+                </li>
+                <li>
+                    <a href="#fitur" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Laporan Keuangan
+                    </a>
+                </li>
+                <li>
+                    <a href="#lacak" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Lacak Pesanan
+                    </a>
+                </li>
             </ul>
         </div>
     );
@@ -17,12 +33,30 @@ function ProductLinks() {
 function CompanyLinks() {
     return (
         <div className="space-y-4">
-            <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-zinc-950 dark:text-white">Perusahaan</h4>
+            <h4 className="font-sans text-xs font-bold tracking-wider text-zinc-950 uppercase dark:text-white">
+                Perusahaan
+            </h4>
             <ul className="space-y-2.5 font-sans text-sm text-zinc-600 dark:text-zinc-400">
-                <li><a href="#faq" className="transition-colors hover:text-zinc-950 dark:hover:text-white">FAQ</a></li>
-                <li><a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Tentang Kami</a></li>
-                <li><a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Kontak</a></li>
-                <li><a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Kebijakan Privasi</a></li>
+                <li>
+                    <a href="#faq" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        FAQ
+                    </a>
+                </li>
+                <li>
+                    <a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Tentang Kami
+                    </a>
+                </li>
+                <li>
+                    <a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Kontak
+                    </a>
+                </li>
+                <li>
+                    <a href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+                        Kebijakan Privasi
+                    </a>
+                </li>
             </ul>
         </div>
     );
@@ -38,7 +72,8 @@ export function LandingFooter() {
                             DIJEMURIN.ID
                         </a>
                         <p className="max-w-sm font-sans text-sm text-zinc-600 dark:text-zinc-400">
-                            Solusi ERP laundry modern yang fokus pada transparansi operasional dan pertumbuhan bisnis berkelanjutan. Didukung teknologi cloud terintegrasi.
+                            Solusi ERP laundry modern yang fokus pada transparansi operasional dan pertumbuhan bisnis
+                            berkelanjutan. Didukung teknologi cloud terintegrasi.
                         </p>
                     </div>
 

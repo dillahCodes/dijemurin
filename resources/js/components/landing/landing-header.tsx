@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
-import { dashboard, login } from '@/routes';
 import { useEffect, useState } from 'react';
+import { dashboard, login } from '@/routes';
 
 export function LandingHeader() {
     const { auth } = usePage().props as unknown as { auth: { user: unknown | null } };
@@ -16,6 +16,7 @@ export function LandingHeader() {
         };
 
         window.addEventListener('scroll', handleScroll);
+
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -38,25 +39,25 @@ export function LandingHeader() {
                     <nav className="hidden items-center gap-6 md:flex">
                         <a
                             href="#"
-                            className="border-b-2 border-zinc-950 font-sans text-xs font-semibold uppercase tracking-wider text-zinc-950 dark:border-white dark:text-white"
+                            className="border-b-2 border-zinc-950 font-sans text-xs font-semibold tracking-wider text-zinc-950 uppercase dark:border-white dark:text-white"
                         >
                             Beranda
                         </a>
                         <a
                             href="#fitur"
-                            className="font-sans text-xs font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                            className="font-sans text-xs font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                         >
                             Fitur
                         </a>
                         <a
                             href="#lacak"
-                            className="font-sans text-xs font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                            className="font-sans text-xs font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                         >
                             Lacak
                         </a>
                         <a
                             href="#faq"
-                            className="font-sans text-xs font-medium uppercase tracking-wider text-zinc-600 transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                            className="font-sans text-xs font-medium tracking-wider text-zinc-600 uppercase transition-colors hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
                         >
                             FAQ
                         </a>
@@ -67,7 +68,7 @@ export function LandingHeader() {
                     {auth?.user ? (
                         <Link
                             href={dashboard()}
-                            className="rounded-full bg-zinc-950 px-5 py-2 font-sans text-xs font-bold uppercase tracking-wider text-white transition-all hover:scale-[0.98] hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                            className="rounded-full bg-zinc-950 px-5 py-2 font-sans text-xs font-bold tracking-wider text-white uppercase transition-all hover:scale-[0.98] hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                         >
                             Dashboard
                         </Link>
@@ -75,13 +76,13 @@ export function LandingHeader() {
                         <>
                             <Link
                                 href={login()}
-                                className="hidden font-sans text-xs font-semibold uppercase tracking-wider text-zinc-950 transition-opacity hover:opacity-75 sm:block dark:text-white"
+                                className="hidden font-sans text-xs font-semibold tracking-wider text-zinc-950 uppercase transition-opacity hover:opacity-75 sm:block dark:text-white"
                             >
                                 Masuk
                             </Link>
                             <Link
                                 href={login()}
-                                className="rounded-full bg-zinc-950 px-5 py-2.5 font-sans text-xs font-bold uppercase tracking-wider text-white transition-transform hover:scale-[0.98] active:scale-95 dark:bg-white dark:text-zinc-950"
+                                className="rounded-full bg-zinc-950 px-5 py-2.5 font-sans text-xs font-bold tracking-wider text-white uppercase transition-transform hover:scale-[0.98] active:scale-95 dark:bg-white dark:text-zinc-950"
                             >
                                 Coba Gratis
                             </Link>

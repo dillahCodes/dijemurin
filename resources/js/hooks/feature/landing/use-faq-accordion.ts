@@ -1,5 +1,5 @@
-import { FAQItem } from '@/types/feature/landing';
 import { useState } from 'react';
+import type { FAQItem } from '@/types/feature/landing';
 
 export const defaultFaqs: FAQItem[] = [
     {
