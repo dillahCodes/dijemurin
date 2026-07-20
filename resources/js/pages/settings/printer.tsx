@@ -3,8 +3,8 @@ import { PrinterSetting } from '@/components/feature/settings/printer';
 import Heading from '@/components/ui/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import type { BreadcrumbItem } from '@/types';
 import printer from '@/routes/printer';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

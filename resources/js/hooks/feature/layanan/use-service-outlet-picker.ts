@@ -3,8 +3,8 @@ import { useState } from 'react';
 import type { ServicePageProps } from '@/components/feature/layanan/service-section';
 import { useCart } from '@/context/feature/cart/cart-context';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import layanan from '@/routes/layanan';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 
 export function useServiceOutletPicker() {
     const { outlets } = usePage<ServicePageProps>().props;

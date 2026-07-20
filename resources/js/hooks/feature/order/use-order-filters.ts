@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import type { OrderFilterPageProps, OrderPageProps } from '@/components/feature/order/order-data-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import order from '@/routes/order';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 
 const FILTER_KEYS: (keyof OrderFilterPageProps)[] = [
     'search',

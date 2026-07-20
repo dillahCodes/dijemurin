@@ -1,10 +1,10 @@
 import { router, useForm } from '@inertiajs/react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import accidents from '@/routes/accidents';
 import type { AddAccidentItemSchema, AddAccidentSchema } from '@/schema/feature/accident/add-accident-schema';
 import { addAccidentSchema } from '@/schema/feature/accident/add-accident-schema';
 import type { AccidentTypeEnglish } from '@/types/feature/accident/accident';
-import accidents from '@/routes/accidents';
 
 const createEmptyItem = (): AddAccidentItemSchema => ({
     order_item_id: null as unknown as number,

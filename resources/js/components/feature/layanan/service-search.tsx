@@ -8,9 +8,9 @@ import { useModal } from '@/components/ui/modal';
 import { useCart } from '@/context/feature/cart/cart-context';
 import { RoleHelper } from '@/helper/role-helper';
 import { useServiceSearch } from '@/hooks/feature/layanan/use-service-search';
+import layanan from '@/routes/layanan';
 import { UserRole } from '@/types/feature/user/user';
 import type { ServicePageProps } from './service-section';
-import layanan from '@/routes/layanan';
 
 // 1. Sub-components
 function ServiceOutletDisplay() {

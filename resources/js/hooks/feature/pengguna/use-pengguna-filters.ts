@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { PenggunaFilterPageProps, PenggunaSectionProps } from '@/components/feature/pengguna/pengguna-section';
 import { createUndefinedObject } from '@/helper/create-undefined-object';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import type { Outlet } from '@/types/feature/outlet/outlet';
 import pengguna from '@/routes/pengguna';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 
 const FILTER_KEYS: (keyof PenggunaFilterPageProps)[] = ['search', 'role', 'status', 'outletIdSelected', 'outletSearch'];
 
