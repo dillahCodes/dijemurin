@@ -485,7 +485,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-CwHqOnrz.css",
+    "file": "assets/app-B7A3MHxF.css",
     "name": "app",
     "names": [
       "app.css"
@@ -494,7 +494,7 @@
     "isEntry": true
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-1D4Fk4Bo.js",
+    "file": "assets/app-DrC2Iir1.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -547,7 +547,7 @@
       "resources/js/pages/welcome.tsx"
     ],
     "css": [
-      "assets/app-CwHqOnrz.css"
+      "assets/app-B7A3MHxF.css"
     ]
   },
   "resources/js/pages/accident/detail.tsx": {
