@@ -4,9 +4,9 @@ import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
 import { RoleHelper } from '@/helper/role-helper';
 import type { AccidentDetailPageProps } from '@/pages/accident/detail';
-import accidents from '@/routes/accidents';
 import { AccidentStatusEnglish } from '@/types/feature/accident/accident';
 import { UserRole } from '@/types/feature/user/user';
+import accidents from '@/routes/accidents';
 
 export function AccidentDetailHeader() {
     const { accident, auth } = usePage<AccidentDetailPageProps>().props;

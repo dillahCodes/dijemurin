@@ -15,11 +15,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RoleHelper } from '@/helper/role-helper';
 import { usePenggunaTambah } from '@/hooks/feature/pengguna/use-pengguna-tambah';
 import { useSearchOutlet } from '@/hooks/feature/search/use-search-outlet';
-import pengguna from '@/routes/pengguna';
 import type { Outlet } from '@/types/feature/outlet/outlet';
 import type { User } from '@/types/feature/user/user';
 import { UserRole } from '@/types/feature/user/user';
 import type { PenggunaTambahPageProps } from './pengguna-tambah-section';
+import pengguna from '@/routes/pengguna';
 
 export function PenggunaTambahForm() {
     const { outlets, userRoleOptions, auth } = usePage<PenggunaTambahPageProps>().props;

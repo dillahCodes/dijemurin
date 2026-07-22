@@ -42,8 +42,8 @@ class AccidentSeeder extends Seeder
             return;
         }
 
-        // Ambil 15 order secara acak untuk disimulasikan sebagai insiden
-        $targetOrders = $orders->random(min(15, $orders->count()));
+        // Ambil 5 order secara acak untuk disimulasikan sebagai insiden
+        $targetOrders = $orders->random(min(5, $orders->count()));
 
         foreach ($targetOrders as $order) {
             $this->createAccidentForOrder($order, $cashiers, $admins);

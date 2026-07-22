@@ -366,7 +366,7 @@ class AccidentTest extends TestCase
             'order_id' => $this->order->id,
             'reporter_id' => $this->cashier->id,
             'description' => 'Catatan insiden',
-            'status' => AccidentStatus::PENDING,
+            'status' => AccidentStatus::INVESTIGATING,
         ]);
 
         $this->actingAs($this->admin);

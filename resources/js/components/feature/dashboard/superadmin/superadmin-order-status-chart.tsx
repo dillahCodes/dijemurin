@@ -4,9 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { indoToEnglishStatuses } from '@/helper/indo-to-english-statuses';
 import { useSuperAdminCharts } from '@/hooks/feature/dashboard/use-superadmin-charts';
 import { useAppearance } from '@/hooks/use-appearance';
-import order from '@/routes/order';
 import { OrderStatusIndonesian } from '@/types/feature/order/order';
 import type { MonthOrderStatusData } from '../dashboard-section';
+import order from '@/routes/order';
 
 type TooltipValue = number | string | readonly (number | string)[] | undefined;
 

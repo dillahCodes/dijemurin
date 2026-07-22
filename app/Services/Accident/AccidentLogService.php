@@ -35,7 +35,7 @@ class AccidentLogService
         return AccidentLog::create([
             'accident_id' => $data['accident']->id,
             'user_id' => $data['user_id'] ?? auth()->id(),
-            'accident_item_id' => $data['item']?->id ?? null,
+            'accident_item_id' => ($data['item'] ?? null)?->id,
             'field_name' => $data['field'],
             'old_value' => is_null($oldValue) ? null : (string) $oldValue,
             'new_value' => is_null($newValue) ? null : (string) $newValue,

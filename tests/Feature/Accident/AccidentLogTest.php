@@ -117,9 +117,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);
@@ -140,9 +145,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);
@@ -172,9 +182,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);
@@ -193,10 +208,16 @@ class AccidentLogTest extends TestCase
 
         $accident = Accident::create([
             'outlet_id' => $this->outlet->id,
+            'order_id' => $this->order->id,
             'reporter_id' => $this->cashier->id,
-            'type' => AccidentType::DAMAGED_ITEM,
             'description' => 'Kemeja robek',
             'status' => AccidentStatus::PENDING,
+        ]);
+
+        $accident->items()->create([
+            'order_item_id' => $this->orderItem->id,
+            'type' => AccidentType::DAMAGED_ITEM,
+            'description' => 'Kemeja robek',
         ]);
 
         $response = $this->get(route('accidents.show', $accident));
@@ -217,9 +238,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);
@@ -246,9 +272,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);
@@ -296,9 +327,14 @@ class AccidentLogTest extends TestCase
         $accidentData = [
             'outlet_id' => $this->outlet->id,
             'order_id' => $this->order->id,
-            'order_item_id' => $this->orderItem->id,
-            'type' => AccidentType::DAMAGED_ITEM->value,
             'description' => 'Sobek karena mesin pengering',
+            'items' => [
+                [
+                    'order_item_id' => $this->orderItem->id,
+                    'type' => AccidentType::DAMAGED_ITEM->value,
+                    'description' => 'Sobek karena mesin pengering',
+                ],
+            ],
         ];
 
         $accident = AccidentService::createAccident($accidentData);

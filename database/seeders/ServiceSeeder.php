@@ -16,8 +16,28 @@ class ServiceSeeder extends Seeder
         $outlets = Outlet::all();
 
         foreach ($outlets as $outlet) {
-            Service::factory(50)->create([
+            Service::create([
                 'outlet_id' => $outlet->id,
+                'name' => 'Cuci Kiloan',
+                'description' => 'Layanan cuci dan lipat pakaian harian berdasarkan berat timbangan.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Cuci Setrika',
+                'description' => 'Layanan cuci bersih, disetrika rapi, dan dilipat higienis.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Dry Cleaning & Satuan',
+                'description' => 'Cuci premium per potong untuk jas, kemeja, bed cover, sepatu, dll.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Setrika Saja',
+                'description' => 'Layanan setrika pakaian hingga rapi dan siap pakai tanpa proses cuci.',
             ]);
         }
     }
