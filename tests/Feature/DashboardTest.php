@@ -98,7 +98,7 @@ test('admin dashboard provides correct month chart props with data isolation', f
             ->and($day20Movement['name'])->toBe('20 Jun');
 
         // Verify the revenue trend is 150000 (from order1), not 350000
-        expect($day20Revenue['total'])->toBe(150000);
+        expect($day20Revenue['grossRevenue'])->toBe(150000);
 
         // Verify incoming and completed counts:
         expect($day20Movement['order_masuk'])->toBe(1)

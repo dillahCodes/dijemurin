@@ -15,67 +15,133 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedUser();
-    }
-
-    /**
-     * Seed users with varied roles, statuses, and outlets.
-     */
-    private function seedUser(): void
-    {
-        $statuses = UserStatus::cases();
-
-        // Specific mapping for outlet assignments
         $outlets = Outlet::all();
 
-        // If no outlets exist, just create a default list of users
         if ($outlets->isEmpty()) {
-            $outlets = collect([null]);
+            $this->command->warn('Outlet kosong. Jalankan OutletSeeder terlebih dahulu.');
+
+            return;
         }
 
-        $userId = 1; // used for generating unique names/emails
+        $margonda = $outlets->where('name', 'DijeMurin Laundry - Margonda')->first();
+        $tebet = $outlets->where('name', 'DijeMurin Laundry - Tebet')->first();
+        $binus = $outlets->where('name', 'DijeMurin Laundry - Binus')->first();
 
-        // Exactly 1 Admin per outlet (or 1 stand-alone admin if outlet is null)
-        foreach ($outlets as $outlet) {
-            User::factory()->create([
-                'name' => "Admin {$userId}",
-                'email' => "admin{$userId}@gmail.com",
+        // 1. Outlet Margonda
+        if ($margonda) {
+            User::create([
+                'name' => 'Budi Santoso',
+                'email' => 'budi.admin@gmail.com',
                 'password' => bcrypt('password'),
                 'role' => UserRole::ADMIN,
-                'status' => $statuses[array_rand($statuses)],
-                'outlet_id' => $outlet?->id,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $margonda->id,
             ]);
-            $userId++;
+
+            User::create([
+                'name' => 'Ahmad Fauzi',
+                'email' => 'ahmad.kasir@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::CASHIER,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $margonda->id,
+            ]);
+
+            User::create([
+                'name' => 'Eko Prasetyo',
+                'email' => 'eko.operator@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::OPERATOR,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $margonda->id,
+            ]);
+
+            User::create([
+                'name' => 'Agus Supriyanto',
+                'email' => 'agus.ghost@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::GHOST,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $margonda->id,
+            ]);
         }
 
-        // Generate the remaining users to reach exactly 150 total users
-        $totalTargetUsers = 150;
-        $currentUsersCount = 1 + $outlets->count(); // Super Admin + Admins
-        $remainingUsersCount = $totalTargetUsers - $currentUsersCount;
+        // 2. Outlet Tebet
+        if ($tebet) {
+            User::create([
+                'name' => 'Rini Astuti',
+                'email' => 'rini.admin@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::ADMIN,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $tebet->id,
+            ]);
 
-        if ($remainingUsersCount > 0) {
-            $roles = [UserRole::CASHIER, UserRole::OPERATOR, UserRole::GHOST];
+            User::create([
+                'name' => 'Dewi Lestari',
+                'email' => 'dewi.kasir@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::CASHIER,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $tebet->id,
+            ]);
 
-            for ($i = 0; $i < $remainingUsersCount; $i++) {
-                $role = $roles[array_rand($roles)];
-                $roleName = match ($role) {
-                    UserRole::CASHIER => 'Kasir',
-                    UserRole::OPERATOR => 'Operator',
-                    UserRole::GHOST => 'Ghost',
-                };
+            User::create([
+                'name' => 'Fitri Handayani',
+                'email' => 'fitri.operator@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::OPERATOR,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $tebet->id,
+            ]);
 
-                $outletId = $role === UserRole::GHOST ? null : $outlets->random()?->id;
+            User::create([
+                'name' => 'Siti Rahayu',
+                'email' => 'siti.ghost@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::GHOST,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $tebet->id,
+            ]);
+        }
 
-                User::factory()->create([
-                    'name' => "{$roleName} {$userId}",
-                    'email' => strtolower($roleName)."{$userId}@gmail.com",
-                    'password' => bcrypt('password'),
-                    'role' => $role,
-                    'status' => $statuses[array_rand($statuses)],
-                    'outlet_id' => $outletId,
-                ]);
-                $userId++;
-            }
+        // 3. Outlet Binus
+        if ($binus) {
+            User::create([
+                'name' => 'Hendra Wijaya',
+                'email' => 'hendra.admin@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::ADMIN,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $binus->id,
+            ]);
+
+            User::create([
+                'name' => 'Joko Widodo',
+                'email' => 'joko.kasir@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::CASHIER,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $binus->id,
+            ]);
+
+            User::create([
+                'name' => 'Nanda Putra',
+                'email' => 'nanda.operator@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::OPERATOR,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $binus->id,
+            ]);
+
+            User::create([
+                'name' => 'Bella Safitri',
+                'email' => 'bella.ghost@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => UserRole::GHOST,
+                'status' => UserStatus::ACTIVE,
+                'outlet_id' => $binus->id,
+            ]);
         }
     }
 }

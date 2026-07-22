@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderSeeder extends Seeder
 {
-    private const TOTAL_ORDERS = 100;
+    private const TOTAL_ORDERS = 30;
 
     /**
      * Run the database seeds.
