@@ -3,9 +3,9 @@ import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCashierCharts } from '@/hooks/feature/dashboard/use-cashier-charts';
 import { useAppearance } from '@/hooks/use-appearance';
-import orderRoutes from '@/routes/order';
 import { OrderDateTypeEnglish } from '@/types/feature/order/order';
 import type { PaymentMethodData } from '../dashboard-section';
+import orderRoutes from '@/routes/order';
 
 type TooltipValue = number | string | readonly (number | string)[] | undefined;
 

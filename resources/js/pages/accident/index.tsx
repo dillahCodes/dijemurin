@@ -1,9 +1,9 @@
 import { Head } from '@inertiajs/react';
 import { AccidentDataSection } from '@/components/feature/accident/accident-data-section';
 import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
 import accidents from '@/routes/accidents';
-import type { BreadcrumbItem } from '@/types';
 
 const BREADCRUMBS: BreadcrumbItem[] = [
     { title: 'Dashboard', href: dashboard() },
