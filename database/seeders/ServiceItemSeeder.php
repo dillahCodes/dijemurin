@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Service\ServiceTimeType;
 use App\Models\Service\Service;
 use App\Models\Service\ServiceItem;
 use Illuminate\Database\Seeder;
@@ -13,273 +14,130 @@ class ServiceItemSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedLaundryKiloanItems();
-        $this->seedLaundryKarpetItems();
-        $this->seedSetrikaSajaItems();
-        $this->seedStrollerItems();
-        $this->seedSepatuItems();
-        $this->seedBedCoverItems();
-        $this->seedBantalItems();
-        $this->seedBonekaItems();
-    }
+        $services = Service::all();
 
-    private function createItems(string $serviceName, array $items): void
-    {
-        $service = Service::where('name', $serviceName)->first();
+        foreach ($services as $service) {
+            if ($service->name === 'Cuci Kiloan') {
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Kiloan Reguler (2 Hari)',
+                    'description' => 'Cuci lipat standar selesai dalam 2 hari.',
+                    'time_number' => 2,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 7000,
+                    'unit' => 'kg',
+                ]);
 
-        if (! $service) {
-            return;
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Kiloan Kilat (1 Hari)',
+                    'description' => 'Cuci lipat cepat selesai dalam 1 hari.',
+                    'time_number' => 1,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 10000,
+                    'unit' => 'kg',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Kiloan Express (6 Jam)',
+                    'description' => 'Cuci lipat super cepat selesai dalam 6 jam.',
+                    'time_number' => 6,
+                    'time_type' => ServiceTimeType::HOUR,
+                    'price' => 15000,
+                    'unit' => 'kg',
+                ]);
+            } elseif ($service->name === 'Cuci Setrika') {
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Setrika Reguler (2 Hari)',
+                    'description' => 'Cuci gosok lipat standar selesai dalam 2 hari.',
+                    'time_number' => 2,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 9000,
+                    'unit' => 'kg',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Setrika Kilat (1 Hari)',
+                    'description' => 'Cuci gosok lipat cepat selesai dalam 1 hari.',
+                    'time_number' => 1,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 13000,
+                    'unit' => 'kg',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Setrika Express (6 Jam)',
+                    'description' => 'Cuci gosok lipat super cepat selesai dalam 6 jam.',
+                    'time_number' => 6,
+                    'time_type' => ServiceTimeType::HOUR,
+                    'price' => 18000,
+                    'unit' => 'kg',
+                ]);
+            } elseif ($service->name === 'Dry Cleaning & Satuan') {
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Dry Cleaning Kemeja / Blouse',
+                    'description' => 'Cuci premium satuan untuk kemeja atau blouse.',
+                    'time_number' => 3,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 15000,
+                    'unit' => 'pcs',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Dry Cleaning Jas / Blazer',
+                    'description' => 'Cuci premium satuan untuk jas formal pria/wanita.',
+                    'time_number' => 3,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 35000,
+                    'unit' => 'pcs',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Dry Cleaning Bed Cover Double',
+                    'description' => 'Cuci premium satuan untuk bed cover ukuran besar.',
+                    'time_number' => 3,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 45000,
+                    'unit' => 'pcs',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Cuci Sepatu Sneakers',
+                    'description' => 'Pembersihan mendalam premium untuk sepatu sneakers.',
+                    'time_number' => 4,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 40000,
+                    'unit' => 'pasang',
+                ]);
+            } elseif ($service->name === 'Setrika Saja') {
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Setrika Reguler (2 Hari)',
+                    'description' => 'Gosok lipat pakaian standar selesai dalam 2 hari.',
+                    'time_number' => 2,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 5000,
+                    'unit' => 'kg',
+                ]);
+
+                ServiceItem::create([
+                    'service_id' => $service->id,
+                    'name' => 'Setrika Kilat (1 Hari)',
+                    'description' => 'Gosok lipat pakaian cepat selesai dalam 1 hari.',
+                    'time_number' => 1,
+                    'time_type' => ServiceTimeType::DAY,
+                    'price' => 8000,
+                    'unit' => 'kg',
+                ]);
+            }
         }
-
-        foreach ($items as $item) {
-            ServiceItem::create([...$item, 'service_id' => $service->id]);
-        }
-    }
-
-    /**
-     * Seed: Laundry Kiloan
-     */
-    private function seedLaundryKiloanItems(): void
-    {
-        $this->createItems('Laundry Kiloan', [
-            [
-                'name' => 'Laundry 4 Jam Selesai',
-                'description' => 'Cuci Kering + Setrika + Packing',
-                'time' => '4 Jam',
-                'price' => 35000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Laundry 8 Jam Selesai',
-                'description' => 'Cuci Kering + Setrika + Packing',
-                'time' => '8 Jam',
-                'price' => 30000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Laundry 12 Jam Selesai',
-                'description' => 'Cuci Kering + Setrika + Packing',
-                'time' => '12 Jam',
-                'price' => 25000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Laundry 24 Jam Selesai',
-                'description' => 'Cuci Kering + Setrika + Packing',
-                'time' => '24 Jam',
-                'price' => 20000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Laundry 48 Jam Selesai',
-                'description' => 'Cuci Kering + Setrika + Packing',
-                'time' => '48 Jam',
-                'price' => 11000,
-                'unit' => 'kg',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Karpet
-     */
-    private function seedLaundryKarpetItems(): void
-    {
-        $this->createItems('Laundry Karpet', [
-            [
-                'name' => 'Karpet Kecil (100x150 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '3 Hari',
-                'price' => 50000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Karpet Sedang (150x200 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '3 Hari',
-                'price' => 75000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Karpet Besar (200x300 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '3 Hari',
-                'price' => 120000,
-                'unit' => 'pcs',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Setrika Saja
-     */
-    private function seedSetrikaSajaItems(): void
-    {
-        $this->createItems('Setrika Saja', [
-            [
-                'name' => 'Setrika 4 Jam Selesai',
-                'description' => 'Setrika + Packing',
-                'time' => '4 Jam',
-                'price' => 8000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Setrika 8 Jam Selesai',
-                'description' => 'Setrika + Packing',
-                'time' => '8 Jam',
-                'price' => 7000,
-                'unit' => 'kg',
-            ],
-            [
-                'name' => 'Setrika 24 Jam Selesai',
-                'description' => 'Setrika + Packing',
-                'time' => '24 Jam',
-                'price' => 5000,
-                'unit' => 'kg',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Stroller & Perlengkapan Bayi
-     */
-    private function seedStrollerItems(): void
-    {
-        $this->createItems('Laundry Stroller & Perlengkapan Bayi', [
-            [
-                'name' => 'Cuci Stroller',
-                'description' => 'Cuci + Sanitasi + Packing',
-                'time' => '3 Hari',
-                'price' => 150000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Cuci Kursi Makan Bayi',
-                'description' => 'Cuci + Sanitasi + Packing',
-                'time' => '3 Hari',
-                'price' => 75000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Cuci Perlengkapan Bayi',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 25000,
-                'unit' => 'kg',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Sepatu
-     */
-    private function seedSepatuItems(): void
-    {
-        $this->createItems('Laundry Sepatu', [
-            [
-                'name' => 'Cuci Sneakers',
-                'description' => 'Cuci + Sikat + Rapikan + Packing',
-                'time' => '3 Hari',
-                'price' => 45000,
-                'unit' => 'pasang',
-            ],
-            [
-                'name' => 'Cuci Sepatu Kulit',
-                'description' => 'Cuci + Poles + Packing',
-                'time' => '3 Hari',
-                'price' => 65000,
-                'unit' => 'pasang',
-            ],
-            [
-                'name' => 'Cuci Sepatu Anak',
-                'description' => 'Cuci + Sikat + Packing',
-                'time' => '2 Hari',
-                'price' => 30000,
-                'unit' => 'pasang',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Bed Cover
-     */
-    private function seedBedCoverItems(): void
-    {
-        $this->createItems('Laundry Bed Cover', [
-            [
-                'name' => 'Bed Cover Single',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 35000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Bed Cover Double',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 50000,
-                'unit' => 'pcs',
-            ],
-            [
-                'name' => 'Bed Cover King',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 65000,
-                'unit' => 'pcs',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Bantal
-     */
-    private function seedBantalItems(): void
-    {
-        $this->createItems('Laundry Bantal', [
-            [
-                'name' => 'Cuci Bantal Standar',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 20000,
-                'unit' => 'buah',
-            ],
-            [
-                'name' => 'Cuci Guling',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 25000,
-                'unit' => 'buah',
-            ],
-        ]);
-    }
-
-    /**
-     * Seed: Laundry Boneka
-     */
-    private function seedBonekaItems(): void
-    {
-        $this->createItems('Laundry Boneka', [
-            [
-                'name' => 'Boneka Kecil (< 30 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 20000,
-                'unit' => 'buah',
-            ],
-            [
-                'name' => 'Boneka Sedang (30 - 60 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '2 Hari',
-                'price' => 35000,
-                'unit' => 'buah',
-            ],
-            [
-                'name' => 'Boneka Besar (> 60 cm)',
-                'description' => 'Cuci Kering + Packing',
-                'time' => '3 Hari',
-                'price' => 60000,
-                'unit' => 'buah',
-            ],
-        ]);
     }
 }

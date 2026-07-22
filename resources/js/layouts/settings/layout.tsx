@@ -1,11 +1,13 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
-import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
+import Heading from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { useNavItems } from '@/hooks/use-nav-items';
 import { cn, toUrl } from '@/lib/utils';
 import type { NavItem } from '@/types';
+import { UserRole } from '@/types/feature/user/user';
 import { edit as editAppearance } from '@/routes/appearance';
 import printer from '@/routes/printer';
 import { edit } from '@/routes/profile';
@@ -16,26 +18,34 @@ const sidebarNavItems: NavItem[] = [
         title: 'Profil',
         href: edit(),
         icon: null,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Keamanan',
         href: editSecurity(),
         icon: null,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Tampilan',
         href: editAppearance(),
         icon: null,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER, UserRole.OPERATOR],
     },
     {
         title: 'Printer',
         href: printer.edit(),
         icon: null,
+        role: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.CASHIER],
     },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
+    const { auth } = usePage().props;
+    const role = auth.user.role as UserRole;
+
+    const filteredNavItems = useNavItems(role, sidebarNavItems);
 
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
@@ -49,7 +59,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             <div className="flex flex-col lg:flex-row lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">
                     <nav className="flex flex-col space-y-1 space-x-0" aria-label="Pengaturan">
-                        {sidebarNavItems.map((item, index) => (
+                        {filteredNavItems.map((item, index) => (
                             <Button
                                 key={`${toUrl(item.href)}-${index}`}
                                 size="sm"

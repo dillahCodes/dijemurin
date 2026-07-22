@@ -2,47 +2,166 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\DTOs\Order\OrderFilterDTO;
-use App\Enums\Order\OrderStatus;
+use App\Enums\Payment\PaymentMethod;
+use App\Enums\User\UserRole;
 use App\Http\Controllers\Controller;
-use App\Services\Order\OrderService;
+use App\Http\Resources\Dashboard\DashboardRevenueTrendResource;
+use App\Services\Accident\AccidentStatsService;
+use App\Services\Order\OrderStatsService;
+use App\Services\Outlet\OutletStatsService;
+use App\Services\Service\ServiceStatsService;
+use App\Services\User\UserStatsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display dashboard page based on authenticated user role.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $filterOrder = OrderFilterDTO::fromRequestDashboard();
-        $orders = OrderService::getOrdersData($filterOrder);
+        $user = $request->user();
 
-        $todayOrderCount = OrderService::getTodayOrderCount();
-        $processOrderCount = OrderService::getProcessOrderCount();
-        $doneOrderCount = OrderService::getDoneOrderCount();
-        $todayRevenue = OrderService::getTodayRevenue();
+        return match ($user->role) {
+            UserRole::SUPER_ADMIN => $this->renderSuperAdminDashboard($request),
+            UserRole::ADMIN => $this->renderAdminDashboard($request),
+            UserRole::CASHIER => $this->renderCashierDashboard($request),
+            UserRole::OPERATOR => $this->renderOperatorDashboard($request),
+            default => abort(403),
+        };
+    }
 
-        $chartWeekRevenue = OrderService::getChartWeekRevenue();
-        $chartMonthStatuses = OrderService::getChartMonthStatuses();
+    /**
+     * Render Super Admin dashboard.
+     */
+    private function renderSuperAdminDashboard(Request $request)
+    {
+        $thisMonthRevenue = OrderStatsService::getThisMonthRevenue();
+        $resolvedLoss = AccidentStatsService::getResolvedThisMonthLoss();
 
-        $orderStatusOptions = OrderStatus::options();
-        $orderTransitionRules = OrderStatus::allowedTransitions();
+        $revenueTrend = OrderStatsService::getChartMonthRevenueTrend();
+        $lossTrend = AccidentStatsService::getChartMonthLossTrend();
+        $chartMonthRevenueTrend = new DashboardRevenueTrendResource($revenueTrend, $lossTrend);
 
         return Inertia::render('dashboard', [
-            'orders' => $orders,
-            'orderTransitionRules' => $orderTransitionRules,
-            'orderStatusOptions' => $orderStatusOptions,
+            'dashboardRole' => UserRole::SUPER_ADMIN->value,
+            'stats' => [
+                'processingOrdersAllOutlets' => OrderStatsService::getProcessOrderCount(),
+                'readyOrdersAllOutlets' => OrderStatsService::getDoneOrderCount(),
+                'almostOverdueOrdersAllOutlets' => OrderStatsService::getAlmostOverdueCount(),
+                'overdueOrdersAllOutlets' => OrderStatsService::getOverdueCount(),
+                'todayRevenueAllOutlets' => OrderStatsService::getTodayRevenue(),
+                'thisMonthRevenueAllOutlets' => $thisMonthRevenue,
+                'thisMonthNetRevenueAllOutlets' => $thisMonthRevenue - $resolvedLoss,
+                'todayOrdersAllOutlets' => OrderStatsService::getTodayOrderCount(),
+                'thisMonthOrdersAllOutlets' => OrderStatsService::getThisMonthOrderCount(),
+                'cancelledTodayAllOutlets' => OrderStatsService::getCancelledTodayCount(),
+                'cancelledThisMonthAllOutlets' => OrderStatsService::getCancelledThisMonthCount(),
+                'activeOutlets' => OutletStatsService::getActiveOutletCount(),
+                'activeUsers' => UserStatsService::getActiveUserCount(),
+                'activeAccidentsAllOutlets' => AccidentStatsService::getActiveAccidentCount(),
+                'resolvedAccidentsThisMonthAllOutlets' => AccidentStatsService::getResolvedThisMonthCount(),
+                'resolvedAccidentLossThisMonthAllOutlets' => $resolvedLoss,
+            ],
+            'chartMonthRevenueTrend' => $chartMonthRevenueTrend->toArray(),
+            'chartMonthOrderStatuses' => OrderStatsService::getChartMonthOrderStatuses(),
+        ]);
+    }
 
-            'chartWeekRevenue' => $chartWeekRevenue,
-            'chartMonthStatuses' => $chartMonthStatuses,
+    /**
+     * Render Admin dashboard.
+     */
+    private function renderAdminDashboard(Request $request)
+    {
+        $user = $request->user();
+        $outletId = $user->outlet_id ?? 0;
 
-            'todayRevenue' => $todayRevenue,
-            'todayOrderCount' => $todayOrderCount,
-            'processOrderCount' => $processOrderCount,
-            'doneOrderCount' => $doneOrderCount,
+        $monthRevenue = OrderStatsService::getThisMonthRevenueForOutlet($outletId);
+        $resolvedLoss = AccidentStatsService::getResolvedThisMonthLoss($outletId);
 
+        $revenueTrend = OrderStatsService::getChartMonthRevenueTrendForOutlet($outletId);
+        $lossTrend = AccidentStatsService::getChartMonthLossTrend($outletId);
+
+        return Inertia::render('dashboard', [
+            'dashboardRole' => UserRole::ADMIN->value,
+            'stats' => [
+                'pendingOrders' => OrderStatsService::getPendingOrderCountForOutlet($outletId),
+                'processOrders' => OrderStatsService::getProcessOrderCountForOutlet($outletId),
+                'readyOrders' => OrderStatsService::getDoneOrderCountForOutlet($outletId),
+                'almostOverdueOrders' => OrderStatsService::getAlmostOverdueCountForOutlet($outletId),
+                'overdueOrders' => OrderStatsService::getOverdueCountForOutlet($outletId),
+                'todayRevenue' => OrderStatsService::getTodayRevenueForOutlet($outletId),
+                'todayOrders' => OrderStatsService::getTodayOrderCountForOutlet($outletId),
+                'completedToday' => OrderStatsService::getCompletedTodayCountForOutlet($outletId),
+                'pickedUpToday' => OrderStatsService::getPickedUpTodayCountForOutlet($outletId),
+                'cancelledToday' => OrderStatsService::getCancelledTodayCountForOutlet($outletId),
+                'employeeCount' => UserStatsService::getEmployeeCountForOutlet($outletId),
+                'monthRevenue' => $monthRevenue,
+                'netRevenue' => $monthRevenue - $resolvedLoss,
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
+                'resolvedAccidentLossThisMonth' => $resolvedLoss,
+            ],
+            'chartRevenueTrend' => (new DashboardRevenueTrendResource($revenueTrend, $lossTrend))->toArray(),
+            'chartOrderMovement' => OrderStatsService::getChartMonthOrderMovementForOutlet($outletId),
+        ]);
+    }
+
+    /**
+     * Render Cashier dashboard.
+     */
+    private function renderCashierDashboard(Request $request)
+    {
+        $user = $request->user();
+        $outletId = $user->outlet_id ?? 0;
+
+        return Inertia::render('dashboard', [
+            'dashboardRole' => UserRole::CASHIER->value,
+            'stats' => [
+                'pendingOrders' => OrderStatsService::getPendingOrderCountForOutlet($outletId),
+                'processOrders' => OrderStatsService::getProcessOrderCountForOutlet($outletId),
+                'readyOrders' => OrderStatsService::getDoneOrderCountForOutlet($outletId),
+                'overdueOrders' => OrderStatsService::getOverdueCountForOutlet($outletId),
+                'todayRevenue' => OrderStatsService::getTodayRevenueForOutlet($outletId),
+                'cashRevenue' => OrderStatsService::getTodayRevenueByPaymentMethodForOutlet($outletId, PaymentMethod::CASH),
+                'qrisRevenue' => OrderStatsService::getTodayRevenueByPaymentMethodForOutlet($outletId, PaymentMethod::QRIS),
+                'todayOrders' => OrderStatsService::getTodayOrderCountForOutlet($outletId),
+                'completedToday' => OrderStatsService::getCompletedTodayCountForOutlet($outletId),
+                'cancelledToday' => OrderStatsService::getCancelledTodayCountForOutlet($outletId),
+                'activeServices' => ServiceStatsService::getActiveServiceCountForOutlet($outletId),
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'myReportedAccidents' => AccidentStatsService::getReportedAccidentCount($user->id),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
+            ],
+            'chartTodayHourlyOrders' => OrderStatsService::getTodayHourlyOrderCountForOutlet($outletId),
+            'chartTodayPaymentMethods' => OrderStatsService::getTodayPaymentMethodChartDataForOutlet($outletId),
+        ]);
+    }
+
+    /**
+     * Render Operator dashboard.
+     */
+    private function renderOperatorDashboard(Request $request)
+    {
+        $user = $request->user();
+        $outletId = $user->outlet_id ?? 0;
+
+        return Inertia::render('dashboard', [
+            'dashboardRole' => UserRole::OPERATOR->value,
+            'stats' => [
+                'pendingOrders' => OrderStatsService::getPendingOrderCountForOutlet($outletId),
+                'processOrders' => OrderStatsService::getProcessOrderCountForOutlet($outletId),
+                'almostOverdueOrders' => OrderStatsService::getAlmostOverdueCountForOutlet($outletId),
+                'overdueOrders' => OrderStatsService::getOverdueCountForOutlet($outletId),
+                'completedToday' => OrderStatsService::getCompletedTodayCountForOutlet($outletId),
+                'readyOrders' => OrderStatsService::getDoneOrderCountForOutlet($outletId),
+                'pickedUpToday' => OrderStatsService::getPickedUpTodayCountForOutlet($outletId),
+                'activeAccidents' => AccidentStatsService::getActiveAccidentCount($outletId),
+                'myReportedAccidents' => AccidentStatsService::getReportedAccidentCount($user->id),
+                'resolvedAccidentsThisMonth' => AccidentStatsService::getResolvedThisMonthCount($outletId),
+            ],
+            'chartTodayHourlyProcessedVsCompleted' => OrderStatsService::getTodayHourlyProcessedVsCompletedForOutlet($outletId),
         ]);
     }
 

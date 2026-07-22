@@ -1,7 +1,7 @@
 import { Activity } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 
 interface OrderItemsProps {
     items: OrderDetail['order_items'];
@@ -9,9 +9,9 @@ interface OrderItemsProps {
 
 export function OrderItems({ items }: OrderItemsProps) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Daftar Item</CardTitle>
+        <Card className="pt-0">
+            <CardHeader className="border-b bg-muted/30 py-4">
+                <CardTitle className="text-base font-semibold">Daftar Item</CardTitle>
             </CardHeader>
             <CardContent>
                 <Table>

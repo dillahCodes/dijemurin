@@ -1,7 +1,7 @@
 import { Activity } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 
 interface OrderCustomerStatusItemsProps {
     items: OrderDetail['order_items'];

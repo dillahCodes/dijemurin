@@ -1,9 +1,9 @@
-# Skill: Frontend Clean Code
-
-**Name:** `frontend-clean-code`
-**Description:** Menegakkan struktur modular berbasis fitur. Memisahkan UI, Logika (Hooks), dan Definisi (Types) secara ketat ke dalam direktori fitur masing-masing untuk mencapai SRP (Single Responsibility Principle) dan DRY yang maksimal.
-
 ---
+name: frontend-clean-code
+description: Menegakkan struktur modular berbasis fitur. Memisahkan UI, Logika (Hooks), dan Definisi (Types) secara ketat ke dalam direktori fitur masing-masing untuk mencapai SRP (Single Responsibility Principle) dan DRY yang maksimal.
+---
+
+# Skill: Frontend Clean Code
 
 ### Rule 1: Minimalist Page Component
 

@@ -4,11 +4,15 @@ import { shared, colors, formatRupiah, formatDate } from './pdf-styles';
 
 interface Props {
     period: ReportPeriod;
-    data: ReportTopLevel;
+    data: ReportTopLevel | null;
 }
 
 export function TopLevelPdf({ period, data }: Props) {
-    const { summary, total_revenue, payment_summary, top_services } = data;
+    if (!data) {
+        return null;
+    }
+
+    const { summary, gross_revenue, accident_loss, net_revenue, payment_summary, top_services } = data;
 
     return (
         <Document title="Laporan Ringkasan" author="Sistem Laundry">
@@ -27,7 +31,7 @@ export function TopLevelPdf({ period, data }: Props) {
                     </View>
                 </View>
 
-                {/* Stat Cards */}
+                {/* Stat Cards Row 1: Orders */}
                 <View style={shared.statRow}>
                     <View style={shared.statCard}>
                         <Text style={shared.statLabel}>Total Pesanan</Text>
@@ -41,9 +45,25 @@ export function TopLevelPdf({ period, data }: Props) {
                         <Text style={shared.statLabel}>Dibatalkan</Text>
                         <Text style={[shared.statValue, { color: colors.danger }]}>{summary.cancelled}</Text>
                     </View>
+                </View>
+
+                {/* Stat Cards Row 2: Financials */}
+                <View style={shared.statRow}>
                     <View style={shared.statCard}>
-                        <Text style={shared.statLabel}>Total Pendapatan</Text>
-                        <Text style={[shared.statValue, { fontSize: 11 }]}>{formatRupiah(total_revenue)}</Text>
+                        <Text style={shared.statLabel}>Pendapatan Kotor</Text>
+                        <Text style={[shared.statValue, { fontSize: 11 }]}>{formatRupiah(gross_revenue)}</Text>
+                    </View>
+                    <View style={shared.statCard}>
+                        <Text style={shared.statLabel}>Kerugian Insiden</Text>
+                        <Text style={[shared.statValue, { fontSize: 11, color: colors.danger }]}>
+                            {formatRupiah(accident_loss)}
+                        </Text>
+                    </View>
+                    <View style={shared.statCard}>
+                        <Text style={shared.statLabel}>Pendapatan Bersih</Text>
+                        <Text style={[shared.statValue, { fontSize: 11, color: colors.success }]}>
+                            {formatRupiah(net_revenue)}
+                        </Text>
                     </View>
                 </View>
 

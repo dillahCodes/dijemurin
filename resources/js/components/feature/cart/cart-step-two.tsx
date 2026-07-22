@@ -1,11 +1,15 @@
 import { Activity } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { formatPrice } from '@/helper/formatted-price';
 import { useCartStepTwo } from '@/hooks/feature/cart/use-cart-step-two';
 
-export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
+interface CartStepTwoProps {
+    onCancel: () => void;
+}
+
+export function CartStepTwo({ onCancel }: CartStepTwoProps) {
     const {
         customerName,
         paymentMethod,
@@ -40,9 +44,7 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                             value={customerName}
                             onChange={(e) => setCustomerName(e.target.value)}
                         />
-                        {errors?.customerName && (
-                            <p className="text-[0.8rem] font-medium text-destructive">{errors.customerName[0]}</p>
-                        )}
+                        <FieldError>{errors?.customerName?.[0]}</FieldError>
                     </Field>
 
                     <Field>
@@ -78,9 +80,7 @@ export function CartStepTwo({ onCancel }: { onCancel: () => void }) {
                                 value={formatPrice(paymentAmount)}
                                 onChange={(e) => setPaymentAmount(e.target.value)}
                             />
-                            {errors?.paymentAmount && (
-                                <p className="text-[0.8rem] font-medium text-destructive">{errors.paymentAmount[0]}</p>
-                            )}
+                            <FieldError>{errors?.paymentAmount?.[0]}</FieldError>
                         </Field>
                     </Activity>
 

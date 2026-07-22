@@ -1,7 +1,7 @@
 import { Activity } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 
 interface OrderCustomerStatusPaymentProps {
     order: OrderDetail;

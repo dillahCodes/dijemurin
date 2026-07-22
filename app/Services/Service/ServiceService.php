@@ -2,25 +2,55 @@
 
 namespace App\Services\Service;
 
-use App\DTOs\Service\ServiceFilterDTO;
-use App\DTOs\Service\ServiceItemFilterDTO;
+use App\Enums\User\UserRole;
 use App\Models\Service\Service;
+use Illuminate\Support\Facades\DB;
 
 class ServiceService
 {
     /**
-     * get service with search filter
+     * create a new service
      */
-    public static function getServicesData(ServiceFilterDTO $filter)
+    public static function createService(array $data)
     {
-        return Service::search($filter->search)->latest()->get();
+        return DB::transaction(function () use ($data) {
+            $user = auth()->user();
+
+            // NOTE: if non super admin → force outlet id related to user
+            if ($user && ! $user->hasRole(UserRole::SUPER_ADMIN)) {
+                $data['outlet_id'] = $user->outlet_id;
+            }
+
+            return Service::create($data);
+        });
     }
 
     /**
-     * get service item with search filter
+     * update an existing service
      */
-    public static function getServiceItems(Service $service, ServiceItemFilterDTO $filter)
+    public static function updateService(Service $service, array $data)
     {
-        return $service->items()->search($filter->search)->latest()->get();
+        return DB::transaction(function () use ($service, $data) {
+            $user = auth()->user();
+
+            // NOTE: if non super admin force outlet id related to user
+            if ($user && ! $user->hasRole(UserRole::SUPER_ADMIN)) {
+                $data['outlet_id'] = $user->outlet_id;
+            }
+
+            $service->update($data);
+
+            return $service;
+        });
+    }
+
+    /**
+     * delete a service
+     */
+    public static function deleteService(Service $service)
+    {
+        return DB::transaction(function () use ($service) {
+            return $service->delete();
+        });
     }
 }

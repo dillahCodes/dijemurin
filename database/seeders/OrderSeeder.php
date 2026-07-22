@@ -4,14 +4,19 @@ namespace Database\Seeders;
 
 use App\Enums\Order\OrderStatus;
 use App\Enums\Payment\PaymentMethod;
+use App\Enums\Service\ServiceTimeType;
+use App\Enums\User\UserRole;
+use App\Models\Outlet\Outlet;
 use App\Models\Service\ServiceItem;
+use App\Models\User;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class OrderSeeder extends Seeder
 {
-    private const TOTAL_ORDERS = 100;
+    private const TOTAL_ORDERS = 30;
 
     /**
      * Run the database seeds.
@@ -19,6 +24,7 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         $serviceItems = ServiceItem::all();
+        $outlets = Outlet::all();
 
         if ($serviceItems->isEmpty()) {
             $this->command->warn('ServiceItem masih kosong. Jalankan ServiceItemSeeder terlebih dahulu.');
@@ -26,15 +32,30 @@ class OrderSeeder extends Seeder
             return;
         }
 
+        if ($outlets->isEmpty()) {
+            $this->command->warn('Outlet masih kosong. Jalankan OutletSeeder terlebih dahulu.');
+
+            return;
+        }
+
+        // Kasir per outlet (dikelompokkan berdasarkan outlet_id)
+        $cashiersByOutlet = User::where('role', UserRole::CASHIER)
+            ->whereNotNull('outlet_id')
+            ->get()
+            ->groupBy('outlet_id');
+
+        // Fallback: semua kasir jika ada outlet yang tidak punya kasir
+        $allCashiers = $cashiersByOutlet->flatten();
+
         for ($i = 1; $i <= self::TOTAL_ORDERS; $i++) {
-            $this->createOrder($i, $serviceItems);
+            $this->createOrder($i, $serviceItems, $outlets, $cashiersByOutlet, $allCashiers);
         }
     }
 
     /**
      * Buat satu order beserta order_items dan payment-nya.
      */
-    private function createOrder(int $index, $serviceItems): void
+    private function createOrder(int $index, Collection $serviceItems, Collection $outlets, $cashiersByOutlet, $allCashiers): void
     {
         $orderAt = now()->subDays(rand(0, 90))->subHours(rand(0, 23));
         $status = $this->randomStatus();
@@ -59,16 +80,37 @@ class OrderSeeder extends Seeder
 
         $totalPrice = $orderItems->sum('subtotal');
 
+        // Calculate estimated completed time (taking the maximum duration among selected items)
+        $maxDurationMinutes = 0;
+        foreach ($selectedItems as $item) {
+            $timeType = $item->time_type;
+            $enumType = $timeType instanceof ServiceTimeType ? $timeType : ServiceTimeType::tryFrom($timeType);
+            $minutes = $enumType ? $enumType->toMinutes($item->time_number) : 0;
+            if ($minutes > $maxDurationMinutes) {
+                $maxDurationMinutes = $minutes;
+            }
+        }
+        $estimatedCompletedAt = $orderAt->copy()->addMinutes($maxDurationMinutes);
+
+        $outlet = $outlets->random();
+        $outletCashiers = $cashiersByOutlet->get($outlet->id, collect());
+        $cashier = $outletCashiers->isNotEmpty() ? $outletCashiers->random() : $allCashiers->random();
+
         // Insert order
         $orderId = DB::table('orders')->insertGetId([
+            'outlet_id' => $outlet->id,
+            'cashier_id' => $cashier->id,
             'order_code' => $this->generateOrderCode($index),
             'customer_name' => $this->randomCustomerName(),
             'status' => $status->value,
             'total_price' => $totalPrice,
-            'order_at' => $orderAt,
             'completed_at' => in_array($status, [OrderStatus::DONE, OrderStatus::PICKED_UP])
                 ? $orderAt->copy()->addDays(rand(1, 3))
                 : null,
+            'picked_up_at' => $status === OrderStatus::PICKED_UP
+                ? $orderAt->copy()->addDays(rand(4, 6))
+                : null,
+            'estimated_completed_at' => $estimatedCompletedAt,
             'created_at' => $orderAt,
             'updated_at' => $orderAt,
         ]);

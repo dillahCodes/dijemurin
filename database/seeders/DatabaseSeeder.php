@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,21 +11,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedUser();
+        $this->call(OutletSeeder::class);
+        $this->call(SuperAdminSeeder::class);
+        $this->call(UserSeeder::class);
         $this->call(ServiceSeeder::class);
         $this->call(ServiceItemSeeder::class);
         $this->call(OrderSeeder::class);
-    }
-
-    /**
-     * Seed default user
-     */
-    private function seedUser(): void
-    {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        $this->call(OrderStatusLogSeeder::class);
+        $this->call(AccidentSeeder::class);
+        $this->call(AccidentLogSeeder::class);
     }
 }

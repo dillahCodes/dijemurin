@@ -11,7 +11,7 @@ Route::middleware(['auth', 'verified'])->prefix('order')->name('order.')->group(
     Route::get('/', [OrderController::class, 'index'])->name('index');
     Route::post('/', [OrderController::class, 'store'])->name('store');
 
-    Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
     Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+    Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
     Route::get('/{order}/print', [OrderController::class, 'print'])->name('print');
 });

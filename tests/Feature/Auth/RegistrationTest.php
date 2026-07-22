@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\User\UserRole;
 use Laravel\Fortify\Features;
 
 beforeEach(function () {
@@ -18,6 +19,7 @@ test('new users can register', function () {
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'role' => UserRole::OPERATOR->value,
     ]);
 
     $this->assertAuthenticated();

@@ -4,16 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOrderEdit } from '@/hooks/feature/order/use-order-edit';
-import type { Order, OrderStatusEnglish, OrderTransitionRules } from '@/types/feature/order';
+import type { Order, OrderStatusEnglish, OrderTransitionRules } from '@/types/feature/order/order';
+import type { UserRole } from '@/types/feature/user/user';
 import type { OrderOption } from './order-data-section';
 
 interface OrderTableEditProps {
     order: Order;
     orderStatusOptions: OrderOption[];
     orderTransitionRules: OrderTransitionRules;
+    userRole: UserRole;
 }
 
-export function OrderTableEdit({ order, orderStatusOptions, orderTransitionRules }: OrderTableEditProps) {
+export function OrderTableEdit({ order, orderStatusOptions, orderTransitionRules, userRole }: OrderTableEditProps) {
     const {
         processing,
         handleCloseModal,
@@ -25,7 +27,7 @@ export function OrderTableEdit({ order, orderStatusOptions, orderTransitionRules
         shouldShowWarning,
     } = useOrderEdit(order);
 
-    const allowedStatuses = orderTransitionRules[order.status.value] ?? [];
+    const allowedStatuses = orderTransitionRules[userRole]?.[order.status.value] ?? [];
 
     const isDisabled = (value: string) => {
         if (value === order.status.value) {

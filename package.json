@@ -10,7 +10,8 @@
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
-        "types:check": "tsc --noEmit"
+        "types:check": "tsc --noEmit",
+        "open-roles": "node .browser/open-roles.js"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
@@ -30,6 +31,7 @@
         "typescript-eslint": "^8.23.0"
     },
     "dependencies": {
+        "@base-ui/react": "^1.4.1",
         "@headlessui/react": "^2.2.0",
         "@inertiajs/react": "^2.3.7",
         "@radix-ui/react-avatar": "^1.1.3",

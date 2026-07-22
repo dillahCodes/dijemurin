@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Outlet\Outlet;
 use App\Models\Service\Service;
 use Illuminate\Database\Seeder;
 
@@ -12,51 +13,32 @@ class ServiceSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->seedServices();
-    }
+        $outlets = Outlet::all();
 
-    /**
-     * Seed services
-     */
-    private function seedServices(): void
-    {
-        $services = [
-            [
-                'name' => 'Laundry Karpet',
-                'description' => 'Jasa cuci karpet',
-            ],
-            [
-                'name' => 'Laundry Kiloan',
-                'description' => 'Jasa cuci kiloan',
-            ],
-            [
+        foreach ($outlets as $outlet) {
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Cuci Kiloan',
+                'description' => 'Layanan cuci dan lipat pakaian harian berdasarkan berat timbangan.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Cuci Setrika',
+                'description' => 'Layanan cuci bersih, disetrika rapi, dan dilipat higienis.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
+                'name' => 'Dry Cleaning & Satuan',
+                'description' => 'Cuci premium per potong untuk jas, kemeja, bed cover, sepatu, dll.',
+            ]);
+
+            Service::create([
+                'outlet_id' => $outlet->id,
                 'name' => 'Setrika Saja',
-                'description' => 'Jasa setrika saja',
-            ],
-            [
-                'name' => 'Laundry Stroller & Perlengkapan Bayi',
-                'description' => 'Jasa cuci stroller & perlengkapan bayi',
-            ],
-            [
-                'name' => 'Laundry Sepatu',
-                'description' => 'Jasa cuci sepatu',
-            ],
-            [
-                'name' => 'Laundry Bed Cover',
-                'description' => 'Jasa cuci bed cover',
-            ],
-            [
-                'name' => 'Laundry Bantal',
-                'description' => 'Jasa cuci bantal',
-            ],
-            [
-                'name' => 'Laundry Boneka',
-                'description' => 'Jasa cuci boneka',
-            ],
-        ];
-
-        foreach ($services as $service) {
-            Service::factory()->create($service);
+                'description' => 'Layanan setrika pakaian hingga rapi dan siap pakai tanpa proses cuci.',
+            ]);
         }
     }
 }

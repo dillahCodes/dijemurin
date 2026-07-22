@@ -1,4 +1,4 @@
-import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order';
+import { OrderStatusEnglish, OrderStatusIndonesian } from '@/types/feature/order/order';
 
 export const indoToEnglishStatuses = Object.entries(OrderStatusIndonesian).reduce(
     (acc, [key, val]) => {

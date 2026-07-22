@@ -1,10 +1,11 @@
 import { usePage } from '@inertiajs/react';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 import type { ApiResponse } from '@/types/response';
 import { OrderDetailHeader } from './order-detail-header';
 import { OrderInfo } from './order-info';
 import { OrderItems } from './order-items';
 import { OrderPayment } from './order-payment';
+import { OrderTimeline } from './order-timeline';
 
 export type OrderDetailPageProps = {
     detailOrder: ApiResponse<OrderDetail>;
@@ -21,6 +22,7 @@ export function OrderDetailSection() {
 
             <div className="flex flex-col gap-6">
                 <OrderInfo order={detailOrder.data} />
+                <OrderTimeline order={detailOrder.data} />
                 <OrderItems items={detailOrder.data.order_items} />
                 <OrderPayment order={detailOrder.data} />
             </div>

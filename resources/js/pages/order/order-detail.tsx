@@ -2,7 +2,6 @@ import { Head, usePage } from '@inertiajs/react';
 import type { OrderDetailPageProps } from '@/components/feature/order/detail/order-detail-section';
 import { OrderDetailSection } from '@/components/feature/order/detail/order-detail-section';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import order from '@/routes/order';
 
 export default function OrderDetail() {
@@ -12,7 +11,6 @@ export default function OrderDetail() {
     return (
         <AppLayout
             breadcrumbs={[
-                { title: 'Dashboard', href: dashboard() },
                 { title: 'Order', href: order.index() },
                 { title: `Detail Order ${orderData.customer_name}`, href: '' },
             ]}

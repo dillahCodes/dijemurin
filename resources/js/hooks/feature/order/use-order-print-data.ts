@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import type { Order, OrderDetail } from '@/types/feature/order';
+import type { Order, OrderDetail } from '@/types/feature/order/order';
 import type { ApiResponse } from '@/types/response';
 import order from '@/routes/order';
 

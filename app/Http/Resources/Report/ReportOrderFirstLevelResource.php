@@ -43,7 +43,7 @@ class ReportOrderFirstLevelResource extends JsonResource
             'status' => $this->resolveStatus($order->status),
             'total_price' => $order->total_price,
 
-            'order_items' => $this->mapOrderItems($order->orderItem),
+            'order_items' => $this->mapOrderItems($order->orderItems),
             'payment' => $this->mapOrderPayment($order->payment),
         ]);
     }
@@ -55,10 +55,10 @@ class ReportOrderFirstLevelResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $orders = $this->resource;
+        $orders = $this->resource['orders'];
 
         // group all order data by date
-        $ordersGroupByDate = $orders->groupBy(fn ($order) => $order->order_at->format('Y-m-d'));
+        $ordersGroupByDate = $orders->groupBy(fn ($order) => $order->created_at->format('Y-m-d'));
 
         $transactions = $ordersGroupByDate->map(fn ($orderByDate, $date) => [
             'date' => $date,

@@ -2,11 +2,25 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/helper/formatted-date';
 import { cn } from '@/lib/utils';
-import type { OrderDetail } from '@/types/feature/order';
+import type { OrderDetail } from '@/types/feature/order/order';
 import { getStatusBadgeClass, getStatusBadgeVariant } from '../order-table';
 
 interface OrderCustomerStatusInfoProps {
     order: OrderDetail;
+}
+
+interface InfoFieldProps {
+    label: string;
+    children: React.ReactNode;
+}
+
+function InfoField({ label, children }: InfoFieldProps) {
+    return (
+        <div className="flex flex-col gap-1">
+            <span className="text-sm text-muted-foreground">{label}</span>
+            <div className="font-semibold">{children}</div>
+        </div>
+    );
 }
 
 export function OrderCustomerStatusInfo({ order }: OrderCustomerStatusInfoProps) {
@@ -15,27 +29,33 @@ export function OrderCustomerStatusInfo({ order }: OrderCustomerStatusInfoProps)
             <CardHeader>
                 <CardTitle>Informasi Pesanan</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <span className="text-sm text-muted-foreground">Kode Pesanan</span>
-                    <p className="font-semibold">{order.order_code}</p>
+            <CardContent className="flex flex-col gap-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <InfoField label="Kode Pesanan">{order.order_code}</InfoField>
+                    <InfoField label="Nama Pelanggan">{order.customer_name}</InfoField>
                 </div>
-                <div>
-                    <span className="text-sm text-muted-foreground">Nama Pelanggan</span>
-                    <p className="font-semibold">{order.customer_name}</p>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <InfoField label="Outlet">{order.outlet?.name ?? '-'}</InfoField>
+                    <InfoField label="Kasir">{order.cashier?.name ?? '-'}</InfoField>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <span className="text-sm text-muted-foreground">Status</span>
-                    <Badge
-                        variant={getStatusBadgeVariant(order.status.label)}
-                        className={cn('w-full max-w-32 py-1 font-medium', getStatusBadgeClass(order.status.label))}
-                    >
-                        {order.status.label}
-                    </Badge>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <InfoField label="Tanggal Pesanan">{formatDate(order.created_at, true)}</InfoField>
+                    <InfoField label="Estimasi Selesai">
+                        {order.estimated_completed_at ? formatDate(order.estimated_completed_at, true) : '-'}
+                    </InfoField>
                 </div>
-                <div>
-                    <span className="text-sm text-muted-foreground">Tanggal Pesanan</span>
-                    <p className="font-semibold">{formatDate(order.order_at)}</p>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <InfoField label="Status">
+                        <Badge
+                            variant={getStatusBadgeVariant(order.status.label)}
+                            className={cn('w-full max-w-32 py-1 font-medium', getStatusBadgeClass(order.status.label))}
+                        >
+                            {order.status.label}
+                        </Badge>
+                    </InfoField>
                 </div>
             </CardContent>
         </Card>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\User\UserRole;
+use App\Enums\User\UserStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -10,7 +12,9 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'role' => UserRole::SUPER_ADMIN,
+    ]);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
@@ -52,4 +56,36 @@ test('users are rate limited', function () {
     ]);
 
     $response->assertTooManyRequests();
+});
+
+test('inactive users cannot authenticate', function () {
+    $user = User::factory()->create([
+        'status' => UserStatus::INACTIVE,
+    ]);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertSessionHasErrors([
+        'email' => 'Akun Anda tidak aktif. Silakan hubungi administrator',
+    ]);
+});
+
+test('suspended users cannot authenticate', function () {
+    $user = User::factory()->create([
+        'status' => UserStatus::SUSPENDED,
+    ]);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertSessionHasErrors([
+        'email' => 'Akun Anda telah ditangguhkan. Silakan hubungi administrator.',
+    ]);
 });

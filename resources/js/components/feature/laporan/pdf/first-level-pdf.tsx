@@ -10,6 +10,40 @@ interface Props {
 export function FirstLevelPdf({ period, data }: Props) {
     const { transactions } = data;
 
+    if (transactions.length === 0) {
+        return (
+            <Document title="Laporan Detail Transaksi" author="Sistem Laundry">
+                <Page size="A4" style={shared.page}>
+                    {/* Header */}
+                    <View style={shared.headerRow}>
+                        <View>
+                            <Text style={shared.headerTitle}>Laporan Detail Transaksi</Text>
+                            <Text style={shared.headerSubtitle}>Rincian per transaksi harian</Text>
+                        </View>
+                        <View style={shared.periodBadge}>
+                            <Text style={shared.periodLabel}>Periode</Text>
+                            <Text style={shared.periodValue}>
+                                {formatDate(period.start_date)} – {formatDate(period.end_date)}
+                            </Text>
+                        </View>
+                    </View>
+
+                    {/* Empty State Message */}
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
+                        <Text style={{ fontSize: 11, color: colors.secondary, fontFamily: 'Helvetica-Bold' }}>
+                            Tidak ada transaksi pada periode ini
+                        </Text>
+                    </View>
+
+                    {/* Footer */}
+                    <View style={shared.footer} fixed>
+                        <Text style={shared.footerText}>Laporan Detail Transaksi — Sistem Laundry</Text>
+                    </View>
+                </Page>
+            </Document>
+        );
+    }
+
     return (
         <Document title="Laporan Detail Transaksi" author="Sistem Laundry">
             {transactions.map((trx) => (

@@ -1,4 +1,4 @@
-import type { OrderStatusIndonesian } from '../order';
+import type { OrderStatusIndonesian } from '../order/order';
 
 // ─── Period ──────────────────────────────────────────────────────────────────
 export interface ReportPeriod {
@@ -22,6 +22,9 @@ export interface ReportTopServiceItem {
 export interface ReportTopLevel {
     summary: ReportSummary;
     total_revenue: number;
+    gross_revenue: number;
+    accident_loss: number;
+    net_revenue: number;
     payment_summary: Record<string, number>;
     top_services: ReportTopServiceItem[];
 }
@@ -31,6 +34,9 @@ export interface DailySummary {
     date: string;
     total_order: number;
     total_revenue: number;
+    gross_revenue: number;
+    accident_loss: number;
+    net_revenue: number;
 }
 
 export interface ServiceSummaryItem {
@@ -81,8 +87,8 @@ export interface ReportFirstLevel {
 // ─── Full Report ──────────────────────────────────────────────────────────────
 export interface Report {
     period: ReportPeriod;
-    top_level: ReportTopLevel;
-    middle_level: ReportMiddleLevel;
+    top_level: ReportTopLevel | null;
+    middle_level: ReportMiddleLevel | null;
     first_level: ReportFirstLevel;
 }
 

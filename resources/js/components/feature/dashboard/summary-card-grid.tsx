@@ -1,78 +1,61 @@
-import { usePage } from '@inertiajs/react';
-import { CheckCircle2, DollarSign, LoaderCircle, ShoppingBag } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Zap, BarChart3, Building2 } from 'lucide-react';
+import { Activity } from 'react';
 import SummaryCard from '@/components/feature/dashboard/summary-card';
-import { OrderStatusEnglish } from '@/types/feature/order';
-import type { DashboardSectionProps } from './dashboard-section';
-import order from '@/routes/order';
+import { useSummaryCardGrid } from '@/hooks/feature/dashboard/use-summary-card-grid';
+import { cn } from '@/lib/utils';
 
-const filterDate = {
-    start_date: new Date().toISOString().split('T')[0],
-    end_date: new Date().toISOString().split('T')[0],
-};
+interface CardData {
+    title: string;
+    count: number | string;
+    type?: 'number' | 'currency';
+    icon: LucideIcon;
+    iconColor?: string;
+    iconBg?: string;
+    accentColor?: string;
+    href?: string;
+    description?: string;
+}
 
-/**
- * main component
- */
+interface CardSectionProps {
+    icon: LucideIcon;
+    iconColor: string;
+    label: string;
+    cards: CardData[];
+}
+
+function CardSection({ icon: Icon, iconColor, label, cards }: CardSectionProps) {
+    return (
+        <div>
+            <div className="mb-3 flex items-center gap-2">
+                <Icon className={cn('size-4', iconColor)} />
+                <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">{label}</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                {cards.map((card) => (
+                    <SummaryCard {...card} key={card.title} />
+                ))}
+            </div>
+        </div>
+    );
+}
 
 export function SummaryCardGrid() {
-    const { todayRevenue, todayOrderCount, processOrderCount, doneOrderCount } = usePage<DashboardSectionProps>().props;
-    const CARD_DATA = [
-        {
-            title: 'Pendapatan hari ini',
-            count: todayRevenue,
-            icon: DollarSign,
-            type: 'currency' as const,
-            iconColor: 'text-purple-600 dark:text-purple-400',
-            iconBg: 'bg-purple-600/10 dark:bg-purple-400/10',
-            accentColor: 'bg-purple-600 dark:bg-purple-400',
-        },
-        {
-            title: 'Orderan hari ini',
-            href: order.index().url + `?end_date=${filterDate.end_date}&start_date=${filterDate.start_date}`,
-            count: todayOrderCount,
-            icon: ShoppingBag,
-            type: 'number' as const,
-            iconColor: 'text-blue-600 dark:text-blue-400',
-            iconBg: 'bg-blue-600/10 dark:bg-blue-400/10',
-            accentColor: 'bg-blue-600 dark:bg-blue-400',
-        },
-        {
-            title: 'Sedang diproses',
-            count: processOrderCount,
-            href: order.index().url + `?status=${OrderStatusEnglish.PROCESS}`,
-            icon: LoaderCircle,
-            type: 'number' as const,
-            iconColor: 'text-yellow-600 dark:text-yellow-400',
-            iconBg: 'bg-yellow-600/10 dark:bg-yellow-400/10',
-            accentColor: 'bg-yellow-600 dark:bg-yellow-400',
-        },
-        {
-            title: 'Siap diambil',
-            count: doneOrderCount,
-            href: order.index().url + `?status=${OrderStatusEnglish.DONE}`,
-            icon: CheckCircle2,
-            type: 'number' as const,
-            iconColor: 'text-green-600 dark:text-green-400',
-            iconBg: 'bg-green-600/10 dark:bg-green-400/10',
-            accentColor: 'bg-green-600 dark:bg-green-400',
-        },
-    ];
+    const { actionCards, summaryCards, overviewCards } = useSummaryCardGrid();
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {CARD_DATA.map((card, index) => (
-                <SummaryCard
-                    key={index}
-                    title={card.title}
-                    count={card.count}
-                    type={card.type}
-                    icon={card.icon}
-                    iconColor={card.iconColor}
-                    iconBg={card.iconBg}
-                    accentColor={card.accentColor}
-                    href={card.href}
-                />
-            ))}
+        <div className="flex flex-col gap-6">
+            <Activity mode={actionCards.length > 0 ? 'visible' : 'hidden'}>
+                <CardSection icon={Zap} iconColor="text-amber-500" label="Perlu Tindakan" cards={actionCards} />
+            </Activity>
+
+            <Activity mode={summaryCards.length > 0 ? 'visible' : 'hidden'}>
+                <CardSection icon={BarChart3} iconColor="text-blue-500" label="Ringkasan" cards={summaryCards} />
+            </Activity>
+
+            <Activity mode={overviewCards.length > 0 ? 'visible' : 'hidden'}>
+                <CardSection icon={Building2} iconColor="text-slate-500" label="Manajemen" cards={overviewCards} />
+            </Activity>
         </div>
     );
 }

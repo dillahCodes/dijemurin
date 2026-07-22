@@ -4,13 +4,19 @@ namespace App\Http\Controllers\Order;
 
 use App\DTOs\Order\OrderCustomerStatusDTO;
 use App\DTOs\Order\OrderFilterDTO;
+use App\DTOs\Outlet\OutletComboboxFilterDTO;
+use App\Enums\Order\OrderDateType;
 use App\Enums\Order\OrderStatus;
+use App\Enums\Order\OrderTimeStatus;
 use App\Enums\Payment\PaymentMethod;
+use App\Enums\User\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderStoreRequest;
 use App\Http\Requests\Order\OrderUpdateRequest;
 use App\Models\Order\Order;
+use App\Services\Order\OrderQueryService;
 use App\Services\Order\OrderService;
+use App\Services\Outlet\OutletQueryService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,20 +28,29 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $filterOrder = OrderFilterDTO::fromRequest($request);
-        $orders = OrderService::getOrdersData($filterOrder);
-        $filters = $filterOrder->toArray();
+        $filterOutlet = OutletComboboxFilterDTO::fromRequest($request);
+        $filters = [...$filterOrder->toArray(), ...$filterOutlet->toArray()];
 
-        $paymentMethodOptions = PaymentMethod::options();
         $orderStatusOptions = OrderStatus::options();
+        $orderTimeStatusOptions = OrderTimeStatus::options();
+        $orderDateTypeOptions = OrderDateType::options();
+        $paymentMethodOptions = PaymentMethod::options();
+        $orderTransitionRules = OrderStatus::allowedRoleTransitions();
 
-        $orderTransitionRules = OrderStatus::allowedTransitions();
+        $orders = OrderQueryService::getOrdersData($filterOrder, $filterOutlet);
+        $outlets = OutletQueryService::getOutletsComboboxData($filterOutlet);
+        $outletSelected = OutletQueryService::getOutletComboboxSelectedData($filterOutlet);
 
         return Inertia::render('order/order', [
             'orderStatusOptions' => $orderStatusOptions,
+            'orderTimeStatusOptions' => $orderTimeStatusOptions,
+            'orderDateTypeOptions' => $orderDateTypeOptions,
             'paymentMethodOptions' => $paymentMethodOptions,
             'orderTransitionRules' => $orderTransitionRules,
             'filters' => $filters,
             'orders' => $orders,
+            'outlets' => $outlets,
+            'outletSelected' => $outletSelected,
         ]);
     }
 
@@ -56,7 +71,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $orderDetail = OrderService::getOrderDetail($order);
+        $hasSuperAdmin = auth()->user()->hasAnyRole([UserRole::SUPER_ADMIN]);
+        $user = auth()->user();
+
+        if (! $hasSuperAdmin && $user->outlet_id != $order->outlet_id) {
+            abort(403);
+        }
+
+        $orderDetail = OrderQueryService::getOrderDetail($order);
 
         return Inertia::render('order/order-detail', [
             'detailOrder' => $orderDetail,
@@ -68,7 +90,7 @@ class OrderController extends Controller
      */
     public function print(Order $order)
     {
-        $orderDetail = OrderService::getOrderDetail($order);
+        $orderDetail = OrderQueryService::getOrderDetail($order);
 
         return $orderDetail;
 
@@ -93,7 +115,7 @@ class OrderController extends Controller
     {
         $orderCodeParam = OrderCustomerStatusDTO::fromRequest($request);
         $orderCode = $orderCodeParam->orderCode;
-        $orderDetail = OrderService::getOrderDetailByCode($orderCode);
+        $orderDetail = OrderQueryService::getOrderDetailByCode($orderCode);
 
         return Inertia::render('order/order-customer-status', [
             'orderDetail' => $orderDetail,

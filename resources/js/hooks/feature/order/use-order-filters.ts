@@ -1,85 +1,220 @@
-import { router } from '@inertiajs/react';
-import { useState } from 'react';
-import type { OrderFilterPageProps } from '@/components/feature/order/order-data-section';
+import { router, usePage } from '@inertiajs/react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import type { OrderFilterPageProps, OrderPageProps } from '@/components/feature/order/order-data-section';
+import { createUndefinedObject } from '@/helper/create-undefined-object';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import type { Outlet } from '@/types/feature/outlet/outlet';
 import order from '@/routes/order';
 
-type FilterValue = string | undefined;
+const FILTER_KEYS: (keyof OrderFilterPageProps)[] = [
+    'search',
+    'status',
+    'paymentMethod',
+    'startDate',
+    'endDate',
+    'timeStatus',
+    'dateType',
+    'outletIdSelected',
+    'outletSearch',
+];
 
-const isEmpty = (value: FilterValue) => value === '' || value === undefined;
-
-const cleanQuery = (params: Record<string, FilterValue>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const filteredEmtyparams = Object.entries(params).filter(([_key, value]) => !isEmpty(value));
-
-    return Object.fromEntries(filteredEmtyparams);
+const FETCH_COMMON = {
+    preserveState: true,
+    preserveScroll: true,
 };
 
-export function useOrderFilters(initialValues: OrderFilterPageProps) {
-    const [filterState, setFilterState] = useState(initialValues);
+const FETCH_ONLY_ORDERS = {
+    ...FETCH_COMMON,
+    only: ['orders', 'outlets', 'outletSelected'],
+};
 
-    const options = { preserveState: true, replace: true };
+const FETCH_ONLY_OUTLETS = {
+    ...FETCH_COMMON,
+    only: ['outlets'],
+};
 
-    const setQuery = (params: Record<string, FilterValue>) => {
-        const merged = { ...initialValues, ...params };
-        const cleaned = cleanQuery(merged);
-        router.get(order.index().url, cleaned, options);
+const FETCH_ONLY_ALL = {
+    ...FETCH_COMMON,
+    only: [
+        'orderStatusOptions',
+        'orderTimeStatusOptions',
+        'orderDateTypeOptions',
+        'paymentMethodOptions',
+        'orderTransitionRules',
+        'filters',
+        'orders',
+        'outlets',
+        'outletSelected',
+    ],
+};
+
+type DateFilter = Pick<OrderFilterPageProps, 'startDate' | 'endDate'>;
+
+function normalizeSelectValue(value: string) {
+    return value === 'all' ? undefined : value;
+}
+
+function normalizeInputValue(value: string) {
+    const trimmedValue = value.trim();
+
+    return trimmedValue === '' ? undefined : trimmedValue;
+}
+
+function validateDateFilter({ startDate, endDate }: DateFilter) {
+    const hasStartDate = !!startDate;
+    const hasEndDate = !!endDate;
+
+    if (hasStartDate && !hasEndDate) {
+        toast.error('Tanggal selesai wajib diisi jika tanggal mulai sudah diisi.');
+
+        return false;
+    }
+
+    if (!hasStartDate && hasEndDate) {
+        toast.error('Tanggal mulai wajib diisi jika tanggal selesai sudah diisi.');
+
+        return false;
+    }
+
+    return true;
+}
+
+export function useOrderFilters() {
+    const { filters } = usePage<OrderPageProps>().props;
+
+    const [filterState, setFilterState] = useState<OrderFilterPageProps>(filters);
+    const [resetKey, setResetKey] = useState(0);
+
+    const filterStateRef = useRef(filterState);
+
+    useEffect(() => {
+        filterStateRef.current = filterState;
+    }, [filterState]);
+
+    const shouldDisableSearch = !filterState.search && !filterState.outletIdSelected;
+
+    const updateFilterState = (params: Partial<OrderFilterPageProps>) => {
+        setFilterState((prev) => ({
+            ...prev,
+            ...params,
+        }));
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const getCurrentFilters = (params: Partial<OrderFilterPageProps> = {}): OrderFilterPageProps => ({
+        ...filters,
+        ...filterStateRef.current,
+        ...params,
+    });
+
+    const fetchOrders = (params: OrderFilterPageProps) => {
+        router.get(order.index().url, params, FETCH_ONLY_ORDERS);
+    };
+
+    const fetchOutlets = (params: OrderFilterPageProps) => {
+        router.get(order.index().url, params, FETCH_ONLY_OUTLETS);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateFilterState({ search: e.target.value });
+    };
+
+    const handleFetchComboboxOutlet = useDebouncedCallback((value: string) => {
+        if (value.length < 3) {
+            return;
+        }
+
+        updateFilterState({ outletIdSelected: undefined });
+
+        fetchOutlets(
+            getCurrentFilters({
+                outletIdSelected: undefined,
+                outletSearch: value,
+            }),
+        );
+    }, 300);
+
+    const handleSelectOutlet = (outlet: Outlet) => {
+        updateFilterState({
+            outletIdSelected: outlet.id,
+            outletSearch: undefined,
+        });
+    };
+
+    const handleSubmitSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        setQuery({ search: filterState.search || undefined });
+        fetchOrders(getCurrentFilters());
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterState((prev) => ({ ...prev, search: e.target.value }));
+    const handleSubmitModalFilters = (
+        e: React.SubmitEvent<HTMLFormElement>,
+        modalFilters: Partial<OrderFilterPageProps>,
+    ) => {
+        e.preventDefault();
+
+        const nextFilters = getCurrentFilters(modalFilters);
+        const isValidDate = validateDateFilter(nextFilters);
+
+        if (!isValidDate) {
+            return;
+        }
+
+        setFilterState(nextFilters);
+        fetchOrders(nextFilters);
     };
 
     const handleClearSearch = () => {
-        setFilterState((prev) => ({ ...prev, search: '' }));
-        setQuery({ search: undefined });
+        const clearedFilters = getCurrentFilters({
+            search: undefined,
+            outletIdSelected: undefined,
+            outletSearch: undefined,
+        });
+
+        setFilterState(clearedFilters);
+        setResetKey((prev) => prev + 1);
+
+        router.get(order.index().url, clearedFilters, FETCH_ONLY_ALL);
     };
 
-    const handleFilterStatus = (status: string) => {
-        const value = status === 'all' ? undefined : status;
+    const handleClearAllFilters = () => {
+        const emptyFilters = createUndefinedObject(FILTER_KEYS);
 
-        setFilterState((prev) => ({ ...prev, status: value ?? '' }));
-        setQuery({ status: value });
+        setFilterState(emptyFilters);
+        setResetKey((prev) => prev + 1);
+
+        router.get(order.index().url, emptyFilters, FETCH_ONLY_ALL);
     };
-
-    const handleFilterPaymentMethod = (paymentMethod: string) => {
-        const value = paymentMethod === 'all' ? undefined : paymentMethod;
-
-        setFilterState((prev) => ({ ...prev, payment_method: value ?? '' }));
-        setQuery({ payment_method: value });
-    };
-
-    const handleFilterDate = (start_date: string, end_date: string) => {
-        setFilterState((prev) => ({ ...prev, start_date: start_date, end_date: end_date }));
-        setQuery({ start_date: start_date || undefined, end_date: end_date || undefined });
-    };
-
-    const searchLength = filterState.search?.length ?? 0;
-    const initialSearchLength = initialValues?.search?.length ?? 0;
-    const shouldDisableSearch = !searchLength && !initialSearchLength;
 
     return {
-        filterState,
-        conditions: { shouldDisableSearch },
-
-        searchHandle: {
-            handleSubmit,
-            handleChange,
+        data: {
+            filterState,
+            resetKey,
+            conditions: {
+                shouldDisableSearch,
+            },
         },
-
-        filterHandle: {
-            handleFilterStatus,
-            handleFilterPaymentMethod,
-            handleFilterDate,
+        utils: {
+            normalizeSelectValue,
+            normalizeInputValue,
         },
-
-        clearHandle: {
-            handleClearSearch,
+        handlers: {
+            searchHandle: {
+                handleSearchChange,
+                handleSubmitSearch,
+                handleClearSearch,
+            },
+            outletHandle: {
+                handleFetchComboboxOutlet,
+                handleSelectOutlet,
+            },
+            modalHandle: {
+                handleSubmitModalFilters,
+            },
+            clearHandle: {
+                handleClearSearch,
+                handleClearAllFilters,
+            },
         },
     };
 }
