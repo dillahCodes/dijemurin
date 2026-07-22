@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import { Eye, Loader2, Pencil, Printer, ShoppingBag } from 'lucide-react';
+import { Activity } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import type { BadgeVariant } from '@/components/ui/badge';
 import { Badge } from '@/components/ui/badge';
@@ -10,10 +11,13 @@ import { usePrinterController } from '@/context/feature/printer/printer-controll
 import { formatDate } from '@/helper/formatted-date';
 import { formatPrice } from '@/helper/formatted-price';
 import { generateOrderInvoice } from '@/helper/generate-order-invoice';
+import { RoleHelper } from '@/helper/role-helper';
 import { useOrderPrintData } from '@/hooks/feature/order/use-order-print-data';
 import { useOrderTableActions } from '@/hooks/feature/order/use-order-table-actions';
 import { cn } from '@/lib/utils';
+import type { Auth } from '@/types/auth';
 import type { Order, OrderStatusIndonesian } from '@/types/feature/order/order';
+import { UserRole } from '@/types/feature/user/user';
 import type { OrderPageProps } from './order-data-section';
 
 export function getStatusBadgeVariant(status: OrderStatusIndonesian): BadgeVariant {
@@ -63,13 +67,19 @@ function OrderTableEmpty() {
     );
 }
 
-function OrderTableHead() {
+interface OrderTableHeadProps {
+    isSuperAdmin: boolean;
+}
+
+function OrderTableHead({ isSuperAdmin }: OrderTableHeadProps) {
     return (
         <TableHeader>
             <TableRow className="hover:bg-transparent">
                 <TableHead className="text-center text-xs">Order ID</TableHead>
-                <TableHead className="text-center text-xs">Pelanggan</TableHead>
-                <TableHead className="text-center text-xs">Outlet</TableHead>
+                <TableHead className="text-center text-xs">
+                    <Activity mode={isSuperAdmin ? 'visible' : 'hidden'}>Pelanggan / Outlet</Activity>
+                    <Activity mode={isSuperAdmin ? 'hidden' : 'visible'}>Pelanggan</Activity>
+                </TableHead>
                 <TableHead className="text-center text-xs">Metode Pembayaran</TableHead>
                 <TableHead className="text-center text-xs">Status</TableHead>
                 <TableHead className="text-center text-xs">Tanggal Dibuat</TableHead>
@@ -115,9 +125,10 @@ function OrderRowPrint({ order }: OrderRowPrintProps) {
 
 interface OrderTableBodyProps {
     ordersData: Order[];
+    isSuperAdmin: boolean;
 }
 
-function OrderTableBody({ ordersData }: OrderTableBodyProps) {
+function OrderTableBody({ ordersData, isSuperAdmin }: OrderTableBodyProps) {
     const { handleOpenEditModal, handleGoToShow } = useOrderTableActions();
 
     return (
@@ -132,8 +143,14 @@ function OrderTableBody({ ordersData }: OrderTableBodyProps) {
                         <TableCell className="text-center font-mono text-xs font-semibold whitespace-nowrap text-muted-foreground">
                             {order.order_code}
                         </TableCell>
-                        <TableCell className="text-center font-medium">{order.customer_name}</TableCell>
-                        <TableCell className="text-center text-xs">{order.outlet?.name ?? '-'}</TableCell>
+                        <TableCell className="text-center text-xs">
+                            <div className="flex flex-col justify-center gap-0.5">
+                                <span className="font-semibold text-foreground">{order.customer_name || '-'}</span>
+                                <Activity mode={isSuperAdmin ? 'visible' : 'hidden'}>
+                                    <span className="text-[11px] text-muted-foreground">{order.outlet?.name ?? '-'}</span>
+                                </Activity>
+                            </div>
+                        </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground uppercase">
                             {order.payment_method}
                         </TableCell>
@@ -169,8 +186,9 @@ function OrderTableBody({ ordersData }: OrderTableBodyProps) {
 }
 
 export function OrderTable() {
-    const { orders } = usePage<OrderPageProps>().props;
+    const { orders, auth } = usePage<OrderPageProps>().props;
     const { data: ordersData } = orders;
+    const isSuperAdmin = RoleHelper.hasRole(auth.user, UserRole.SUPER_ADMIN);
 
     if (!ordersData.length) {
         return <OrderTableEmpty />;
@@ -178,8 +196,8 @@ export function OrderTable() {
 
     return (
         <Table>
-            <OrderTableHead />
-            <OrderTableBody ordersData={ordersData} />
+            <OrderTableHead isSuperAdmin={isSuperAdmin} />
+            <OrderTableBody ordersData={ordersData} isSuperAdmin={isSuperAdmin} />
         </Table>
     );
 }

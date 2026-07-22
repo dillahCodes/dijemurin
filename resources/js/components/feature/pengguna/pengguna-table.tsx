@@ -66,9 +66,8 @@ function PenggunaTableHead() {
         <TableHeader>
             <TableRow className="hover:bg-transparent">
                 <TableHead className="text-center text-xs">No</TableHead>
-                <TableHead className="text-center text-xs">Nama</TableHead>
-                <TableHead className="text-center text-xs">Email</TableHead>
-                <TableHead className="text-center text-xs">Penampatan</TableHead>
+                <TableHead className="text-center text-xs">Nama / Email</TableHead>
+                <TableHead className="text-center text-xs">Penempatan</TableHead>
                 <TableHead className="text-center text-xs">Role</TableHead>
                 <TableHead className="text-center text-xs">Status</TableHead>
                 <TableHead className="text-center text-xs">Aksi</TableHead>
@@ -103,8 +102,12 @@ function PenggunaTableBody({ usersData }: PenggunaTableBodyProps) {
                         <TableCell className="text-center font-mono text-xs font-semibold whitespace-nowrap text-muted-foreground">
                             {index + 1}
                         </TableCell>
-                        <TableCell className="text-center font-medium">{user.name}</TableCell>
-                        <TableCell className="text-center text-xs text-muted-foreground">{user.email}</TableCell>
+                        <TableCell className="text-center text-xs">
+                            <div className="flex flex-col justify-center gap-0.5">
+                                <span className="font-semibold text-foreground">{user.name}</span>
+                                <span className="text-[11px] text-muted-foreground">{user.email}</span>
+                            </div>
+                        </TableCell>
                         <TableCell className="text-center text-xs text-muted-foreground">
                             {user?.outlet?.name ?? '-'}
                         </TableCell>

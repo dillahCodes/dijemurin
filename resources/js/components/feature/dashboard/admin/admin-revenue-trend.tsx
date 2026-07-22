@@ -93,8 +93,7 @@ function RevenueTrendAreaChart({ data, height, isDark }: RevenueTrendAreaChartPr
                     }}
                 />
                 <Legend
-                    verticalAlign="top"
-                    align="right"
+                    verticalAlign="bottom"
                     iconType="circle"
                     formatter={(value) => (value === 'grossRevenue' ? 'Pendapatan Kotor' : 'Kerugian')}
                     wrapperStyle={{ fontSize: '12px', paddingBottom: '8px', color: TOOLTIP_TEXT }}

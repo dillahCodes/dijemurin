@@ -30,8 +30,6 @@ return new class extends Migration
             $table->unsignedBigInteger('compensation_amount')->nullable();
 
             $table->timestamps();
-
-            $table->unique('order_item_id');
         });
     }
 
