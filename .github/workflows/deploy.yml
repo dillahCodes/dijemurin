@@ -1,0 +1,69 @@
+name: Deploy to Local Machine via Cloudflare
+
+on:
+  push:
+    branches: ['main']
+
+# ==========================================
+# CONFIGURATION
+# ==========================================
+env:
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
+  CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
+  PROJECT_NAME: dijemurin
+  IMAGE_TAG: latest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # ==========================================
+      # BUILD & PUSH IMAGE
+      # ==========================================
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: |
+          docker build --target prod -t ${{ env.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:${{ env.IMAGE_TAG }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push ${{ env.DOCKER_USERNAME }}/${{ env.PROJECT_NAME }}:${{ env.IMAGE_TAG }}
+
+      # ==========================================
+      # DEPLOY TO LOCAL MACHINE VIA CLOUDFLARED
+      # ==========================================
+      - name: Install Cloudflared
+        run: |
+          curl -L -o cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared.deb
+          cloudflared --version
+
+      - name: Deploy via Cloudflare SSH Tunnel
+        run: |
+          mkdir -p ~/.ssh
+
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          echo "=== EXECUTING DEPLOYMENT VIA CLOUDFLARE TUNNEL ==="
+
+          ssh \
+            -o ProxyCommand="cloudflared access tcp --hostname $SSH_HOST --id $CF_CLIENT_ID --secret $CF_CLIENT_SECRET" \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ~/.ssh/deploy_key \
+            ${SSH_USER}@${SSH_HOST} \
+            "make pull PROJECTNAME=${PROJECT_NAME} USERNAME=${DOCKER_USERNAME} TAG=${IMAGE_TAG} && make start"

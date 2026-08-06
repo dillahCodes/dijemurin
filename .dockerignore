@@ -1,0 +1,79 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# IDE & Editor Helper Files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.editorconfig
+.prettierrc
+.prettierignore
+.npmrc
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Documentation & AI Agent Metadata
+.agents
+.browser
+.github
+.context
+AGENTS.md
+README.md
+README*
+
+# Tooling, Linting & Testing Configs
+boost.json
+components.json
+eslint.config.js
+pint.json
+phpunit.xml
+tests/
+Makefile
+
+# Local Dependencies
+vendor/
+node_modules/
+.pnpm-store
+
+# Frontend Build & Cache
+public/build/
+public/hot/
+.vite/
+
+# Laravel Storage & Temporary Files
+bootstrap/cache/*.php
+!bootstrap/cache/.gitignore
+storage/*.key
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/testing/.gitignore
+!storage/framework/views/.gitignore
+!storage/logs/.gitignore
+
+# Local SQLite Databases
+database/*.sqlite
+database/*.sqlite-journal
+
+# Docker & OS Files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+.DS_Store
+Thumbs.db
