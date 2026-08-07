@@ -14,11 +14,8 @@ setup:
 	@echo "Starting Development environment..."
 	docker compose --profile dev up -d
 
-	@echo "Running Prisma migrations..."
-	docker exec -it dijemurin-dev npx prisma migrate dev
-
-	@echo "Running database seeder..."
-	docker exec -it dijemurin-dev npx prisma db seed
+	@echo "Running Laravel migrations and seeders..."
+	docker exec -it dijemurin-dev php artisan migrate:fresh --seed
 
 # Stop development environment
 dev-down:
