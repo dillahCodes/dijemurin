@@ -7,12 +7,12 @@
 # Start development environment
 dev:
 	@echo "Starting Development environment..."
-	docker compose --profile dev up -d
+	docker compose --profile dev up -d --build
 
 # Initialize development database
 setup:
 	@echo "Starting Development environment..."
-	docker compose --profile dev up -d
+	docker compose --profile dev up -d --build
 
 	@echo "Running Laravel migrations and seeders..."
 	docker exec -it dijemurin-dev php artisan migrate:fresh --seed
