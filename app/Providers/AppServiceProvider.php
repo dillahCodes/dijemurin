@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->registerEventListeners();
+        $this->forceHttpsOnProduction();
     }
 
     /**
@@ -58,5 +60,15 @@ class AppServiceProvider extends ServiceProvider
     protected function registerEventListeners(): void
     {
         Event::listen(PasswordReset::class, MarkEmailAsVerifiedOnFirstPasswordReset::class);
+    }
+
+    /**
+     * Force https on production.
+     */
+    protected function forceHttpsOnProduction(): void
+    {
+        if (app()->isProduction()) {
+            URL::forceScheme('https');
+        }
     }
 }
