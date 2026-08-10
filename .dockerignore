@@ -34,7 +34,6 @@ README.md
 README*
 
 # Tooling, Linting & Testing Configs
-boost.json
 components.json
 eslint.config.js
 pint.json

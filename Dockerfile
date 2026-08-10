@@ -10,7 +10,17 @@ WORKDIR /var/www/html
 # ==========================================
 # 2. BACKEND DEPENDENCIES (LARAVEL VENDOR)
 # ==========================================
-FROM composer:2 AS composer-deps
+FROM composer:2 AS composer-deps-dev
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-interaction --no-scripts \
+    --no-autoloader --ignore-platform-reqs --prefer-dist
+
+FROM composer:2 AS composer-deps-prod
 
 WORKDIR /app
 
@@ -46,7 +56,7 @@ COPY --from=node-deps /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY . /var/www/html
 
 # Copy Composer vendor and Node modules from dependency stages
-COPY --from=composer-deps /app/vendor /var/www/html/vendor
+COPY --from=composer-deps-dev /app/vendor /var/www/html/vendor
 COPY --from=node-deps /app/node_modules /var/www/html/node_modules
 
 # Generate autoloader for application classes
@@ -80,7 +90,7 @@ COPY --from=node-deps /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY . /var/www/html
 
 # Copy Composer vendor and Node modules
-COPY --from=composer-deps /app/vendor /var/www/html/vendor
+COPY --from=composer-deps-dev /app/vendor /var/www/html/vendor
 COPY --from=node-deps /app/node_modules /var/www/html/node_modules
 
 # Re-generate autoloader map for Wayfinder route generator
@@ -104,7 +114,7 @@ RUN rm -rf /var/www/html/resources/js /var/www/html/resources/css \
     /var/www/html/vite.config.ts /var/www/html/tsconfig.json
 
 # Copy production vendor and compiled frontend assets
-COPY --from=composer-deps --chown=www-data:www-data /app/vendor /var/www/html/vendor
+COPY --from=composer-deps-prod --chown=www-data:www-data /app/vendor /var/www/html/vendor
 COPY --from=node-builder --chown=www-data:www-data /var/www/html/public/build /var/www/html/public/build
 
 # Generate final optimized autoloader map for production

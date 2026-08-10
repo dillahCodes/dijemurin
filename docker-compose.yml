@@ -19,7 +19,7 @@ services:
       - /var/www/html/node_modules
     restart: unless-stopped
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
     profiles:
       - dev
@@ -39,7 +39,7 @@ services:
       - '8000:8080'
     restart: unless-stopped
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
     profiles:
       - prod
@@ -48,7 +48,7 @@ services:
   # INFRASTRUCTURE
   # ==========================================
 
-  postgres:
+  db:
     image: postgres:18.4-alpine
     container_name: db
     env_file:
