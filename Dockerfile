@@ -1,7 +1,7 @@
 # ==========================================
 # 1. BASE STAGE
 # ==========================================
-FROM serversideup/php:8.3-fpm-nginx-alpine AS base
+FROM serversideup/php:8.5-fpm-nginx-alpine AS base
 
 ENV HTTP_PORT=8080
 
