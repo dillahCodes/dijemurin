@@ -1,0 +1,1 @@
+import{r as e}from"./wayfinder-CbfMZzdF.js";var t=e(`Filter`,[[`polygon`,{points:`22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3`,key:`1yg77f`}]]),n=e(`RotateCcw`,[[`path`,{d:`M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8`,key:`1357e3`}],[`path`,{d:`M3 3v5h5`,key:`1xhq8a`}]]);function r(e){return Object.fromEntries(e.map(e=>[e,void 0]))}export{n,t as r,r as t};

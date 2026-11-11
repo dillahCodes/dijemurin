@@ -1,1 +1,0 @@
-import{s as e,u as t}from"./wayfinder-BYHF05zG.js";var n=t(),r=e();function i(e){let t=(0,n.c)(2),i;return t[0]===e?i=t[1]:(i=(0,r.jsx)(`img`,{...e,src:`/favicon/favicon.svg`,alt:`App Logo`}),t[0]=e,t[1]=i),i}export{i as t};
