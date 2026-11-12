@@ -45,8 +45,9 @@ export function useLayananTambah() {
                 clearErrors();
                 toast.success('Layanan berhasil ditambahkan', { position: 'top-center' });
             },
-            onError: () => {
-                toast.error('Gagal menambahkan layanan', { position: 'top-center' });
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                toast.error(firstError || 'Gagal menambahkan Layanan', { position: 'top-center' });
             },
         });
     };

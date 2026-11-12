@@ -34,8 +34,9 @@ export function useOrderEdit(orderData: Order) {
                 modal.close(`edit-order-${orderData.id}`);
                 toast.success('Order berhasil diupdate', { position: 'top-center' });
             },
-            onError: () => {
-                toast.error('Gagal mengupdate order', { position: 'top-center' });
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                toast.error(firstError ?? 'Gagal mengupdate order', { position: 'top-center' });
             },
         });
     };

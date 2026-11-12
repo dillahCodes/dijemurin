@@ -51,10 +51,9 @@ export function useLayananEdit() {
                 reset();
             },
 
-            onError: () => {
-                toast.error('Pengguna gagal diupdate', {
-                    position: 'top-center',
-                });
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                toast.error(firstError || 'Gagal mengupdate Layanan', { position: 'top-center' });
             },
 
             preserveScroll: true,

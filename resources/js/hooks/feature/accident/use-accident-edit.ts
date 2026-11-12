@@ -60,7 +60,6 @@ export function useAccidentEdit(accident: Accident) {
             onSuccess: () => {
                 clearErrors();
                 toast.success('Laporan insiden berhasil diperbarui', { position: 'top-center' });
-                router.get(accidents.show(accident.id).url);
             },
             onError: (errs) => {
                 const firstError = Object.values(errs)[0];
