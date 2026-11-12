@@ -9,6 +9,7 @@ use App\Rules\Accident\RoleCanUpdateAccidentFieldsRule;
 use App\Rules\Accident\RoleCanUpdateAccidentItemFieldsRule;
 use App\Rules\Accident\ValidAccidentCompensationAmountRule;
 use App\Rules\Accident\ValidAccidentStatusTransition;
+use App\Rules\Outlet\OutletIsActive;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -29,6 +30,7 @@ class AccidentUpdateRequest extends FormRequest
     {
         $accident = $this->route('accident');
         $user = $this->user();
+        $outletId = $accident->outlet_id;
 
         return [
             'description' => [
@@ -36,48 +38,57 @@ class AccidentUpdateRequest extends FormRequest
                 'nullable',
                 'string',
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'description'),
+                new OutletIsActive($outletId)
             ],
             'status' => [
                 'sometimes',
                 new Enum(AccidentStatus::class),
                 new ValidAccidentStatusTransition($accident),
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'status'),
+                new OutletIsActive($outletId)
             ],
             'resolver_id' => [
                 'nullable',
                 'exists:users,id',
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'resolver_id'),
+                new OutletIsActive($outletId)
             ],
             'items' => [
                 'sometimes',
                 'array',
                 'min:1',
+                new OutletIsActive($outletId)
             ],
             'items.*.id' => [
                 'required',
                 'integer',
                 'exists:accident_items,id',
+                new OutletIsActive($outletId)
             ],
             'items.*.type' => [
                 'required',
                 new Enum(AccidentType::class),
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'type'),
+                new OutletIsActive($outletId)
             ],
             'items.*.item_details' => [
                 'nullable',
                 'string',
                 'max:255',
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'item_details'),
+                new OutletIsActive($outletId)
             ],
             'items.*.description' => [
                 'required',
                 'string',
                 new RoleCanUpdateAccidentFieldsRule($accident, $user, 'description'),
+                new OutletIsActive($outletId)
             ],
             'items.*.compensation_type' => [
                 'nullable',
                 new Enum(AccidentCompensationType::class),
                 new RoleCanUpdateAccidentItemFieldsRule($user),
+                new OutletIsActive($outletId)
             ],
             'items.*.compensation_amount' => [
                 'nullable',
@@ -85,6 +96,7 @@ class AccidentUpdateRequest extends FormRequest
                 'required_if:items.*.compensation_type,refund,replacement,free_service,repair',
                 new RoleCanUpdateAccidentItemFieldsRule($user),
                 new ValidAccidentCompensationAmountRule,
+                new OutletIsActive($outletId)
             ],
         ];
     }

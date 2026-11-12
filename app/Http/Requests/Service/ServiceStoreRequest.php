@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Service;
 
 use App\Enums\User\UserRole;
+use App\Rules\Outlet\OutletIsActive;
 use App\Rules\Service\OnlySuperAdminRule;
 use App\Rules\Service\UniqueServiceNamePerOutletRule;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -30,7 +31,7 @@ class ServiceStoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new UniqueServiceNamePerOutletRule($outletId)],
             'description' => ['required', 'string', 'max:255'],
-            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OnlySuperAdminRule],
+            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OnlySuperAdminRule, new OutletIsActive],
         ];
     }
 

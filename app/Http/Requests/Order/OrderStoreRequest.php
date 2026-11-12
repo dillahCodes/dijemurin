@@ -6,6 +6,7 @@ use App\Enums\Payment\PaymentMethod;
 use App\Enums\User\UserRole;
 use App\Rules\Order\CartItemsSameOutletRule;
 use App\Rules\Order\CashPaymentSufficientRule;
+use App\Rules\Outlet\OutletIsActive;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -28,7 +29,7 @@ class OrderStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id'],
+            'outlet_id' => ['nullable', 'integer', 'exists:outlets,id', new OutletIsActive],
             'customer_name' => ['required', 'string', 'max:255'],
             'payment_method' => ['required', new Enum(PaymentMethod::class)],
             'payment_amount' => ['required', 'numeric', 'min:0', new CashPaymentSufficientRule],

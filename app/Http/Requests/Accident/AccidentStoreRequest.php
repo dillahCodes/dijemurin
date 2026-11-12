@@ -7,6 +7,7 @@ use App\Rules\Accident\AllowedOrderStatusForAccidentRule;
 use App\Rules\Accident\OrderBelongsToOutletRule;
 use App\Rules\Accident\UniqueActiveAccidentItemRule;
 use App\Rules\Accident\VerifyOutletAccessRule;
+use App\Rules\Outlet\OutletIsActive;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -30,7 +31,7 @@ class AccidentStoreRequest extends FormRequest
     {
         return [
             // Header fields
-            'outlet_id' => ['required', 'exists:outlets,id', new VerifyOutletAccessRule($this->user())],
+            'outlet_id' => ['required', 'exists:outlets,id', new VerifyOutletAccessRule($this->user()), new OutletIsActive],
             'order_id' => ['required', 'exists:orders,id', new OrderBelongsToOutletRule($this->user()), new AllowedOrderStatusForAccidentRule],
             'description' => ['nullable', 'string'],
 
