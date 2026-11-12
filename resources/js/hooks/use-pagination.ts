@@ -36,21 +36,68 @@ export function usePagination(dataWithPagination: LaravelPaginator) {
 
     const paginationItems = getPaginationPages({ currentPage, perPage, totalData, mode: 'desktop' });
 
-    const validNextPage = currentPage < lastPage ? currentPage + 1 : lastPage;
-    const validPrevPage = currentPage > 1 ? currentPage - 1 : 1;
+    const safeLastPage = Math.max(lastPage ?? 1, 1);
 
-    const handleGoToFirstPage = () => navigateWithReload(1);
-    const handleGoToLastPage = () => navigateWithReload(lastPage);
-    const handleGoToPreviousPage = () => navigateWithReload(validPrevPage);
-    const handleGoToNextPage = () => navigateWithReload(validNextPage);
-    const handleNavigateToPage = (page: number) => () => navigateWithReload(page);
+    const isFirstPage = currentPage <= 1;
+    const isLastPage = currentPage >= safeLastPage;
+
+    const canGoFirst = !isFirstPage;
+    const canGoPrevious = !isFirstPage;
+    const canGoNext = !isLastPage;
+    const canGoLast = !isLastPage;
+
+    const handleGoToFirstPage = () => {
+        if (!canGoFirst) {
+            return;
+        }
+
+        navigateWithReload(1);
+    };
+
+    const handleGoToLastPage = () => {
+        if (!canGoLast) {
+            return;
+        }
+
+        navigateWithReload(safeLastPage);
+    };
+
+    const handleGoToPreviousPage = () => {
+        if (!canGoPrevious) {
+            return;
+        }
+
+        navigateWithReload(currentPage - 1);
+    };
+
+    const handleGoToNextPage = () => {
+        if (!canGoNext) {
+            return;
+        }
+
+        navigateWithReload(currentPage + 1);
+    };
+
+    const handleNavigateToPage = (page: number) => () => {
+        if (page === currentPage) {
+            return;
+        }
+
+        navigateWithReload(page);
+    };
 
     return {
         paginationItems,
         currentPage,
         perPage,
         totalData,
-        lastPage,
+        lastPage: safeLastPage,
+        isFirstPage,
+        isLastPage,
+        canGoFirst,
+        canGoPrevious,
+        canGoNext,
+        canGoLast,
         handleNavigate: {
             handleGoToFirstPage,
             handleGoToLastPage,

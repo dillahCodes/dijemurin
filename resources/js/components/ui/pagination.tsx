@@ -26,22 +26,38 @@ function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
 
 type PaginationLinkProps = {
     isActive?: boolean;
+    disabled?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, 'size'> &
     React.ComponentProps<'a'>;
 
-function PaginationLink({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) {
+function PaginationLink({ className, isActive, disabled, size = 'icon', onClick, tabIndex, ...props }: PaginationLinkProps) {
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (disabled) {
+            event.preventDefault();
+
+            return;
+        }
+
+        onClick?.(event);
+    };
+
     return (
         <a
             aria-current={isActive ? 'page' : undefined}
+            aria-disabled={disabled || undefined}
             data-slot="pagination-link"
             data-active={isActive}
+            data-disabled={disabled}
+            tabIndex={disabled ? -1 : tabIndex}
             className={cn(
                 buttonVariants({
                     variant: isActive ? 'outline' : 'ghost',
                     size,
                 }),
+                disabled && 'pointer-events-none opacity-50',
                 className,
             )}
+            onClick={handleClick}
             {...props}
         />
     );

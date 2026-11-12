@@ -5,7 +5,8 @@ import type { PenggunaSectionProps } from './pengguna-section';
 
 export function PenggunaTablePagination() {
     const { users } = usePage<PenggunaSectionProps>().props;
-    const { paginationItems, currentPage, handleNavigate } = usePagination(users);
+    const { paginationItems, currentPage, canGoFirst, canGoPrevious, canGoNext, canGoLast, handleNavigate } =
+        usePagination(users);
 
     if (!users.data.length) {
         return null;
@@ -15,13 +16,21 @@ export function PenggunaTablePagination() {
         <Pagination>
             <PaginationContent className="w-fit flex-wrap justify-center">
                 <PaginationItem>
-                    <PaginationLink isActive onClick={handleNavigate.handleGoToFirstPage} className="w-fit px-2">
+                    <PaginationLink
+                        onClick={handleNavigate.handleGoToFirstPage}
+                        disabled={!canGoFirst}
+                        className="w-fit px-2"
+                    >
                         First
                     </PaginationLink>
                 </PaginationItem>
 
                 <PaginationItem>
-                    <PaginationLink isActive onClick={handleNavigate.handleGoToPreviousPage} className="w-fit px-2">
+                    <PaginationLink
+                        onClick={handleNavigate.handleGoToPreviousPage}
+                        disabled={!canGoPrevious}
+                        className="w-fit px-2"
+                    >
                         Previous
                     </PaginationLink>
                 </PaginationItem>
@@ -35,12 +44,12 @@ export function PenggunaTablePagination() {
                 ))}
 
                 <PaginationItem>
-                    <PaginationLink isActive onClick={handleNavigate.handleGoToNextPage} className="w-fit px-2">
+                    <PaginationLink onClick={handleNavigate.handleGoToNextPage} disabled={!canGoNext} className="w-fit px-2">
                         Next
                     </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink isActive onClick={handleNavigate.handleGoToLastPage} className="w-fit px-2">
+                    <PaginationLink onClick={handleNavigate.handleGoToLastPage} disabled={!canGoLast} className="w-fit px-2">
                         Last
                     </PaginationLink>
                 </PaginationItem>

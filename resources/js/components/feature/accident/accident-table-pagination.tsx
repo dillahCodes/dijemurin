@@ -5,7 +5,8 @@ import type { AccidentPageProps } from './accident-data-section';
 
 export function AccidentTablePagination() {
     const { accidents } = usePage<AccidentPageProps>().props;
-    const { paginationItems, currentPage, handleNavigate } = usePagination(accidents);
+    const { paginationItems, currentPage, canGoFirst, canGoPrevious, canGoNext, canGoLast, handleNavigate } =
+        usePagination(accidents);
 
     if (!accidents.data.length) {
         return null;
@@ -16,8 +17,8 @@ export function AccidentTablePagination() {
             <PaginationContent className="w-fit flex-wrap justify-center">
                 <PaginationItem>
                     <PaginationLink
-                        isActive
                         onClick={handleNavigate.handleGoToFirstPage}
+                        disabled={!canGoFirst}
                         className="w-fit cursor-pointer px-2"
                     >
                         First
@@ -26,8 +27,8 @@ export function AccidentTablePagination() {
 
                 <PaginationItem>
                     <PaginationLink
-                        isActive
                         onClick={handleNavigate.handleGoToPreviousPage}
+                        disabled={!canGoPrevious}
                         className="w-fit cursor-pointer px-2"
                     >
                         Previous
@@ -48,8 +49,8 @@ export function AccidentTablePagination() {
 
                 <PaginationItem>
                     <PaginationLink
-                        isActive
                         onClick={handleNavigate.handleGoToNextPage}
+                        disabled={!canGoNext}
                         className="w-fit cursor-pointer px-2"
                     >
                         Next
@@ -57,8 +58,8 @@ export function AccidentTablePagination() {
                 </PaginationItem>
                 <PaginationItem>
                     <PaginationLink
-                        isActive
                         onClick={handleNavigate.handleGoToLastPage}
+                        disabled={!canGoLast}
                         className="w-fit cursor-pointer px-2"
                     >
                         Last
